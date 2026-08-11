@@ -8,6 +8,10 @@ import consultaRoutes from './routes/ConsultaRouter.js';
 import ProntuarioRoutes from './routes/ProntuarioRoutes.js';
 import AuthRoutes from './routes/AuthRouter.js'; 
 import UsuarioRoutes from './routes/UsuarioRouter.js';
+import dns from "node:dns";
+import "dotenv/config";
+dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 // inicia variaveis de ambiente
 dotenv.config();
