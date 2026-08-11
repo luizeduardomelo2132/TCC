@@ -5,6 +5,8 @@ import Tutores from './pages/Tutores/Tutores';
 import Pets from './pages/Pets/Pets';
 import Consultas from './pages/Consultas/Consultas';
 import Prontuarios from './pages/Prontuarios/Prontuarios';
+import Login from './pages/Login/Login';
+
 
 export default function App() {
   return (
@@ -16,6 +18,7 @@ export default function App() {
           <Route path="pets" element={<Pets />} />
           <Route path="consultas" element={<Consultas />} />
           <Route path="prontuarios" element={<Prontuarios />} />
+          <Route path="login" element={<Login />} />
         </Route>
       </Routes>
     </BrowserRouter>

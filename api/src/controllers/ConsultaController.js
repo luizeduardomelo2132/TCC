@@ -1,10 +1,19 @@
 import Consulta from '../models/Consulta.js';
+import Pet from '../models/Pet.js'; 
 
 export const criarConsulta = async (req, res) => {
   try {
-    const { dataConsulta, motivo, pesoAtual, petId } = req.body;
+    const { dataConsulta, motivo, pesoAtual, petId, veterinarioId } = req.body;
     
-    const novaConsulta = new Consulta({ dataConsulta, motivo, pesoAtual, petId });
+
+    const novaConsulta = new Consulta({ 
+      dataConsulta, 
+      motivo, 
+      pesoAtual, 
+      petId, 
+      veterinarioId 
+    });
+    
     const consultaSalva = await novaConsulta.save();
     
     res.status(201).json(consultaSalva);
@@ -15,7 +24,21 @@ export const criarConsulta = async (req, res) => {
 
 export const listarConsultas = async (req, res) => {
   try {
-    const consultas = await Consulta.find().populate('petId');
+    let filtro = {};
+
+    if (req.usuarioRole === 'tutor') {
+      const petsDoTutor = await Pet.find({ tutorId: req.usuarioId }); 
+      
+      const idsDosPets = petsDoTutor.map(pet => pet._id);
+      
+      filtro = { petId: { $in: idsDosPets } }; 
+    } 
+    else if (req.usuarioRole === 'veterinario') {
+      filtro = { veterinarioId: req.usuarioId };
+    }
+
+    const consultas = await Consulta.find(filtro).populate('petId').populate('veterinarioId');
+
     res.status(200).json(consultas);
   } catch (error) {
     res.status(500).json({ message: error.message });

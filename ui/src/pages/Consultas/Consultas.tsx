@@ -8,17 +8,26 @@ interface Pet {
   especie: string;
 }
 
+// Interface para tipar os usuários (Veterinários)
+interface Usuario {
+  _id: string;
+  nome: string;
+  role: string;
+}
+
 interface Consulta {
   _id?: string;
   dataConsulta: string;
   motivo: string;
   pesoAtual?: number | string;
   petId: Pet | string;
+  veterinarioId?: Usuario | string; // Adicionado para suportar string ou objeto populado
 }
 
 export default function Consultas() {
   const [consultas, setConsultas] = useState<Consulta[]>([]);
   const [pets, setPets] = useState<Pet[]>([]);
+  const [veterinarios, setVeterinarios] = useState<Usuario[]>([]); // Guarda os veterinários
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<Consulta>({
@@ -26,16 +35,24 @@ export default function Consultas() {
     motivo: '',
     pesoAtual: '',
     petId: '',
+    veterinarioId: '', // Adicionado no formData
   });
 
   const carregarDados = async () => {
     try {
-      const [resConsultas, resPets] = await Promise.all([
+      // Busca Consultas, Pets e Usuários ao mesmo tempo
+      const [resConsultas, resPets, resUsuarios] = await Promise.all([
         api.get('/consultas'),
         api.get('/pets'),
+        api.get('/usuarios') // Rota que busca os usuários do sistema
       ]);
+      
       setConsultas(resConsultas.data);
       setPets(resPets.data);
+
+      // Filtra para guardar no estado apenas os usuários que são veterinários
+      const apenasVets = resUsuarios.data.filter((u: Usuario) => u.role === 'veterinario');
+      setVeterinarios(apenasVets);
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     }
@@ -50,6 +67,8 @@ export default function Consultas() {
 
     const payload = {
       petId: typeof formData.petId === 'object' ? formData.petId._id : formData.petId,
+      // Pega o ID do veterinário escolhido
+      veterinarioId: typeof formData.veterinarioId === 'object' ? formData.veterinarioId._id : formData.veterinarioId,
       dataConsulta: new Date(formData.dataConsulta).toISOString(),
       motivo: formData.motivo,
       pesoAtual: formData.pesoAtual ? Number(formData.pesoAtual) : undefined,
@@ -74,9 +93,9 @@ export default function Consultas() {
 
   const handleEdit = (consulta: Consulta) => {
     setEditingId(consulta._id || null);
-    
-    const dataFormatada = consulta.dataConsulta 
-      ? new Date(consulta.dataConsulta).toISOString().slice(0, 16) 
+
+    const dataFormatada = consulta.dataConsulta
+      ? new Date(consulta.dataConsulta).toISOString().slice(0, 16)
       : '';
 
     setFormData({
@@ -84,6 +103,10 @@ export default function Consultas() {
       motivo: consulta.motivo,
       pesoAtual: consulta.pesoAtual || '',
       petId: typeof consulta.petId === 'object' ? consulta.petId._id : consulta.petId,
+      // Popula o campo do veterinário corretamente ao editar
+      veterinarioId: typeof consulta.veterinarioId === 'object' && consulta.veterinarioId !== null 
+        ? consulta.veterinarioId._id 
+        : consulta.veterinarioId || '',
     });
   };
 
@@ -100,7 +123,7 @@ export default function Consultas() {
 
   const limparFormulario = () => {
     setEditingId(null);
-    setFormData({ dataConsulta: '', motivo: '', pesoAtual: '', petId: '' });
+    setFormData({ dataConsulta: '', motivo: '', pesoAtual: '', petId: '', veterinarioId: '' });
   };
 
   return (
@@ -120,6 +143,23 @@ export default function Consultas() {
               {pets.map((pet) => (
                 <option key={pet._id} value={pet._id}>
                   {pet.nome} ({pet.especie})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* NOVO CAMPO: Seleção do Veterinário */}
+          <div className="input-group">
+            <label>Veterinário Responsável*</label>
+            <select
+              required
+              value={typeof formData.veterinarioId === 'object' ? formData.veterinarioId._id : formData.veterinarioId}
+              onChange={(e) => setFormData({ ...formData, veterinarioId: e.target.value })}
+            >
+              <option value="">Selecione um Veterinário...</option>
+              {veterinarios.map((vet) => (
+                <option key={vet._id} value={vet._id}>
+                  Dr(a). {vet.nome}
                 </option>
               ))}
             </select>
@@ -175,6 +215,7 @@ export default function Consultas() {
             <tr>
               <th>Data / Hora</th>
               <th>Pet</th>
+              <th>Veterinário</th> {/* NOVA COLUNA */}
               <th>Peso (kg)</th>
               <th>Motivo</th>
               <th>Ações</th>
@@ -189,6 +230,12 @@ export default function Consultas() {
                     ? c.petId.nome
                     : 'Pet não encontrado'}
                 </td>
+                {/* MOSTRANDO O NOME DO VETERINÁRIO NA TABELA */}
+                <td>
+                  {typeof c.veterinarioId === 'object' && c.veterinarioId !== null
+                    ? `Dr(a). ${c.veterinarioId.nome}`
+                    : '-'}
+                </td>
                 <td>{c.pesoAtual ? `${c.pesoAtual} kg` : '-'}</td>
                 <td>{c.motivo}</td>
                 <td className="actions-cell">
@@ -199,7 +246,7 @@ export default function Consultas() {
             ))}
             {consultas.length === 0 && (
               <tr>
-                <td colSpan={5} style={{ textAlign: 'center' }}>Nenhuma consulta registrada.</td>
+                <td colSpan={6} style={{ textAlign: 'center' }}>Nenhuma consulta registrada.</td>
               </tr>
             )}
           </tbody>

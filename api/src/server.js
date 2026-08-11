@@ -6,6 +6,8 @@ import TutorRoutes from './routes/TutorRouter.js';
 import PetRoutes from './routes/PetRouter.js'; 
 import consultaRoutes from './routes/ConsultaRouter.js';
 import ProntuarioRoutes from './routes/ProntuarioRoutes.js';
+import AuthRoutes from './routes/AuthRouter.js'; 
+import UsuarioRoutes from './routes/UsuarioRouter.js';
 
 // inicia variaveis de ambiente
 dotenv.config();
@@ -23,7 +25,8 @@ app.use('/api/tutores', TutorRoutes);
 app.use('/api/pets', PetRoutes);
 app.use('/api/consultas', consultaRoutes);
 app.use('/api/prontuarios', ProntuarioRoutes);
-
+app.use('/api/auth', AuthRoutes); 
+app.use('/api/usuarios', UsuarioRoutes);
 // rota de teste
 app.get('/', (req, res) => {
   res.send('API da Clínica Veterinária está rodando');

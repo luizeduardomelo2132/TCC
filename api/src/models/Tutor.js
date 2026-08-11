@@ -12,7 +12,7 @@ const tutorSchema = new mongoose.Schema({
   email: { 
     type: String, 
     required: true, 
-    unique: true // Garante que não teremos dois tutores com o mesmo e-mail
+    unique: true 
   },
   endereco: { 
     type: String, 

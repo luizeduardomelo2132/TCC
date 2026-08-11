@@ -2,8 +2,12 @@ import Pet from '../models/Pet.js';
 
 export const criarPet = async (req, res) => {
   try {
-    const { nome, especie, raca, idade, tutorId } = req.body;
+    let { nome, especie, raca, idade, tutorId } = req.body;
     
+    if (req.usuarioRole === 'tutor') {
+      tutorId = req.usuarioId;
+    }
+
     const novoPet = new Pet({ nome, especie, raca, idade, tutorId });
     const petSalvo = await novoPet.save();
     
@@ -15,7 +19,14 @@ export const criarPet = async (req, res) => {
 
 export const listarPets = async (req, res) => {
   try {
-    const pets = await Pet.find().populate('tutorId', 'nome');
+    let filtro = {};
+
+    if (req.usuarioRole === 'tutor') {
+      filtro = { tutorId: req.usuarioId }; 
+    }
+
+    const pets = await Pet.find(filtro);
+    
     res.status(200).json(pets);
   } catch (error) {
     res.status(500).json({ message: error.message });
