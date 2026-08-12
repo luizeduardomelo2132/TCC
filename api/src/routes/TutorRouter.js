@@ -5,7 +5,7 @@ import { verificarToken, apenasCargos } from '../middlewares/auth.js';
 const router = express.Router();
 
 // Apenas Recepção e Veterinários gerenciam o cadastro de tutores
-const cargosPermitidos = apenasCargos(['admin', 'veterinario']);
+const cargosPermitidos = apenasCargos(['admin']);
 
 router.post('/', verificarToken, cargosPermitidos, TutorController.criarTutor);
 router.get('/', verificarToken, cargosPermitidos, TutorController.listarTutores);

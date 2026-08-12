@@ -24,7 +24,7 @@ export const listarPets = async (req, res) => {
     if (req.usuarioRole === 'tutor') {
       filtro = { tutorId: req.usuarioId }; 
     }
-
+    
     
     const pets = await Pet.find(filtro).populate('tutorId', 'nome email telefone');
     

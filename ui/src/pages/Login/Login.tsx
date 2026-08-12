@@ -7,8 +7,9 @@ export default function Login() {
   const [modoLogin, setModoLogin] = useState(true);
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
+  const [endereco, setEndereco] = useState('');
   const [senha, setSenha] = useState('');
-  const [role, setRole] = useState('tutor'); 
+  const [role, setRole] = useState('tutor');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,11 +18,11 @@ export default function Login() {
     try {
       if (modoLogin) {
         const response = await api.post('/auth/login', { email, senha });
-        
+
         // salva o token e o cargo do usuario no navegador
         localStorage.setItem('@TCC:token', response.data.token);
         localStorage.setItem('@TCC:role', response.data.usuario.role);
-        
+
         navigate('/');
         window.location.reload();
       } else {
@@ -56,6 +57,11 @@ export default function Login() {
                   <option value="veterinario">Veterinário</option>
                   <option value="admin">Recepcionista / Admin</option>
                 </select>
+
+                <div className="input-group">
+                  <label>Endereco</label>
+                  <input type="text" value={endereco} onChange={(e) => setEndereco(e.target.value)} required />
+                </div>
               </div>
             </>
           )}

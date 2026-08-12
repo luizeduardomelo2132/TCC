@@ -77,38 +77,46 @@ export const criarConsulta = async (req, res) => {
 };
 
 
-// 2. Listar Consultas
 export const listarConsultas = async (req, res) => {
   try {
     let filtro = {};
 
-    // REGRA 3: Filtro por papel do usuário logado
+    // REGRA DE SEGURANÇA POR CARGO
     if (req.usuarioRole === 'tutor') {
-      // Busca os pets pertencentes ao tutor logado
+      // Busca os pets do tutor logado (suporta 'tutorId' e 'tutor')
       const meusPets = await Pet.find({
-        tutorId: req.usuarioId
+        $or: [
+          { tutorId: req.usuarioId },
+          { tutor: req.usuarioId }
+        ]
       }).select('_id');
 
       const meusPetsIds = meusPets.map(pet => pet._id);
 
-      // Mostra apenas consultas dos pets do tutor
+      // Compatibilidade: aceita 'petId' ou 'pet' na consulta
       filtro = {
-        petId: { $in: meusPetsIds }
+        $or: [
+          { petId: { $in: meusPetsIds } },
+          { pet: { $in: meusPetsIds } }
+        ]
+      };
+    } else if (req.usuarioRole === 'veterinario') {
+      // Compatibilidade: aceita 'veterinarioId' ou 'veterinario'
+      filtro = {
+        $or: [
+          { veterinarioId: req.usuarioId },
+          { veterinario: req.usuarioId }
+        ]
       };
     }
+    // Admin/Recepção: filtro continua vazio ({}) para listar a agenda completa da clínica
 
-    else if (req.usuarioRole === 'veterinario') {
-      // Mostra apenas consultas atribuídas ao veterinário logado
-      filtro = {
-        veterinarioId: req.usuarioId
-      };
-    }
-
-    // Admin não possui filtro e vê todas as consultas
-
+    // Busca trazendo os dados populados do Pet e do Veterinário
     const consultas = await Consulta.find(filtro)
       .populate('petId', 'nome especie raca')
+      .populate('pet', 'nome especie raca')
       .populate('veterinarioId', 'nome email')
+      .populate('veterinario', 'nome email')
       .sort({
         dataHorario: 1,
         dataConsulta: 1
@@ -116,9 +124,7 @@ export const listarConsultas = async (req, res) => {
 
     res.status(200).json(consultas);
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 

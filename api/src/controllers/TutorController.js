@@ -1,10 +1,10 @@
 import Usuario from '../models/Usuario.js';
+import Pet from '../models/Pet.js'; // Importação que estava faltando!
 
 export const criarTutor = async (req, res) => {
   try {
     const { nome, telefone, email, endereco } = req.body;
 
-    
     const novoTutor = await Usuario.create({ 
       nome, 
       email, 
@@ -22,7 +22,6 @@ export const criarTutor = async (req, res) => {
 
 export const listarTutores = async (req, res) => {
   try {
-    
     const tutores = await Usuario.find({ role: 'tutor' }).select('-senha');
     return res.status(200).json(tutores);
   } catch (error) {
@@ -33,7 +32,19 @@ export const listarTutores = async (req, res) => {
 export const deleteTutor = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // 1. Remove em cascata todos os pets do tutor (aceita tutorId ou tutor)
+    await Pet.deleteMany({
+      $or: [{ tutorId: id }, { tutor: id }]
+    });
+
+    // 2. Remove o tutor do banco de dados
     const tutor = await Usuario.findByIdAndDelete(id);
+
+    if (!tutor) {
+      return res.status(404).json({ erro: 'Tutor não encontrado' });
+    }
+
     return res.status(200).json(tutor);
   } catch (error) {
     return res.status(500).json({ erro: 'Falha ao deletar tutor', detalhes: error.message });
