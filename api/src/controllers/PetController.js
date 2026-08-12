@@ -25,7 +25,8 @@ export const listarPets = async (req, res) => {
       filtro = { tutorId: req.usuarioId }; 
     }
 
-    const pets = await Pet.find(filtro);
+    
+    const pets = await Pet.find(filtro).populate('tutorId', 'nome email telefone');
     
     res.status(200).json(pets);
   } catch (error) {

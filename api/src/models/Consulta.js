@@ -23,7 +23,11 @@ const consultaSchema = new mongoose.Schema({
     ref: 'Usuario',
     required: true
   },
-
+  status: {
+  type: String,
+  enum: ['agendada', 'em_andamento', 'concluida', 'cancelada'],
+  default: 'agendada'
+}
 }, {
   timestamps: true
 });

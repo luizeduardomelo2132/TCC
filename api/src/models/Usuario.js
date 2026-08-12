@@ -22,15 +22,22 @@ const usuarioSchema = new mongoose.Schema({
     default: 'tutor', // Se não enviar nada, vira tutor por padrão
     required: true,
   },
+
+  telefone: {
+    type: String
+  }, 
+  endereco: {
+    type: String
+  }
 }, { timestamps: true });
 
 // Função que roda antes de salvar no banco para criptografar a senha
 usuarioSchema.pre('save', async function () {
   if (!this.isModified('senha')) return;
-  
+
   const hash = await bcrypt.hash(this.senha, 10);
   this.senha = hash;
-  
+
 });
 
 export default mongoose.model('Usuario', usuarioSchema);

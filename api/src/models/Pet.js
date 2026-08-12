@@ -18,7 +18,7 @@ const petSchema = new mongoose.Schema({
         required: true
     },
     tutorId: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Tutor',
+        type: mongoose.Schema.Types.ObjectId, ref: 'Usuario',
         required: true
     }
 });
