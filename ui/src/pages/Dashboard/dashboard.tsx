@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import api from '../../services/api'; // Confirme se o caminho para a sua API está correto
+import api from '../../services/api'; 
 import './Dashboard.scss'; 
+import DashboardTutor from '../DashboardTutor/DashboardTutor';
 
 export default function Dashboard() {
   const userRole = localStorage.getItem('@TCC:role') || 'tutor';
@@ -15,12 +16,10 @@ export default function Dashboard() {
   useEffect(() => {
     const buscarDados = async () => {
       try {
-        // 1. Busca as consultas (Graças ao nosso bloqueio no Back-end, 
-        // isso já vem filtrado automaticamente dependendo de quem está logado!)
         const resConsultas = await api.get('/consultas');
         setConsultas(resConsultas.data);
 
-        // 2. Busca Pets e Tutores apenas se tiver permissão (Admin ou Vet)
+        // Busca Pets e Tutores apenas se tiver permissão (Admin ou Vet)
         if (userRole === 'admin' || userRole === 'veterinario') {
           const resPets = await api.get('/pets');
           setTotalPets(resPets.data.length);
@@ -40,7 +39,7 @@ export default function Dashboard() {
     buscarDados();
   }, [userRole]);
 
-  // Formata a data para ficar bonita na tela (Ex: 15/10/2026 - 14:30)
+  // Formata a data para exibir bonito na tabela
   const formatarData = (dataString: string) => {
     if (!dataString) return '--';
     const data = new Date(dataString);
@@ -53,6 +52,11 @@ export default function Dashboard() {
         <h1 className="page-title">Carregando dados...</h1>
       </div>
     );
+  }
+
+  // --- SE FOR TUTOR: Renderiza a nova tela inspirada na foto do site ---
+  if (userRole === 'tutor') {
+    return <DashboardTutor />;
   }
 
   // --- TELA DA RECEPÇÃO (ADMIN) ---
@@ -80,7 +84,7 @@ export default function Dashboard() {
             <tr>
               <th>Data / Horário</th>
               <th>Pet</th>
-              <th>Motivo</th>
+              <th>Motivo / Observação</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -88,12 +92,11 @@ export default function Dashboard() {
             {consultas.length === 0 ? (
               <tr><td colSpan={4} style={{ textAlign: 'center' }}>Nenhuma consulta agendada.</td></tr>
             ) : (
-              // Mostra apenas as 5 últimas consultas cadastradas
               consultas.slice(-5).reverse().map((consulta) => (
                 <tr key={consulta._id}>
-                  <td>{formatarData(consulta.dataConsulta)}</td>
-                  <td>{consulta.petId?.nome || 'Pet excluído'}</td>
-                  <td>{consulta.motivo}</td>
+                  <td>{formatarData(consulta.dataConsulta || consulta.dataHorario)}</td>
+                  <td>{consulta.petId?.nome || consulta.pet?.nome || 'Pet excluído'}</td>
+                  <td>{consulta.motivo || consulta.observacoes || 'Atendimento Geral'}</td>
                   <td><span className="status-badge">Agendada</span></td>
                 </tr>
               ))
@@ -125,7 +128,7 @@ export default function Dashboard() {
             <tr>
               <th>Data / Horário</th>
               <th>Pet</th>
-              <th>Motivo</th>
+              <th>Motivo / Observação</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -135,9 +138,9 @@ export default function Dashboard() {
             ) : (
               consultas.map((consulta) => (
                 <tr key={consulta._id}>
-                  <td>{formatarData(consulta.dataConsulta)}</td>
-                  <td>{consulta.petId?.nome || 'Desconhecido'}</td>
-                  <td>{consulta.motivo}</td>
+                  <td>{formatarData(consulta.dataConsulta || consulta.dataHorario)}</td>
+                  <td>{consulta.petId?.nome || consulta.pet?.nome || 'Desconhecido'}</td>
+                  <td>{consulta.motivo || consulta.observacoes || 'Atendimento Geral'}</td>
                   <td><span className="status-badge">Confirmado</span></td>
                 </tr>
               ))
@@ -148,41 +151,11 @@ export default function Dashboard() {
     </>
   );
 
-  // --- TELA DO TUTOR ---
-  const renderTutorDashboard = () => {
-    // Pega a consulta mais recente do tutor
-    const proximaConsulta = consultas.length > 0 ? consultas[consultas.length - 1] : null;
-
-    return (
-      <div className="summary-grid">
-        <div className="summary-card" style={{ borderTopColor: '#3b82f6' }}>
-          <h3>Próxima Consulta</h3>
-          {proximaConsulta ? (
-             <>
-               <span className="number" style={{ fontSize: '1.2rem', marginBottom: '10px' }}>
-                 {formatarData(proximaConsulta.dataConsulta)}
-               </span>
-               <span style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: 'bold' }}>
-                 Pet: {proximaConsulta.petId?.nome || 'Seu Pet'}
-               </span>
-             </>
-          ) : (
-             <span className="number" style={{ fontSize: '1.2rem' }}>Nenhuma consulta</span>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="dashboard-container">
-      <h1 className="page-title">
-        {userRole === 'tutor' ? 'Meu Painel' : 'Painel de Controle'}
-      </h1>
-
+      <h1 className="page-title">Painel de Controle</h1>
       {userRole === 'admin' && renderAdminDashboard()}
       {userRole === 'veterinario' && renderVeterinarioDashboard()}
-      {userRole === 'tutor' && renderTutorDashboard()}
     </div>
   );
 }

@@ -79,94 +79,156 @@ export default function Tutores() {
 
   return (
     <div className="tutores-container">
-      <h1 className="page-title">Gestão de Tutores (RF01)</h1>
-
-      {/* Formulário de Cadastro / Edição */}
-      <form className="form-card" onSubmit={handleSubmit}>
-        <div className="form-grid">
-          <div className="input-group">
-            <label>Nome Completo*</label>
-            <input
-              type="text"
-              required
-              value={formData.nome}
-              onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>E-mail*</label>
-            <input
-              type="email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Telefone*</label>
-            <input
-              type="text"
-              required
-              value={formData.telefone}
-              onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Endereço</label>
-            <input
-              type="text"
-              value={formData.endereco}
-              onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
-            />
-          </div>
+      {/* SEÇÃO HERO BANNER */}
+      <section className="hero-banner">
+        <div className="hero-content">
+          <h1 className="page-title">Gestão de Tutores</h1>
+          <p className="hero-subtitle">
+            Cadastre e gerencie os dados de contato dos responsáveis pelos pets cadastrados na clínica com praticidade e segurança.
+          </p>
         </div>
 
-        <div className="form-actions">
-          {editingId && (
-            <button type="button" className="btn-secondary" onClick={limparFormulario}>
-              Cancelar
-            </button>
-          )}
-          <button type="submit" className="btn-primary">
-            {editingId ? 'Atualizar Tutor' : 'Cadastrar Tutor'}
-          </button>
+        <div className="hero-image-wrapper">
+          <div className="decor-shape"></div>
+          <div className="decor-cross cross-1">+</div>
+          <div className="decor-cross cross-2">+</div>
+          <img
+            src="https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&q=80&w=600"
+            alt="Tutor com Pet"
+            className="pet-hero-img"
+          />
         </div>
-      </form>
+      </section>
 
-      {/* Tabela de Exibição */}
-      <div className="table-card">
-        <table className="tutores-table">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Contato</th>
-              <th>Endereço</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tutores.map((tutor) => (
-              <tr key={tutor._id}>
-                <td>{tutor.nome}</td>
-                <td>{tutor.email}<br /><small>{tutor.telefone}</small></td>
-                <td>{tutor.endereco || '-'}</td>
-                <td className="actions-cell">
-                  <button className="btn-edit" onClick={() => handleEdit(tutor)}>Editar</button>
-                  <button className="btn-delete" onClick={() => handleDelete(tutor._id!)}>Excluir</button>
-                </td>
-              </tr>
-            ))}
-            {tutores.length === 0 && (
-              <tr>
-                <td colSpan={4} style={{ textAlign: 'center' }}>Nenhum tutor cadastrado.</td>
-              </tr>
+      {/* FORMULÁRIO DE CADASTRO / EDIÇÃO */}
+      <section className="form-section">
+        <div className="section-header">
+          <h2>{editingId ? 'Editar Tutor' : 'Novo Cadastro de Tutor'}</h2>
+          <p>Informe os dados do responsável para contato e prontuário.</p>
+        </div>
+
+        <form className="form-card" onSubmit={handleSubmit}>
+          <div className="form-grid">
+            <div className="input-group">
+              <label>Nome Completo*</label>
+              <div className="input-wrapper">
+                <span className="input-icon">👤</span>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ex: Maria Silva"
+                  value={formData.nome}
+                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>E-mail*</label>
+              <div className="input-wrapper">
+                <span className="input-icon">✉️</span>
+                <input
+                  type="email"
+                  required
+                  placeholder="Ex: maria@email.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Telefone*</label>
+              <div className="input-wrapper">
+                <span className="input-icon">📞</span>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ex: (11) 98765-4321"
+                  value={formData.telefone}
+                  onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Endereço</label>
+              <div className="input-wrapper">
+                <span className="input-icon">🏠</span>
+                <input
+                  type="text"
+                  placeholder="Ex: Rua das Flores, 123"
+                  value={formData.endereco}
+                  onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-actions">
+            {editingId && (
+              <button type="button" className="btn-secondary" onClick={limparFormulario}>
+                Cancelar
+              </button>
             )}
-          </tbody>
-        </table>
-      </div>
+            <button type="submit" className="btn-primary">
+              {editingId ? 'Atualizar Tutor' : 'Cadastrar Tutor'}
+            </button>
+          </div>
+        </form>
+      </section>
+
+      {/* TABELA DE EXHIBIÇÃO DE TUTORES */}
+      <section className="table-section">
+        <div className="table-card">
+          <div className="table-header">
+            <h3>Tutores Cadastrados ({tutores.length})</h3>
+          </div>
+
+          <table className="tutores-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Contato</th>
+                <th>Endereço</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tutores.map((tutor) => (
+                <tr key={tutor._id}>
+                  <td className="tutor-nome-cell">
+                    <span className="tutor-avatar">👤</span>
+                    <strong className="tutor-nome">{tutor.nome}</strong>
+                  </td>
+                  <td>
+                    <div className="contact-info">
+                      <span className="email">{tutor.email}</span>
+                      <small className="phone">{tutor.telefone}</small>
+                    </div>
+                  </td>
+                  <td>{tutor.endereco || '-'}</td>
+                  <td className="actions-cell">
+                    <button className="btn-edit" onClick={() => handleEdit(tutor)}>
+                      Editar
+                    </button>
+                    <button className="btn-delete" onClick={() => handleDelete(tutor._id!)}>
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {tutores.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="empty-state">
+                    Nenhum tutor cadastrado até o momento.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

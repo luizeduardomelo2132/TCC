@@ -128,130 +128,188 @@ export default function Consultas() {
 
   return (
     <div className="consultas-container">
-      <h1 className="page-title">Agendamento de Consultas (RF03)</h1>
-
-      <form className="form-card" onSubmit={handleSubmit}>
-        <div className="form-grid">
-          <div className="input-group">
-            <label>Paciente (Pet)*</label>
-            <select
-              required
-              value={typeof formData.petId === 'object' ? formData.petId._id : formData.petId}
-              onChange={(e) => setFormData({ ...formData, petId: e.target.value })}
-            >
-              <option value="">Selecione um Pet...</option>
-              {pets.map((pet) => (
-                <option key={pet._id} value={pet._id}>
-                  {pet.nome} ({pet.especie})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* NOVO CAMPO: Seleção do Veterinário */}
-          <div className="input-group">
-            <label>Veterinário Responsável*</label>
-            <select
-              required
-              value={typeof formData.veterinarioId === 'object' ? formData.veterinarioId._id : formData.veterinarioId}
-              onChange={(e) => setFormData({ ...formData, veterinarioId: e.target.value })}
-            >
-              <option value="">Selecione um Veterinário...</option>
-              {veterinarios.map((vet) => (
-                <option key={vet._id} value={vet._id}>
-                  Dr(a). {vet.nome}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="input-group">
-            <label>Data e Hora da Consulta*</label>
-            <input
-              type="datetime-local"
-              required
-              value={formData.dataConsulta}
-              onChange={(e) => setFormData({ ...formData, dataConsulta: e.target.value })}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Peso Atual (kg)</label>
-            <input
-              type="number"
-              step="0.1"
-              placeholder="Ex: 5.4"
-              value={formData.pesoAtual}
-              onChange={(e) => setFormData({ ...formData, pesoAtual: e.target.value })}
-            />
-          </div>
-
-          <div className="input-group" style={{ gridColumn: '1 / -1' }}>
-            <label>Motivo da Consulta*</label>
-            <textarea
-              required
-              placeholder="Ex: Vacinação de rotina, exames gerais..."
-              value={formData.motivo}
-              onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
-            />
-          </div>
+      {/* HERO BANNER DESTAQUE */}
+      <section className="hero-banner">
+        <div className="hero-content">
+          <h1 className="page-title">Agendamento de Consultas</h1>
+          <p className="hero-subtitle">
+            Marque consultas, atribua o veterinário especialista responsável e acompanhe a evolução de peso e saúde dos pacientes.
+          </p>
         </div>
 
-        <div className="form-actions">
-          {editingId && (
-            <button type="button" className="btn-secondary" onClick={limparFormulario}>
-              Cancelar
-            </button>
-          )}
-          <button type="submit" className="btn-primary">
-            {editingId ? 'Atualizar Consulta' : 'Agendar Consulta'}
-          </button>
+        <div className="hero-image-wrapper">
+          <div className="decor-shape"></div>
+          <div className="decor-cross cross-1">+</div>
+          <div className="decor-cross cross-2">+</div>
+          <img
+            src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&q=80&w=600"
+            alt="Atendimento Veterinário"
+            className="pet-hero-img"
+          />
         </div>
-      </form>
+      </section>
 
-      <div className="table-card">
-        <table className="consultas-table">
-          <thead>
-            <tr>
-              <th>Data / Hora</th>
-              <th>Pet</th>
-              <th>Veterinário</th> {/* NOVA COLUNA */}
-              <th>Peso (kg)</th>
-              <th>Motivo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {consultas.map((c) => (
-              <tr key={c._id}>
-                <td>{new Date(c.dataConsulta).toLocaleString('pt-BR')}</td>
-                <td>
-                  {typeof c.petId === 'object' && c.petId !== null
-                    ? c.petId.nome
-                    : 'Pet não encontrado'}
-                </td>
-                {/* MOSTRANDO O NOME DO VETERINÁRIO NA TABELA */}
-                <td>
-                  {typeof c.veterinarioId === 'object' && c.veterinarioId !== null
-                    ? `Dr(a). ${c.veterinarioId.nome}`
-                    : '-'}
-                </td>
-                <td>{c.pesoAtual ? `${c.pesoAtual} kg` : '-'}</td>
-                <td>{c.motivo}</td>
-                <td className="actions-cell">
-                  <button className="btn-edit" onClick={() => handleEdit(c)}>Editar</button>
-                  <button className="btn-delete" onClick={() => handleDelete(c._id!)}>Excluir</button>
-                </td>
-              </tr>
-            ))}
-            {consultas.length === 0 && (
-              <tr>
-                <td colSpan={6} style={{ textAlign: 'center' }}>Nenhuma consulta registrada.</td>
-              </tr>
+      {/* CARD DO FORMULÁRIO */}
+      <section className="form-section">
+        <div className="section-header">
+          <h2>{editingId ? 'Editar Consulta' : 'Agendar Novo Atendimento'}</h2>
+          <p>Selecione o paciente, o profissional responsável e informe os detalhes da consulta.</p>
+        </div>
+
+        <form className="form-card" onSubmit={handleSubmit}>
+          <div className="form-grid">
+            <div className="input-group">
+              <label>Paciente (Pet)*</label>
+              <div className="input-wrapper">
+                <span className="input-icon">🐾</span>
+                <select
+                  required
+                  value={typeof formData.petId === 'object' ? formData.petId._id : formData.petId}
+                  onChange={(e) => setFormData({ ...formData, petId: e.target.value })}
+                >
+                  <option value="">Selecione um Pet...</option>
+                  {pets.map((pet) => (
+                    <option key={pet._id} value={pet._id}>
+                      {pet.nome} ({pet.especie})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Veterinário Responsável*</label>
+              <div className="input-wrapper">
+                <span className="input-icon">🩺</span>
+                <select
+                  required
+                  value={typeof formData.veterinarioId === 'object' ? formData.veterinarioId._id : formData.veterinarioId}
+                  onChange={(e) => setFormData({ ...formData, veterinarioId: e.target.value })}
+                >
+                  <option value="">Selecione um Veterinário...</option>
+                  {veterinarios.map((vet) => (
+                    <option key={vet._id} value={vet._id}>
+                      Dr(a). {vet.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Data e Hora da Consulta*</label>
+              <div className="input-wrapper">
+                <span className="input-icon">📅</span>
+                <input
+                  type="datetime-local"
+                  required
+                  value={formData.dataConsulta}
+                  onChange={(e) => setFormData({ ...formData, dataConsulta: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Peso Atual (kg)</label>
+              <div className="input-wrapper">
+                <span className="input-icon">⚖️</span>
+                <input
+                  type="number"
+                  step="0.1"
+                  placeholder="Ex: 5.4"
+                  value={formData.pesoAtual}
+                  onChange={(e) => setFormData({ ...formData, pesoAtual: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+              <label>Motivo da Consulta*</label>
+              <div className="input-wrapper textarea-wrapper">
+                <span className="input-icon">📝</span>
+                <textarea
+                  required
+                  placeholder="Ex: Vacinação de rotina, exames gerais, sintomas oculares..."
+                  value={formData.motivo}
+                  onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-actions">
+            {editingId && (
+              <button type="button" className="btn-secondary" onClick={limparFormulario}>
+                Cancelar Edição
+              </button>
             )}
-          </tbody>
-        </table>
-      </div>
+            <button type="submit" className="btn-primary">
+              {editingId ? 'Atualizar Consulta' : 'Agendar Consulta'}
+            </button>
+          </div>
+        </form>
+      </section>
+
+      {/* TABELA DE CONSULTAS */}
+      <section className="table-section">
+        <div className="table-card">
+          <div className="table-header">
+            <h3>Consultas Registradas ({consultas.length})</h3>
+          </div>
+          <table className="consultas-table">
+            <thead>
+              <tr>
+                <th>Data / Hora</th>
+                <th>Paciente</th>
+                <th>Veterinário</th>
+                <th>Peso</th>
+                <th>Motivo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {consultas.map((c) => (
+                <tr key={c._id}>
+                  <td className="date-cell">
+                    <span className="date-badge">
+                      {new Date(c.dataConsulta).toLocaleString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="pet-tag">
+                      🐶 {typeof c.petId === 'object' && c.petId !== null ? c.petId.nome : 'Pet não encontrado'}
+                    </span>
+                  </td>
+                  <td>
+                    {typeof c.veterinarioId === 'object' && c.veterinarioId !== null
+                      ? `Dr(a). ${c.veterinarioId.nome}`
+                      : '-'}
+                  </td>
+                  <td>{c.pesoAtual ? `${c.pesoAtual} kg` : '-'}</td>
+                  <td className="motivo-cell">{c.motivo}</td>
+                  <td className="actions-cell">
+                    <button className="btn-edit" onClick={() => handleEdit(c)}>Editar</button>
+                    <button className="btn-delete" onClick={() => handleDelete(c._id!)}>Excluir</button>
+                  </td>
+                </tr>
+              ))}
+              {consultas.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="empty-state">
+                    Nenhuma consulta registrada até o momento.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

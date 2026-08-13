@@ -83,7 +83,6 @@ export const listarConsultas = async (req, res) => {
 
     // REGRA DE SEGURANÇA POR CARGO
     if (req.usuarioRole === 'tutor') {
-      // Busca os pets do tutor logado (suporta 'tutorId' e 'tutor')
       const meusPets = await Pet.find({
         $or: [
           { tutorId: req.usuarioId },
@@ -93,7 +92,6 @@ export const listarConsultas = async (req, res) => {
 
       const meusPetsIds = meusPets.map(pet => pet._id);
 
-      // Compatibilidade: aceita 'petId' ou 'pet' na consulta
       filtro = {
         $or: [
           { petId: { $in: meusPetsIds } },
@@ -101,7 +99,6 @@ export const listarConsultas = async (req, res) => {
         ]
       };
     } else if (req.usuarioRole === 'veterinario') {
-      // Compatibilidade: aceita 'veterinarioId' ou 'veterinario'
       filtro = {
         $or: [
           { veterinarioId: req.usuarioId },
@@ -109,25 +106,38 @@ export const listarConsultas = async (req, res) => {
         ]
       };
     }
-    // Admin/Recepção: filtro continua vazio ({}) para listar a agenda completa da clínica
+    // Admin: filtro permanece {} para carregar todas as consultas
 
-    // Busca trazendo os dados populados do Pet e do Veterinário
-    const consultas = await Consulta.find(filtro)
-      .populate('petId', 'nome especie raca')
-      .populate('pet', 'nome especie raca')
-      .populate('veterinarioId', 'nome email')
-      .populate('veterinario', 'nome email')
-      .sort({
-        dataHorario: 1,
-        dataConsulta: 1
-      });
+    // Prepara a busca no banco
+    let query = Consulta.find(filtro);
+
+    // Identifica dinamicamente os campos que realmente existem no seu Model
+    const camposDoSchema = Object.keys(Consulta.schema.paths);
+
+    if (camposDoSchema.includes('petId')) {
+      query = query.populate('petId', 'nome especie raca');
+    }
+    if (camposDoSchema.includes('pet')) {
+      query = query.populate('pet', 'nome especie raca');
+    }
+    if (camposDoSchema.includes('veterinarioId')) {
+      query = query.populate('veterinarioId', 'nome email');
+    }
+    if (camposDoSchema.includes('veterinario')) {
+      query = query.populate('veterinario', 'nome email');
+    }
+
+    const consultas = await query.sort({
+      dataHorario: 1,
+      dataConsulta: 1
+    });
 
     res.status(200).json(consultas);
   } catch (error) {
+    console.error('Erro interno em listarConsultas:', error);
     res.status(500).json({ message: error.message });
   }
 };
-
 
 // 3. Buscar Consulta por ID
 export const buscarConsultaPorId = async (req, res) => {

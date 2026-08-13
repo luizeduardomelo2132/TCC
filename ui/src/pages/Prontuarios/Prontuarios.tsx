@@ -117,113 +117,184 @@ export default function Prontuarios() {
 
   return (
     <div className="prontuarios-container">
-      <h1 className="page-title">Histórico Médico / Prontuários (RF04)</h1>
-
-      <form className="form-card" onSubmit={handleSubmit}>
-        <div className="form-grid">
-          <div className="input-group" style={{ gridColumn: '1 / -1' }}>
-            <label>Selecione a Consulta*</label>
-            <select
-              required
-              value={typeof formData.consultaId === 'object' ? formData.consultaId._id : formData.consultaId}
-              onChange={(e) => setFormData({ ...formData, consultaId: e.target.value })}
-            >
-              <option value="">Selecione a consulta realizada...</option>
-              {consultas.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {new Date(c.dataConsulta).toLocaleString('pt-BR')} - {c.petId?.nome || 'Pet'} ({c.motivo})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="input-group" style={{ gridColumn: '1 / -1' }}>
-            <label>Diagnóstico*</label>
-            <textarea
-              required
-              value={formData.diagnostico}
-              onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Prescrição / Medicamentos</label>
-            <textarea
-              value={formData.prescricao}
-              onChange={(e) => setFormData({ ...formData, prescricao: e.target.value })}
-            />
-          </div>
-
-          <div className="input-group">
-            <label>Exames Solicitados</label>
-            <textarea
-              value={formData.examesSolicitados}
-              onChange={(e) => setFormData({ ...formData, examesSolicitados: e.target.value })}
-            />
-          </div>
-
-          <div className="input-group" style={{ gridColumn: '1 / -1' }}>
-            <label>Observações Gerais</label>
-            <textarea
-              value={formData.observacoes}
-              onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
-            />
-          </div>
+      {/* SEÇÃO HERO BANNER */}
+      <section className="hero-banner">
+        <div className="hero-content">
+          <h1 className="page-title">Histórico Médico & Prontuários</h1>
+          <p className="hero-subtitle">
+            Registre diagnósticos, prescreva medicações, solicite exames e acompanhe todo o histórico de saúde do seu paciente.
+          </p>
         </div>
 
-        <div className="form-actions">
-          {editingId && (
-            <button type="button" className="btn-secondary" onClick={limparFormulario}>
-              Cancelar
+        <div className="hero-image-wrapper">
+          <div className="decor-shape"></div>
+          <div className="decor-cross cross-1">+</div>
+          <div className="decor-cross cross-2">+</div>
+          <img
+            src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=600"
+            alt="Exame Veterinário"
+            className="pet-hero-img"
+          />
+        </div>
+      </section>
+
+      {/* CARD DO FORMULÁRIO */}
+      <section className="form-section">
+        <div className="section-header">
+          <h2>{editingId ? 'Editar Prontuário' : 'Novo Prontuário Médico'}</h2>
+          <p>Preencha os dados clínicos da consulta selecionada.</p>
+        </div>
+
+        <form className="form-card" onSubmit={handleSubmit}>
+          <div className="form-grid">
+            <div className="input-group full-width">
+              <label>Selecione a Consulta*</label>
+              <div className="input-wrapper">
+                <span className="input-icon">📋</span>
+                <select
+                  required
+                  value={typeof formData.consultaId === 'object' ? formData.consultaId._id : formData.consultaId}
+                  onChange={(e) => setFormData({ ...formData, consultaId: e.target.value })}
+                >
+                  <option value="">Selecione a consulta realizada...</option>
+                  {consultas.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {new Date(c.dataConsulta).toLocaleString('pt-BR')} - {c.petId?.nome || 'Pet'} ({c.motivo})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="input-group full-width">
+              <label>Diagnóstico*</label>
+              <div className="input-wrapper textarea-wrapper">
+                <span className="input-icon">🩺</span>
+                <textarea
+                  required
+                  placeholder="Descreva detalhadamente o diagnóstico do paciente..."
+                  value={formData.diagnostico}
+                  onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Prescrição / Medicamentos</label>
+              <div className="input-wrapper textarea-wrapper">
+                <span className="input-icon">💊</span>
+                <textarea
+                  placeholder="Instruções de medicação, dosagens e horários..."
+                  value={formData.prescricao}
+                  onChange={(e) => setFormData({ ...formData, prescricao: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Exames Solicitados</label>
+              <div className="input-wrapper textarea-wrapper">
+                <span className="input-icon">🔬</span>
+                <textarea
+                  placeholder="Exames de sangue, radiografias, ultrassom..."
+                  value={formData.examesSolicitados}
+                  onChange={(e) => setFormData({ ...formData, examesSolicitados: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group full-width">
+              <label>Observações Gerais</label>
+              <div className="input-wrapper textarea-wrapper">
+                <span className="input-icon">📝</span>
+                <textarea
+                  placeholder="Anotações adicionais sobre o comportamento ou retorno do paciente..."
+                  value={formData.observacoes}
+                  onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-actions">
+            {editingId && (
+              <button type="button" className="btn-secondary" onClick={limparFormulario}>
+                Cancelar
+              </button>
+            )}
+            <button type="submit" className="btn-primary">
+              {editingId ? 'Atualizar Prontuário' : 'Salvar Prontuário'}
             </button>
-          )}
-          <button type="submit" className="btn-primary">
-            {editingId ? 'Atualizar Prontuário' : 'Salvar Prontuário'}
-          </button>
-        </div>
-      </form>
+          </div>
+        </form>
+      </section>
 
-      <div className="table-card">
-        <table className="prontuarios-table">
-          <thead>
-            <tr>
-              <th>Data Consulta</th>
-              <th>Pet</th>
-              <th>Diagnóstico</th>
-              <th>Prescrição</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {prontuarios.map((p) => {
-              const consulta = typeof p.consultaId === 'object' ? p.consultaId : null;
-              const pet = consulta?.petId;
+      {/* TABELA DE PRONTUÁRIOS */}
+      <section className="table-section">
+        <div className="table-card">
+          <div className="table-header">
+            <h3>Prontuários Registrados ({prontuarios.length})</h3>
+          </div>
 
-              return (
-                <tr key={p._id}>
-                  <td>
-                    {consulta?.dataConsulta
-                      ? new Date(consulta.dataConsulta).toLocaleString('pt-BR')
-                      : '-'}
-                  </td>
-                  <td>{pet?.nome ? `${pet.nome} (${pet.especie})` : '-'}</td>
-                  <td>{p.diagnostico}</td>
-                  <td>{p.prescricao || '-'}</td>
-                  <td className="actions-cell">
-                    <button className="btn-edit" onClick={() => handleEdit(p)}>Editar</button>
-                    <button className="btn-delete" onClick={() => handleDelete(p._id!)}>Excluir</button>
+          <table className="prontuarios-table">
+            <thead>
+              <tr>
+                <th>Data Consulta</th>
+                <th>Pet / Paciente</th>
+                <th>Diagnóstico</th>
+                <th>Prescrição</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {prontuarios.map((p) => {
+                const consulta = typeof p.consultaId === 'object' ? p.consultaId : null;
+                const pet = consulta?.petId;
+
+                return (
+                  <tr key={p._id}>
+                    <td className="date-cell">
+                      <span className="date-badge">
+                        {consulta?.dataConsulta
+                          ? new Date(consulta.dataConsulta).toLocaleString('pt-BR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })
+                          : '-'}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="pet-tag">
+                        🐶 {pet?.nome ? `${pet.nome} (${pet.especie})` : '-'}
+                      </span>
+                    </td>
+                    <td className="text-preview">{p.diagnostico}</td>
+                    <td className="text-preview">{p.prescricao || '-'}</td>
+                    <td className="actions-cell">
+                      <button className="btn-edit" onClick={() => handleEdit(p)}>
+                        Editar
+                      </button>
+                      <button className="btn-delete" onClick={() => handleDelete(p._id!)}>
+                        Excluir
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {prontuarios.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="empty-state">
+                    Nenhum prontuário registrado até o momento.
                   </td>
                 </tr>
-              );
-            })}
-            {prontuarios.length === 0 && (
-              <tr>
-                <td colSpan={5} style={{ textAlign: 'center' }}>Nenhum prontuário registrado.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }
