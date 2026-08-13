@@ -1,5 +1,6 @@
 import Usuario from '../models/Usuario.js';
-import Pet from '../models/Pet.js'; // Importação que estava faltando!
+import Pet from '../models/Pet.js';
+import Consulta from '../models/Consulta.js';
 
 export const criarTutor = async (req, res) => {
   try {
@@ -33,12 +34,26 @@ export const deleteTutor = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // 1. Remove em cascata todos os pets do tutor (aceita tutorId ou tutor)
+    // 1. Busca os pets do tutor para mapear os IDs antes de deletá-los
+    const petsDoTutor = await Pet.find({
+      $or: [{ tutorId: id }, { tutor: id }]
+    });
+
+    const petIds = petsDoTutor.map((pet) => pet._id);
+
+    // 2. Se o tutor tiver pets, remove todas as consultas associadas a esses pets
+    if (petIds.length > 0) {
+      await Consulta.deleteMany({
+        $or: [{ pet: { $in: petIds } }, { petId: { $in: petIds } }]
+      });
+    }
+
+    // 3. Remove em cascata todos os pets do tutor
     await Pet.deleteMany({
       $or: [{ tutorId: id }, { tutor: id }]
     });
 
-    // 2. Remove o tutor do banco de dados
+    // 4. Remove o tutor do banco de dados
     const tutor = await Usuario.findByIdAndDelete(id);
 
     if (!tutor) {

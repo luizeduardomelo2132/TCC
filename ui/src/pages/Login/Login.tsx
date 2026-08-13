@@ -51,7 +51,7 @@ export default function Login() {
           <div className="hero-content">
             <div className="brand-badge">
               <span className="paw-icon">🐾</span>
-              <span>Clínica Vet</span>
+              <span>Clínica Maximus</span>
             </div>
 
             <h1 className="hero-title">

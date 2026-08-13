@@ -18,7 +18,7 @@ export default function Layout() {
   return (
     <div className="layout-container">
       <aside className="sidebar">
-        <h1 className="brand">🐾 Clínica Vet</h1>
+        <h1 className="brand"> Clínica Maximus</h1>
         
         <nav className="nav-menu">
           <Link to="/" className="nav-link">

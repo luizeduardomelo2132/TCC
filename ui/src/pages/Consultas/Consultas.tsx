@@ -19,38 +19,38 @@ interface Consulta {
   _id?: string;
   dataConsulta: string;
   motivo: string;
+  tipo_de_atendimento: string;
   pesoAtual?: number | string;
   petId: Pet | string;
-  veterinarioId?: Usuario | string; // Adicionado para suportar string ou objeto populado
+  veterinarioId?: Usuario | string;
 }
 
 export default function Consultas() {
   const [consultas, setConsultas] = useState<Consulta[]>([]);
   const [pets, setPets] = useState<Pet[]>([]);
-  const [veterinarios, setVeterinarios] = useState<Usuario[]>([]); // Guarda os veterinários
+  const [veterinarios, setVeterinarios] = useState<Usuario[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<Consulta>({
     dataConsulta: '',
     motivo: '',
+    tipo_de_atendimento: '',
     pesoAtual: '',
     petId: '',
-    veterinarioId: '', // Adicionado no formData
+    veterinarioId: '',
   });
 
   const carregarDados = async () => {
     try {
-      // Busca Consultas, Pets e Usuários ao mesmo tempo
       const [resConsultas, resPets, resUsuarios] = await Promise.all([
         api.get('/consultas'),
         api.get('/pets'),
-        api.get('/usuarios') // Rota que busca os usuários do sistema
+        api.get('/usuarios')
       ]);
       
       setConsultas(resConsultas.data);
       setPets(resPets.data);
 
-      // Filtra para guardar no estado apenas os usuários que são veterinários
       const apenasVets = resUsuarios.data.filter((u: Usuario) => u.role === 'veterinario');
       setVeterinarios(apenasVets);
     } catch (error) {
@@ -67,10 +67,10 @@ export default function Consultas() {
 
     const payload = {
       petId: typeof formData.petId === 'object' ? formData.petId._id : formData.petId,
-      // Pega o ID do veterinário escolhido
       veterinarioId: typeof formData.veterinarioId === 'object' ? formData.veterinarioId._id : formData.veterinarioId,
       dataConsulta: new Date(formData.dataConsulta).toISOString(),
       motivo: formData.motivo,
+      tipo_de_atendimento: formData.tipo_de_atendimento,
       pesoAtual: formData.pesoAtual ? Number(formData.pesoAtual) : undefined,
     };
 
@@ -101,9 +101,9 @@ export default function Consultas() {
     setFormData({
       dataConsulta: dataFormatada,
       motivo: consulta.motivo,
+      tipo_de_atendimento: consulta.tipo_de_atendimento || '',
       pesoAtual: consulta.pesoAtual || '',
       petId: typeof consulta.petId === 'object' ? consulta.petId._id : consulta.petId,
-      // Popula o campo do veterinário corretamente ao editar
       veterinarioId: typeof consulta.veterinarioId === 'object' && consulta.veterinarioId !== null 
         ? consulta.veterinarioId._id 
         : consulta.veterinarioId || '',
@@ -123,7 +123,14 @@ export default function Consultas() {
 
   const limparFormulario = () => {
     setEditingId(null);
-    setFormData({ dataConsulta: '', motivo: '', pesoAtual: '', petId: '', veterinarioId: '' });
+    setFormData({ 
+      dataConsulta: '', 
+      motivo: '', 
+      tipo_de_atendimento: '', 
+      pesoAtual: '', 
+      petId: '', 
+      veterinarioId: '' 
+    });
   };
 
   return (
@@ -196,6 +203,28 @@ export default function Consultas() {
               </div>
             </div>
 
+            {/* SELETOR: TIPO DE ATENDIMENTO */}
+            <div className="input-group">
+              <label>Tipo de Atendimento*</label>
+              <div className="input-wrapper">
+                <span className="input-icon">📋</span>
+                <select
+                  required
+                  value={formData.tipo_de_atendimento}
+                  onChange={(e) => setFormData({ ...formData, tipo_de_atendimento: e.target.value })}
+                >
+                  <option value="">Selecione o tipo de atendimento...</option>
+                  <option value="Consulta Normal">Consulta Normal / Rotina</option>
+                  <option value="Exames de Imagem">Exames de Imagem (Raio-X, Ultrassom)</option>
+                  <option value="Exames Laboratoriais">Exames Laboratoriais (Sangue, Urina, etc.)</option>
+                  <option value="Vacinação">Vacinação / Imunização</option>
+                  <option value="Procedimento Cirúrgico">Procedimento Cirúrgico</option>
+                  <option value="Retorno">Retorno</option>
+                  <option value="Outros">Outros</option>
+                </select>
+              </div>
+            </div>
+
             <div className="input-group">
               <label>Data e Hora da Consulta*</label>
               <div className="input-wrapper">
@@ -262,6 +291,7 @@ export default function Consultas() {
                 <th>Data / Hora</th>
                 <th>Paciente</th>
                 <th>Veterinário</th>
+                <th>Tipo</th>
                 <th>Peso</th>
                 <th>Motivo</th>
                 <th>Ações</th>
@@ -291,6 +321,11 @@ export default function Consultas() {
                       ? `Dr(a). ${c.veterinarioId.nome}`
                       : '-'}
                   </td>
+                  <td>
+                    <span className="type-badge">
+                      {c.tipo_de_atendimento || '-'}
+                    </span>
+                  </td>
                   <td>{c.pesoAtual ? `${c.pesoAtual} kg` : '-'}</td>
                   <td className="motivo-cell">{c.motivo}</td>
                   <td className="actions-cell">
@@ -301,7 +336,7 @@ export default function Consultas() {
               ))}
               {consultas.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="empty-state">
+                  <td colSpan={7} className="empty-state">
                     Nenhuma consulta registrada até o momento.
                   </td>
                 </tr>
