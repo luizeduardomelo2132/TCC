@@ -1,0 +1,176 @@
+$primary-color: #0f766e;
+$bg-light: #f8fafc;
+$border-color: #e2e8f0;
+$text-main: #0f172a;
+$text-muted: #64748b;
+$danger: #ef4444;
+
+.topbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  padding: 0 2rem;
+  background-color: white;
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    background: $bg-light;
+    border: 1px solid $border-color;
+    border-radius: 50px;
+    padding: 0.6rem 1.2rem;
+    width: 400px;
+    transition: 0.2s;
+
+    &:focus-within {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    }
+
+    .search-icon {
+      margin-right: 0.8rem;
+      color: $text-muted;
+    }
+
+    input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 0.95rem;
+      color: $text-main;
+    }
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    .quick-action-btn {
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover { background-color: #115e59; }
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: background 0.2s;
+
+      &:hover { background: $bg-light; }
+
+      .notification-badge {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background: $danger;
+        color: white;
+        font-size: 0.65rem;
+        font-weight: bold;
+        padding: 0.1rem 0.3rem;
+        border-radius: 50px;
+        border: 2px solid white;
+      }
+    }
+
+    .profile-menu {
+      position: relative;
+
+      .profile-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.3rem;
+        border-radius: 8px;
+        transition: 0.2s;
+
+        &:hover { background: $bg-light; }
+
+        .profile-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: $primary-color;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 1.2rem;
+        }
+
+        .profile-info {
+          display: flex;
+          flex-direction: column;
+          text-align: left;
+
+          .profile-name { font-weight: 600; color: $text-main; font-size: 0.95rem; }
+          .profile-role-text { font-size: 0.75rem; color: $text-muted; font-weight: 500; }
+        }
+
+        .dropdown-icon { font-size: 0.7rem; color: $text-muted; }
+      }
+
+      .dropdown-content {
+        position: absolute;
+        top: 110%;
+        right: 0;
+        background: white;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        width: 220px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem;
+
+        button {
+          text-align: left;
+          padding: 0.8rem 1rem;
+          background: none;
+          border: none;
+          border-radius: 6px;
+          font-size: 0.95rem;
+          color: $text-main;
+          cursor: pointer;
+          transition: background 0.2s;
+
+          &:hover { background: $bg-light; }
+        }
+
+        .dropdown-divider {
+          height: 1px;
+          background-color: $border-color;
+          margin: 0.5rem 0;
+        }
+
+        .logout-btn {
+          color: $danger;
+          font-weight: 600;
+          &:hover { background: #fef2f2; }
+        }
+      }
+    }
+  }
+}

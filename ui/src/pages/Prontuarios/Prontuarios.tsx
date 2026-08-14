@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import './Prontuarios.scss';
 
@@ -24,10 +25,14 @@ interface Prontuario {
   observacoes?: string;
 }
 
+
+
 export default function Prontuarios() {
+  const navigate = useNavigate();
   const [prontuarios, setProntuarios] = useState<Prontuario[]>([]);
   const [consultas, setConsultas] = useState<Consulta[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
+
 
   const [formData, setFormData] = useState<Prontuario>({
     consultaId: '',
@@ -257,12 +262,12 @@ export default function Prontuarios() {
                       <span className="date-badge">
                         {consulta?.dataConsulta
                           ? new Date(consulta.dataConsulta).toLocaleString('pt-BR', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
                           : '-'}
                       </span>
                     </td>
@@ -279,6 +284,18 @@ export default function Prontuarios() {
                       </button>
                       <button className="btn-delete" onClick={() => handleDelete(p._id!)}>
                         Excluir
+                      </button>
+                      <button
+                        className="btn-ver-ficha"
+                        onClick={() => {
+                          if (pet && pet._id) {
+                            navigate(`/perfil-pet/${pet._id}`);
+                          } else {
+                            alert('Paciente não encontrado neste prontuário.');
+                          }
+                        }}
+                      >
+                        Ver Perfil
                       </button>
                     </td>
                   </tr>

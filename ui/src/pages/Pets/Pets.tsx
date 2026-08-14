@@ -246,6 +246,11 @@ export default function Pets() {
                   <td className="actions-cell">
                     <button className="btn-edit" onClick={() => handleEdit(pet)}>Editar</button>
                     <button className="btn-delete" onClick={() => handleDelete(pet._id!)}>Excluir</button>
+                    <button className="btn-ver-ficha" onClick={() => {
+                      window.location.href = `/perfil-pet/${pet._id}`;
+                    }}>
+                      Ver Perfil
+                    </button>
                   </td>
                 </tr>
               ))}

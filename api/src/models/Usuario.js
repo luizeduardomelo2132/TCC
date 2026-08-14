@@ -28,7 +28,11 @@ const usuarioSchema = new mongoose.Schema({
   }, 
   endereco: {
     type: String
-  }
+  }, 
+  especialidade: {
+    type: String,
+    required: false,
+    trim: true, },
 }, { timestamps: true });
 
 // Função que roda antes de salvar no banco para criptografar a senha

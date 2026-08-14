@@ -1,11 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/Login/Login'; 
 import Layout from './components/Layout/Layout';
-import Dashboard from './pages/Dashboard/dashboard';
 import Tutores from './pages/Tutores/Tutores';
 import Pets from './pages/Pets/Pets';
 import Consultas from './pages/Consultas/Consultas';
 import Prontuarios from './pages/Prontuarios/Prontuarios';
+import Veterinarios from './pages/Veterinarios/Veterinarios';
+import PerfilPet from './pages/PerfilPet/PerfilPet';
+import DashboardAdmin from './pages/DashboardAdmin/DashboardAdmin';
+import DashboardTutor from './pages/DashboardTutor/DashboardTutor';
+import DashboardVet from './pages/DashboardVet/DashboardVet';
+import Perfil from './pages/Perfil/Perfil'; // <-- Importação da nova página
 
 // Trava que impede acessar o sistema sem token
 const RotaProtegida = () => {
@@ -26,11 +31,18 @@ export default function App() {
         {/* Rotas do sistema bloqueadas para quem não está logado */}
         <Route element={<RotaProtegida />}>
           <Route element={<Layout />}>
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="dashboard-tutor" element={<DashboardTutor />} />
+            <Route path="dashboard-admin" element={<DashboardAdmin />} />
+            <Route path="dashboard-vet" element={<DashboardVet />} />
             <Route path="tutores" element={<Tutores />} />
             <Route path="pets" element={<Pets />} />
             <Route path="consultas" element={<Consultas />} />
             <Route path="prontuarios" element={<Prontuarios />} />
+            <Route path="veterinarios" element={<Veterinarios />} />
+            <Route path="perfil-pet/:id" element={<PerfilPet />} />
+            
+            {/* NOVO: Rota do Perfil do Usuário Logado */}
+            <Route path="perfil" element={<Perfil />} />
           </Route>
         </Route>
 

@@ -1,47 +1,20 @@
 .layout-container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background-color: #f3f4f6;
   font-family: system-ui, -apple-system, sans-serif;
 
-  .sidebar {
-    width: 250px;
-    background-color:#4a0c25;
-    color: #ffffff;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-
-    .brand {
-      font-size: 1.25rem;
-      font-weight: bold;
-      margin-bottom: 2rem;
-    }
-
-    .nav-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      .nav-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 0.5rem;
-        transition: background-color 0.2s;
-
-        &:hover {
-          background-color: #047857;
-        }
-      }
-    }
-  }
-
-  .main-content {
+  .main-wrapper {
     flex: 1;
-    padding: 2rem;
+    display: flex;
+    flex-direction: column; 
+    height: 100vh;
+    
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
   }
 }

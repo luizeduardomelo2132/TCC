@@ -8,11 +8,14 @@ $paw-svg-large: "data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0
   max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
-  background-color: #faf5f2; /* Tom creme aquecido da referência */
+  background-color: #faf5f2;
+  /* Tom creme aquecido da referência */
   background-image: url($paw-svg-large);
-  background-size: 120px 120px; /* Patinhas maiores */
+  background-size: 120px 120px;
+  /* Patinhas maiores */
   background-repeat: repeat;
-  background-attachment: fixed; /* Ocupa e acompanha toda a tela */
+  background-attachment: fixed;
+  /* Ocupa e acompanha toda a tela */
   min-height: 100vh;
   border-radius: 1.5rem;
   box-sizing: border-box;
@@ -47,7 +50,8 @@ $paw-svg-large: "data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0
       .page-title {
         font-size: 2.4rem;
         font-weight: 800;
-        color: #61122e; /* Tom Vinho Principal */
+        color: #61122e;
+        /* Tom Vinho Principal */
         line-height: 1.2;
         margin-bottom: 0.75rem;
       }
@@ -195,7 +199,9 @@ $paw-svg-large: "data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0
               margin-right: 0.5rem;
             }
 
-            input, select, textarea {
+            input,
+            select,
+            textarea {
               width: 100%;
               padding: 0.65rem 0;
               border: none;
@@ -228,7 +234,8 @@ $paw-svg-large: "data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0
 
   /* --- BOTÕES --- */
   .btn-primary {
-    background-color: #22c55e; /* Verde Chamativo da Referência */
+    background-color: #22c55e;
+    /* Verde Chamativo da Referência */
     color: #ffffff;
     padding: 0.75rem 1.75rem;
     border: none;
@@ -285,7 +292,8 @@ $paw-svg-large: "data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0
         border-collapse: collapse;
         text-align: left;
 
-        th, td {
+        th,
+        td {
           padding: 0.9rem 1rem;
           border-bottom: 1px solid #f5eaee;
         }
@@ -361,6 +369,23 @@ $paw-svg-large: "data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0
 
             &:hover {
               background-color: #dc2626;
+            }
+          }
+
+          .btn-ver-ficha {
+            background-color: #e0f2fe;
+            color: #0284c7;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background-color: #bae6fd;
+              color: #0369a1;
             }
           }
         }

@@ -13,6 +13,7 @@ interface Usuario {
   _id: string;
   nome: string;
   role: string;
+  especialidade?: string;
 }
 
 interface Consulta {
@@ -47,7 +48,7 @@ export default function Consultas() {
         api.get('/pets'),
         api.get('/usuarios')
       ]);
-      
+
       setConsultas(resConsultas.data);
       setPets(resPets.data);
 
@@ -104,8 +105,8 @@ export default function Consultas() {
       tipo_de_atendimento: consulta.tipo_de_atendimento || '',
       pesoAtual: consulta.pesoAtual || '',
       petId: typeof consulta.petId === 'object' ? consulta.petId._id : consulta.petId,
-      veterinarioId: typeof consulta.veterinarioId === 'object' && consulta.veterinarioId !== null 
-        ? consulta.veterinarioId._id 
+      veterinarioId: typeof consulta.veterinarioId === 'object' && consulta.veterinarioId !== null
+        ? consulta.veterinarioId._id
         : consulta.veterinarioId || '',
     });
   };
@@ -123,19 +124,18 @@ export default function Consultas() {
 
   const limparFormulario = () => {
     setEditingId(null);
-    setFormData({ 
-      dataConsulta: '', 
-      motivo: '', 
-      tipo_de_atendimento: '', 
-      pesoAtual: '', 
-      petId: '', 
-      veterinarioId: '' 
+    setFormData({
+      dataConsulta: '',
+      motivo: '',
+      tipo_de_atendimento: '',
+      pesoAtual: '',
+      petId: '',
+      veterinarioId: ''
     });
   };
 
   return (
     <div className="consultas-container">
-      {/* HERO BANNER DESTAQUE */}
       <section className="hero-banner">
         <div className="hero-content">
           <h1 className="page-title">Agendamento de Consultas</h1>
@@ -196,7 +196,7 @@ export default function Consultas() {
                   <option value="">Selecione um Veterinário...</option>
                   {veterinarios.map((vet) => (
                     <option key={vet._id} value={vet._id}>
-                      Dr(a). {vet.nome}
+                      Dr(a). {vet.nome} {vet.especialidade ? `(${vet.especialidade})` : ''}
                     </option>
                   ))}
                 </select>

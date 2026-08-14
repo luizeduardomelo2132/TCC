@@ -1,5 +1,5 @@
 import express from 'express';
-import * as TutorController from '../controllers/TutorController.js';
+import * as UsuarioController from '../controllers/UsuarioController.js';
 import { verificarToken, apenasCargos } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -7,10 +7,17 @@ const router = express.Router();
 // Apenas Recepção e Veterinários gerenciam o cadastro de tutores
 const cargosPermitidos = apenasCargos(['admin']);
 
-router.post('/', verificarToken, cargosPermitidos, TutorController.criarTutor);
-router.get('/', verificarToken, cargosPermitidos, TutorController.listarTutores);
-router.get('/:id', verificarToken, cargosPermitidos, TutorController.obterTutor);
-router.put('/:id', verificarToken, cargosPermitidos, TutorController.atualizarTutor);
-router.delete('/:id', verificarToken, cargosPermitidos, TutorController.deleteTutor);
+router.post('/', verificarToken, cargosPermitidos, UsuarioController.criarTutor);
+router.get('/', verificarToken, cargosPermitidos, UsuarioController.listarTutores);
+router.get('/:id', verificarToken, cargosPermitidos, UsuarioController.obterTutor);
+router.put('/:id', verificarToken, cargosPermitidos, UsuarioController.atualizarTutor);
+router.delete('/:id', verificarToken, cargosPermitidos, UsuarioController.deleteTutor);
+router.get('/meu-perfil', verificarToken, UsuarioController.obterMeuPerfil);
+router.put('/atualizar-perfil', verificarToken, UsuarioController.atualizarMeuPerfil);
+router.put('/trocar-senha', verificarToken, UsuarioController.trocarMinhaSenha);
 
 export default router;
+
+
+
+
