@@ -19,19 +19,20 @@ export default function Login() {
       if (modoLogin) {
         const response = await api.post('/auth/login', { email, senha });
 
-        // Captura a role (cargo/perfil) retornada pelo back-end
+        // Captura a role (cargo/perfil) e o nome retornados pelo back-end
         const usuarioRole = response.data.usuario.role;
+        const usuarioNome = response.data.usuario.nome;
 
-        // Salva token e perfil no localStorage com o prefixo @TCC
+        // Salva token, perfil e NOME no localStorage com o prefixo @TCC
         localStorage.setItem('@TCC:token', response.data.token);
         localStorage.setItem('@TCC:role', usuarioRole);
+        localStorage.setItem('@TCC:nome', usuarioNome); // <-- CORREÇÃO FEITA AQUI
 
         // Redireciona para o dashboard correto baseado no perfil do usuário
-        // Substitua o if/else que fizemos antes por este:
         if (usuarioRole === 'tutor') {
           navigate('/dashboard-tutor');
         } else if (usuarioRole === 'veterinario') {
-          navigate('/dashboard-vet'); // Agora ele vai pro lugar certo!
+          navigate('/dashboard-vet'); 
         } else if (usuarioRole === 'admin') {
           navigate('/dashboard-admin');
         } else {

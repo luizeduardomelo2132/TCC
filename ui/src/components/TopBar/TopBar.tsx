@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Topbar.scss';
+import './TopBar.scss';
 
 export default function Topbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -9,7 +9,7 @@ export default function Topbar() {
   const navigate = useNavigate();
 
   // Idealmente, você pegaria esses dados do Contexto de Autenticação ou localStorage
-  const userName = "Dr. Silva"; 
+  const userName = localStorage.getItem('@TCC:nome') || 'Usuário';
   const userRole = localStorage.getItem('@TCC:role') || 'veterinario';
 
   const handleLogout = () => {
@@ -61,7 +61,7 @@ export default function Topbar() {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <div className="profile-avatar">
-              {userName.charAt(0)}
+              {userName.charAt(0).toUpperCase()}
             </div>
             <div className="profile-info">
               <span className="profile-name">{userName}</span>
@@ -74,16 +74,16 @@ export default function Topbar() {
           {isDropdownOpen && (
             <div className="dropdown-content">
               <button onClick={() => navigate('/perfil')}>
-                👤 Editar Perfil
+                 Editar Perfil
               </button>
               <button onClick={() => navigate('/configuracoes')}>
-                ⚙️ Configurações
+                 Configurações
               </button>
               
               <div className="dropdown-divider"></div>
               
               <button className="logout-btn" onClick={handleLogout}>
-                🚪 Sair do Sistema
+                 Sair do Sistema
               </button>
             </div>
           )}

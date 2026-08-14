@@ -15,7 +15,6 @@ interface ConsultaVet {
 export default function DashboardVet() {
   const navigate = useNavigate();
   const [minhaAgenda, setMinhaAgenda] = useState<ConsultaVet[]>([]);
-  const [buscaPaciente, setBuscaPaciente] = useState('');
 
   // ==========================================
   // LÓGICA E SEGURANÇA MANTIDAS INTACTAS
@@ -75,15 +74,6 @@ export default function DashboardVet() {
           </p>
           
           <div className="hero-actions">
-            <div className="search-bar">
-              <span className="icon">🔍</span>
-              <input 
-                type="text" 
-                placeholder="Buscar histórico de paciente..." 
-                value={buscaPaciente}
-                onChange={(e) => setBuscaPaciente(e.target.value)}
-              />
-            </div>
             <div className="quick-buttons">
               <button className="btn-primary" onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
                 Ir para Fila de Atendimento

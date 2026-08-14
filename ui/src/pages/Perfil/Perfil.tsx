@@ -3,13 +3,13 @@ import api from '../../services/api';
 import './Perfil.scss';
 
 export default function Perfil() {
-  // Estados para os Dados Pessoais
+  // Estados para os Dados Pessoais (LÓGICA INTACTA)
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
   
-  // Estados para a Segurança
+  // Estados para a Segurança (LÓGICA INTACTA)
   const [senhaAtual, setSenhaAtual] = useState('');
   const [novaSenha, setNovaSenha] = useState('');
   
@@ -17,10 +17,8 @@ export default function Perfil() {
   const userRole = localStorage.getItem('@TCC:role') || 'tutor';
 
   useEffect(() => {
-    // Busca os dados do usuário logado assim que a tela abre
     const carregarPerfil = async () => {
       try {
-        // Ajuste a rota '/usuarios/meu-perfil' conforme o seu back-end
         const response = await api.get('/usuarios/meu-perfil');
         setNome(response.data.nome || '');
         setEmail(response.data.email || '');
@@ -28,7 +26,6 @@ export default function Perfil() {
         setEndereco(response.data.endereco || '');
       } catch (error) {
         console.error('Erro ao buscar dados do perfil:', error);
-        // Fallback temporário caso a API não tenha essa rota ainda
         setNome('Usuário Teste');
         setEmail('usuario@email.com');
       }
@@ -42,7 +39,6 @@ export default function Perfil() {
     setIsLoading(true);
 
     try {
-      // Ajuste a rota conforme o seu back-end
       await api.put('/usuarios/atualizar-perfil', { nome, email, telefone, endereco });
       alert('Dados pessoais atualizados com sucesso!');
     } catch (error) {
@@ -73,16 +69,25 @@ export default function Perfil() {
 
   return (
     <div className="perfil-container">
-      <header className="perfil-header">
-        <h1>Meu Perfil</h1>
-        <p>Gerencie suas informações pessoais e configurações de segurança.</p>
-      </header>
+      {/* NOVO CABEÇALHO INSPIRADO NO DESIGN DA HOME */}
+      <div className="perfil-hero">
+        <div className="hero-text">
+          <h1>Meu Perfil</h1>
+          <p>Gerencie suas informações pessoais e configurações de segurança com a mesma dedicação que temos com o seu pet.</p>
+        </div>
+        <div className="hero-image">
+          <img 
+            src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=800" 
+            alt="Cachorro fofo olhando para cima" 
+          />
+        </div>
+      </div>
 
       <div className="perfil-grid">
         {/* COLUNA 1: DADOS PESSOAIS */}
         <section className="perfil-card">
           <div className="card-header">
-            <h2>👤 Dados Pessoais</h2>
+            <h2>Dados Pessoais</h2>
             <span className="role-badge">{userRole.toUpperCase()}</span>
           </div>
 
@@ -136,7 +141,7 @@ export default function Perfil() {
         {/* COLUNA 2: SEGURANÇA */}
         <section className="perfil-card">
           <div className="card-header">
-            <h2>🔒 Segurança</h2>
+            <h2>Segurança</h2>
           </div>
 
           <form onSubmit={handleTrocarSenha}>

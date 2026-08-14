@@ -1,63 +1,110 @@
-$primary: #0f766e;
+// Paleta de cores extraída do seu layout
+$primary-green: #2ECA75; // O verde vibrante dos botões
+$primary-hover: #25a861;
+$brand-wine: #4A1423;    // O vinho/bordô do menu lateral
 $border: #e2e8f0;
-$text-main: #0f172a;
-$text-muted: #64748b;
-$bg-card: #ffffff;
+$text-main: #2d3748;
+$text-muted: #718096;
+$bg-card: #4a0c25;
+$bg-app: #f7f9fa;
 
 .perfil-container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 1rem;
 
-  .perfil-header {
-    margin-bottom: 2rem;
-    h1 {
-      font-size: 2rem;
-      color: $text-main;
-      margin-bottom: 0.5rem;
+  // HERO SECTION INSPIRADA NA TELA INICIAL
+  .perfil-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $bg-card;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+      padding: 1.5rem;
     }
-    p {
-      color: $text-muted;
-      font-size: 1rem;
+
+    .hero-text {
+      flex: 1;
+
+      h1 {
+        font-size: 2.5rem;
+        color: $brand-wine; // Usando a cor da marca
+        margin-bottom: 1rem;
+        font-weight: 800;
+      }
+      p {
+        color: $text-muted;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+    }
+
+    .hero-image {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+
+      @media (max-width: 768px) {
+        justify-content: center;
+      }
+
+      img {
+        max-width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 20px; // Cantos arredondados iguais aos do print
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+      }
     }
   }
 
+  // GRID DOS FORMULÁRIOS
   .perfil-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
 
-    @media (max-width: 768px) {
+    @media (max-width: 850px) {
       grid-template-columns: 1fr;
     }
 
     .perfil-card {
       background: $bg-card;
-      border: 1px solid $border;
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba($border, 0.5);
 
       .card-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.5rem;
-        border-bottom: 1px solid $border;
+        margin-bottom: 2rem;
         padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
 
         h2 {
-          font-size: 1.25rem;
-          color: $text-main;
+          font-size: 1.4rem;
+          color: $brand-wine;
           margin: 0;
+          font-weight: 700;
         }
 
         .role-badge {
-          background-color: #dcfce7;
-          color: #166534;
-          padding: 0.3rem 0.8rem;
+          background-color: rgba($primary-green, 0.15);
+          color: darken($primary-green, 15%);
+          padding: 0.4rem 1rem;
           border-radius: 50px;
           font-size: 0.75rem;
-          font-weight: 700;
+          font-weight: 800;
           letter-spacing: 0.5px;
         }
       }
@@ -65,59 +112,76 @@ $bg-card: #ffffff;
       form {
         display: flex;
         flex-direction: column;
-        gap: 1.2rem;
+        gap: 1.25rem;
 
         .input-group {
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 0.5rem;
 
           label {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: $text-main;
           }
 
           input {
-            padding: 0.75rem 1rem;
-            border: 1px solid $border;
-            border-radius: 8px;
+            padding: 0.9rem 1.2rem;
+            border: 1.5px solid $border;
+            border-radius: 12px;
             font-size: 1rem;
+            color: $text-main;
+            background-color: #f8fafc;
             outline: none;
-            transition: 0.2s;
+            transition: all 0.2s ease;
 
             &:focus {
-              border-color: $primary;
-              box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+              border-color: $primary-green;
+              background-color: #ffffff;
+              box-shadow: 0 0 0 4px rgba($primary-green, 0.15);
             }
           }
         }
 
         button {
-          margin-top: 1rem;
-          padding: 0.8rem;
-          border-radius: 8px;
-          font-weight: 600;
+          margin-top: 1.5rem;
+          padding: 1rem;
+          border-radius: 50px; // Cantos totalmente arredondados como no print
+          font-weight: 700;
           font-size: 1rem;
           cursor: pointer;
-          transition: 0.2s;
+          transition: all 0.3s ease;
           border: none;
+          text-align: center;
         }
 
         .btn-primary {
-          background-color: $primary;
+          background-color: $primary-green;
           color: white;
 
-          &:hover { background-color: #115e59; }
-          &:disabled { background-color: #94a3b8; cursor: not-allowed; }
+          &:hover { 
+            background-color: $primary-hover; 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba($primary-green, 0.3);
+          }
+          
+          &:disabled { 
+            background-color: #cbd5e1; 
+            cursor: not-allowed; 
+            transform: none;
+            box-shadow: none;
+          }
         }
 
         .btn-secondary {
           background-color: #f1f5f9;
-          color: $text-main;
-          border: 1px solid $border;
+          color: $brand-wine;
+          border: 2px solid transparent;
 
-          &:hover { background-color: #e2e8f0; }
+          &:hover { 
+            background-color: #e2e8f0; 
+            color: darken($brand-wine, 10%);
+          }
         }
       }
     }
