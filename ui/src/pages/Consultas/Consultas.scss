@@ -1,382 +1,1176 @@
-/* src/pages/Consultas/Consultas.scss */
+/* =========================================================
+   CONSULTAS
+   Identidade visual - Clínica Veterinária
+   ========================================================= */
 
-/* Padrão SVG de Patinhas em background */
-$paw-svg: "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2361122e' fill-opacity='0.04' fill-rule='evenodd'%3E%3Cpath d='M20 18c1.65 0 3-1.79 3-4s-1.35-4-3-4-3 1.79-3 4 1.35 4 3 4zm10-2c1.65 0 3-1.79 3-4s-1.35-4-3-4-3 1.79-3 4 1.35 4 3 4zm-20 2c1.65 0 3-1.79 3-4s-1.35-4-3-4-3 1.79-3 4 1.35 4 3 4zm30-2c1.65 0 3-1.79 3-4s-1.35-4-3-4-3 1.79-3 4 1.35 4 3 4zm-15 8c-4.42 0-8 3.58-8 8 0 4.42 3.58 8 8 8s8-3.58 8-8c0-4.42-3.58-8-8-8z'/%3E%3C/g%3E%3C/svg%3E";
+$verde-principal: #557a46;
+$verde-escuro: #3f6134;
+$verde-claro: #e8f0e3;
+
+$bege: #f4eee5;
+$bege-escuro: #e6dccd;
+
+$marrom: #705b48;
+$marrom-claro: #8a7765;
+
+$texto: #2f342e;
+$texto-secundario: #74766f;
+
+$branco: #ffffff;
+$fundo: #f8f7f3;
+
+$vermelho: #c95b52;
+$vermelho-escuro: #ae4941;
+
+$border: #e7e5df;
+
+$radius-lg: 24px;
+$radius-md: 16px;
+$radius-sm: 10px;
+
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+   ========================================================= */
 
 .consultas-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  background-color: #faf5f2; /* Tom creme aquecido da referência */
-  background-image: url($paw-svg);
+  width: 100%;
+  max-width: 100%;
   min-height: 100vh;
-  border-radius: 1.5rem;
+
+  margin: 0 auto;
+  padding: 40px 44px 60px;
+
   box-sizing: border-box;
 
-  /* --- HERO BANNER --- */
+  background: $fundo;
+  color: $texto;
+
+  font-family: inherit;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.consultas-container {
+
   .hero-banner {
+    position: relative;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
-    position: relative;
-    padding: 1rem 0;
+
+    min-height: 270px;
+
+    margin-bottom: 34px;
+    padding: 38px 42px;
+
+    overflow: hidden;
+
+    background: $bege;
+
+    border-radius: $radius-lg;
+
+    box-sizing: border-box;
+
+    /*
+      Elemento decorativo suave.
+    */
+    &::before {
+      content: '';
+
+      position: absolute;
+
+      width: 260px;
+      height: 260px;
+
+      right: 170px;
+      top: -150px;
+
+      border-radius: 50%;
+
+      background: rgba(85, 122, 70, 0.08);
+
+      pointer-events: none;
+    }
+
 
     .hero-content {
-      flex: 1;
-      max-width: 580px;
+      position: relative;
+      z-index: 2;
 
-      .badge-tag {
-        display: inline-block;
-        background-color: #f3e5ea;
-        color: #61122e;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        padding: 0.35rem 0.85rem;
-        border-radius: 9999px;
-        margin-bottom: 1rem;
-        letter-spacing: 0.05em;
-      }
+      flex: 1;
+      max-width: 650px;
+
+      padding-right: 30px;
+
 
       .page-title {
-        font-size: 2.4rem;
+        margin: 0 0 14px;
+
+        color: $verde-escuro;
+
+        font-size: clamp(2rem, 3vw, 3rem);
         font-weight: 800;
-        color: #61122e;
-        line-height: 1.2;
-        margin-bottom: 0.75rem;
+
+        line-height: 1.08;
+        letter-spacing: -0.04em;
       }
 
+
       .hero-subtitle {
+        max-width: 600px;
+
+        margin: 0;
+
+        color: $marrom;
+
         font-size: 1rem;
-        color: #6b5860;
-        line-height: 1.6;
+        line-height: 1.7;
       }
     }
 
-    /* Moldura geométrica da imagem */
+
+    /* =====================================================
+       IMAGEM DO HERO
+       ===================================================== */
+
     .hero-image-wrapper {
       position: relative;
+
       width: 280px;
-      height: 260px;
+      height: 230px;
+
+      flex-shrink: 0;
+
       display: flex;
       align-items: center;
       justify-content: center;
 
+
       .pet-hero-img {
-        width: 220px;
-        height: 220px;
-        object-fit: cover;
-        border-radius: 1.5rem;
         position: relative;
         z-index: 2;
-        box-shadow: 0 20px 30px rgba(97, 18, 46, 0.2);
+
+        width: 205px;
+        height: 205px;
+
+        object-fit: cover;
+
+        border: 8px solid rgba(255, 255, 255, 0.9);
+
+        border-radius: 50%;
+
+        box-shadow:
+          0 12px 30px rgba(63, 97, 52, 0.16);
       }
 
+
+      /*
+        Forma verde atrás da imagem
+      */
       .decor-shape {
         position: absolute;
         z-index: 1;
-        width: 210px;
-        height: 210px;
-        background-color: #61122e;
-        border-radius: 2rem;
+
+        width: 175px;
+        height: 175px;
+
+        right: 24px;
+        top: 30px;
+
+        background: $verde-principal;
+
+        border-radius: 48% 52% 45% 55%;
+
         transform: rotate(12deg);
-        top: 10px;
-        right: 15px;
+
+        opacity: 0.95;
       }
 
+
+      /*
+        Pequenos elementos decorativos
+      */
       .decor-cross {
         position: absolute;
-        color: #d99b82;
-        font-size: 2rem;
-        font-weight: bold;
         z-index: 3;
 
+        color: $verde-principal;
+
+        font-size: 1.8rem;
+        font-weight: 700;
+
+        line-height: 1;
+
+
         &.cross-1 {
-          top: -10px;
-          right: 10px;
+          top: 4px;
+          right: 0;
         }
+
 
         &.cross-2 {
-          bottom: 10px;
-          left: 0px;
-        }
-      }
-    }
-  }
-
-  /* --- SEÇÃO FORMULÁRIO (Card Vinho Estilo BemTeVi) --- */
-  .form-section {
-    background-color: #61122e;
-    border-radius: 1.25rem;
-    padding: 2rem;
-    box-shadow: 0 15px 35px rgba(97, 18, 46, 0.25);
-    margin-bottom: 2.5rem;
-    color: #ffffff;
-    position: relative;
-    overflow: hidden;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 150px;
-      height: 150px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .section-header {
-      margin-bottom: 1.5rem;
-
-      h2 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.25rem;
-        color: #ffffff;
-      }
-
-      p {
-        font-size: 0.875rem;
-        color: #e5cbd3;
-      }
-    }
-
-    .form-card {
-      .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 1.5rem;
-
-        .input-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.4rem;
-
-          label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #f7e8ed;
-          }
-
-          .input-wrapper {
-            display: flex;
-            align-items: center;
-            background-color: #ffffff;
-            border-radius: 0.6rem;
-            padding: 0 0.75rem;
-            border: 2px solid transparent;
-            transition: all 0.2s ease;
-
-            &.textarea-wrapper {
-              align-items: flex-start;
-              padding-top: 0.65rem;
-            }
-
-            &:focus-within {
-              border-color: #22c55e;
-              box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
-            }
-
-            .input-icon {
-              font-size: 0.9rem;
-              margin-right: 0.5rem;
-            }
-
-            input, select, textarea {
-              width: 100%;
-              padding: 0.65rem 0;
-              border: none;
-              outline: none;
-              font-size: 0.875rem;
-              color: #1f2937;
-              background: transparent;
-              font-family: inherit;
-
-              &::placeholder {
-                color: #9ca3af;
-              }
-            }
-
-            textarea {
-              resize: vertical;
-              min-height: 80px;
-            }
-          }
-        }
-      }
-
-      .form-actions {
-        display: flex;
-        gap: 0.75rem;
-        justify-content: flex-end;
-      }
-    }
-  }
-
-  /* --- BOTÕES --- */
-  .btn-primary {
-    background-color: #22c55e;
-    color: #ffffff;
-    padding: 0.75rem 1.75rem;
-    border: none;
-    border-radius: 9999px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 0.9rem;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: #16a34a;
-      transform: translateY(-1px);
-    }
-  }
-
-  .btn-secondary {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 9999px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-  }
-
-  /* --- SEÇÃO DA TABELA --- */
-  .table-section {
-    .table-card {
-      background-color: #ffffff;
-      border-radius: 1.25rem;
-      padding: 1.75rem;
-      box-shadow: 0 10px 30px rgba(97, 18, 46, 0.08);
-      border: 1px solid #f0e2e7;
-
-      .table-header {
-        margin-bottom: 1.25rem;
-
-        h3 {
-          font-size: 1.15rem;
-          color: #61122e;
-          font-weight: 700;
-        }
-      }
-
-      .consultas-table {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: left;
-
-        th, td {
-          padding: 0.9rem 1rem;
-          border-bottom: 1px solid #f5eaee;
-        }
-
-        th {
-          background-color: #fcf6f8;
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: #61122e;
-        }
-
-        td {
-          font-size: 0.875rem;
-          color: #374151;
-
-          .date-badge {
-            font-weight: 600;
-            color: #61122e;
-          }
-
-          .pet-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            background-color: #f3e5ea;
-            color: #61122e;
-            padding: 0.2rem 0.5rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            font-size: 0.8rem;
-          }
-
-          &.motivo-cell {
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
-
-        .actions-cell {
-          display: flex;
-          gap: 0.5rem;
-
-          .btn-edit {
-            background-color: #61122e;
-            color: #ffffff;
-            padding: 0.35rem 0.75rem;
-            border: none;
-            border-radius: 0.4rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-
-            &:hover {
-              background-color: #430a1e;
-            }
-          }
-
-          .btn-delete {
-            background-color: #ef4444;
-            color: #ffffff;
-            padding: 0.35rem 0.75rem;
-            border: none;
-            border-radius: 0.4rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-
-            &:hover {
-              background-color: #dc2626;
-            }
-          }
-        }
-
-        .empty-state {
-          text-align: center;
-          color: #9ca3af;
-          padding: 2rem;
+          bottom: 6px;
+          left: 18px;
         }
       }
     }
   }
 }
 
-/* Responsividade para telas menores */
-@media (max-width: 768px) {
-  .consultas-container {
-    .hero-banner {
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.consultas-container {
+
+  .form-section {
+    position: relative;
+
+    margin-bottom: 32px;
+    padding: 30px;
+
+    background: $branco;
+
+    border: 1px solid $border;
+    border-radius: $radius-lg;
+
+    box-shadow:
+      0 8px 30px rgba(53, 57, 48, 0.05);
+
+    color: $texto;
+  }
+
+
+  /* =======================================================
+     CABEÇALHO DO FORMULÁRIO
+     ======================================================= */
+
+  .section-header {
+    margin-bottom: 25px;
+
+
+    h2 {
+      margin: 0 0 7px;
+
+      color: $verde-escuro;
+
+      font-size: 1.45rem;
+      font-weight: 800;
+
+      letter-spacing: -0.02em;
+    }
+
+
+    p {
+      margin: 0;
+
+      color: $texto-secundario;
+
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+  }
+
+
+  /* =======================================================
+     GRID
+     ======================================================= */
+
+  .form-card {
+
+    .form-grid {
+      display: grid;
+
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      gap: 20px;
+
+      margin-bottom: 26px;
+    }
+
+
+    /* =====================================================
+       INPUT GROUP
+       ===================================================== */
+
+    .input-group {
+      display: flex;
       flex-direction: column;
-      text-align: center;
+
+      gap: 8px;
+
+
+      label {
+        color: $texto;
+
+        font-size: 0.82rem;
+        font-weight: 700;
+
+        letter-spacing: 0.01em;
+      }
+
+
+      .input-wrapper {
+        display: flex;
+        align-items: center;
+
+        min-height: 48px;
+
+        padding: 0 14px;
+
+        background: #fbfbf9;
+
+        border: 1px solid $border;
+        border-radius: $radius-sm;
+
+        box-sizing: border-box;
+
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          background-color 0.2s ease;
+
+
+        &:hover {
+          border-color: #d4d8ce;
+        }
+
+
+        &:focus-within {
+          background: $branco;
+
+          border-color: $verde-principal;
+
+          box-shadow:
+            0 0 0 3px rgba(85, 122, 70, 0.11);
+        }
+
+
+        &.textarea-wrapper {
+          align-items: flex-start;
+
+          padding-top: 12px;
+        }
+
+
+        .input-icon {
+          width: 24px;
+
+          margin-right: 9px;
+
+          color: $verde-principal;
+
+          font-size: 1rem;
+
+          text-align: center;
+
+          flex-shrink: 0;
+        }
+
+
+        input,
+        select,
+        textarea {
+          width: 100%;
+
+          margin: 0;
+          padding: 12px 0;
+
+          border: none;
+          outline: none;
+
+          background: transparent;
+
+          color: $texto;
+
+          font-family: inherit;
+          font-size: 0.88rem;
+
+          box-sizing: border-box;
+
+
+          &::placeholder {
+            color: #a4a59f;
+          }
+        }
+
+
+        select {
+          cursor: pointer;
+        }
+
+
+        textarea {
+          min-height: 88px;
+
+          resize: vertical;
+
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+}
+
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+.consultas-container {
+
+  .form-actions {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 4px;
+  }
+
+
+  .btn-primary {
+    min-height: 44px;
+
+    padding: 0 22px;
+
+    background: $verde-principal;
+
+    color: $branco;
+
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    box-shadow:
+      0 5px 14px rgba(85, 122, 70, 0.2);
+
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+
+
+    &:hover {
+      background: $verde-escuro;
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 7px 18px rgba(85, 122, 70, 0.25);
+    }
+
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+
+  .btn-secondary {
+    min-height: 44px;
+
+    padding: 0 20px;
+
+    background: $branco;
+
+    color: $marrom;
+
+    border: 1px solid $border;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+
+
+    &:hover {
+      background: $bege;
+
+      border-color: $bege-escuro;
+    }
+  }
+}
+
+
+/* =========================================================
+   TABELA
+   ========================================================= */
+
+/* =========================================================
+   CONSULTAS AGENDADAS
+   ========================================================= */
+
+.consultas-container {
+
+  .table-section {
+    width: 100%;
+    margin-top: 0;
+  }
+
+
+  .table-card {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 24px 22px 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7e5df;
+    border-radius: 22px;
+
+    box-shadow:
+      0 5px 22px rgba(53, 57, 48, 0.045);
+
+    overflow: hidden;
+  }
+
+
+  /* =======================================================
+     CABEÇALHO
+     ======================================================= */
+
+  .table-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+
+    h3 {
+      margin: 0 0 5px;
+
+      color: #3f6134;
+
+      font-size: 1.28rem;
+      font-weight: 800;
+
+      letter-spacing: -0.025em;
+    }
+
+    p {
+      margin: 0;
+
+      color: #74766f;
+
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+  }
+
+
+  /* =======================================================
+     WRAPPER
+     ======================================================= */
+
+  .table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+  }
+
+
+  /* =======================================================
+     TABELA
+     ======================================================= */
+
+  .consultas-table {
+    width: 100%;
+
+    min-width: 980px;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    table-layout: auto;
+
+    text-align: left;
+
+
+    th,
+    td {
+      box-sizing: border-box;
+
+      border-bottom: 1px solid #eeeeea;
+
+      vertical-align: middle;
+    }
+
+
+    /* CABEÇALHO */
+
+    th {
+      height: 40px;
+
+      padding: 0 10px;
+
+      background: #f4f6ed;
+
+      color: #30452d;
+
+      font-size: 0.66rem;
+      font-weight: 800;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.025em;
+
+      white-space: nowrap;
+    }
+
+
+    th:first-child {
+      padding-left: 12px;
+
+      border-radius: 8px 0 0 8px;
+    }
+
+
+    th:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+
+
+    /* LINHAS */
+
+    tbody tr {
+      height: 64px;
+
+      transition:
+        background-color 0.15s ease;
+
+      &:hover {
+        background: #fafbf8;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+
+
+    td {
+      padding: 9px 10px;
+
+      color: #2f342e;
+
+      font-size: 0.76rem;
+
+      line-height: 1.35;
+    }
+  }
+
+
+  /* =======================================================
+     DATA
+     ======================================================= */
+
+  .date-cell {
+    width: 125px;
+  }
+
+
+  .date-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+    color: #343a33;
+
+    span {
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    small {
+      color: #8a8d86;
+
+      font-size: 0.68rem;
+      font-weight: 500;
+    }
+  }
+
+
+  /* =======================================================
+     PET
+     ======================================================= */
+
+  .pet-info {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 120px;
+  }
+
+
+  .pet-avatar {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #f1eee7;
+
+    font-size: 1rem;
+  }
+
+
+  .pet-details {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+    strong {
+      color: #293528;
+
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    span {
+      color: #858980;
+
+      font-size: 0.66rem;
+    }
+  }
+
+
+  /* =======================================================
+     TUTOR
+     ======================================================= */
+
+  .tutor-name {
+    color: #444941;
+
+    font-size: 0.75rem;
+    font-weight: 500;
+
+    white-space: nowrap;
+  }
+
+
+  /* =======================================================
+     VETERINÁRIO
+     ======================================================= */
+
+  .vet-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+    min-width: 125px;
+
+    strong {
+      color: #293528;
+
+      font-size: 0.75rem;
+      font-weight: 800;
+
+      white-space: nowrap;
+    }
+
+    span {
+      color: #858980;
+
+      font-size: 0.66rem;
+
+      white-space: nowrap;
+    }
+  }
+
+
+  /* =======================================================
+     TIPO DE ATENDIMENTO
+     ======================================================= */
+
+  .type-badge {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 26px;
+
+    padding: 0 10px;
+
+    box-sizing: border-box;
+
+    background: #f0f3e9;
+
+    color: #3f6134;
+
+    border-radius: 999px;
+
+    font-size: 0.67rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+  }
+
+
+  /* =======================================================
+     PESO
+     ======================================================= */
+
+  .peso-value {
+    color: #444941;
+
+    font-size: 0.74rem;
+    font-weight: 500;
+
+    white-space: nowrap;
+  }
+
+
+  /* =======================================================
+     MOTIVO
+     ======================================================= */
+
+  .motivo-cell {
+    display: block;
+
+    max-width: 190px;
+
+    overflow: hidden;
+
+    color: #555b53;
+
+    font-size: 0.73rem;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+  }
+
+
+  /* =======================================================
+     AÇÕES
+     ======================================================= */
+
+  .actions-cell {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    white-space: nowrap;
+  }
+
+
+  .actions-cell button {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 0.9rem;
+
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+
+  .btn-edit {
+    background: #557a46;
+
+    color: #ffffff;
+
+    &:hover {
+      background: #3f6134;
+
+      transform: translateY(-1px);
+    }
+  }
+
+
+  .btn-delete {
+    background: #fae8e6;
+
+    color: #c95b52;
+
+    &:hover {
+      background: #f4d8d5;
+
+      color: #ae4941;
+
+      transform: translateY(-1px);
+    }
+  }
+
+
+  /* =======================================================
+     ESTADO VAZIO
+     ======================================================= */
+
+  .empty-state {
+    padding: 50px 20px;
+
+    color: #999c94;
+
+    text-align: center;
+
+    font-size: 0.82rem;
+  }
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   Tablets
+   --------------------------------------------------------- */
+
+@media (max-width: 950px) {
+
+  .consultas-container {
+    padding: 30px 25px 50px;
+
+
+    .hero-banner {
+      padding: 30px;
+
+      .hero-content {
+
+        .page-title {
+          font-size: 2.2rem;
+        }
+      }
+
 
       .hero-image-wrapper {
-        margin: 0 auto;
+        width: 220px;
+        height: 210px;
+
+
+        .pet-hero-img {
+          width: 175px;
+          height: 175px;
+        }
+
+
+        .decor-shape {
+          width: 150px;
+          height: 150px;
+
+          right: 12px;
+          top: 30px;
+        }
       }
+    }
+
+
+    .form-section,
+    .table-card {
+      padding: 24px;
+    }
+  }
+}
+
+
+/* ---------------------------------------------------------
+   Celulares
+   --------------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+  .consultas-container {
+    padding: 20px 15px 40px;
+
+
+    /* HERO */
+
+    .hero-banner {
+      flex-direction: column;
+
+      min-height: auto;
+
+      padding: 30px 22px;
+
+      text-align: center;
+
+
+      .hero-content {
+        padding-right: 0;
+
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+
+        .hero-subtitle {
+          font-size: 0.9rem;
+        }
+      }
+
+
+      .hero-image-wrapper {
+        width: 220px;
+        height: 190px;
+
+        margin-top: 5px;
+
+
+        .pet-hero-img {
+          width: 155px;
+          height: 155px;
+        }
+
+
+        .decor-shape {
+          width: 135px;
+          height: 135px;
+
+          right: 20px;
+          top: 28px;
+        }
+      }
+    }
+
+
+    /* FORMULÁRIO */
+
+    .form-section {
+      padding: 22px 18px;
+
+      border-radius: 18px;
+    }
+
+
+    .section-header {
+
+      h2 {
+        font-size: 1.25rem;
+      }
+
+
+      p {
+        font-size: 0.84rem;
+      }
+    }
+
+
+    .form-card {
+
+      .form-grid {
+        grid-template-columns: 1fr;
+
+        gap: 16px;
+      }
+
+
+      .input-group[style] {
+        grid-column: auto !important;
+      }
+    }
+
+
+    .form-actions {
+      flex-direction: column-reverse;
+
+      align-items: stretch;
+
+
+      button {
+        width: 100%;
+      }
+    }
+
+
+    /* TABELA */
+
+    .table-card {
+      padding: 18px;
+
+      border-radius: 18px;
+    }
+
+
+    .table-header {
+
+      h3 {
+        font-size: 1rem;
+      }
+    }
+
+
+    .consultas-table {
+      min-width: 850px;
+    }
+  }
+}
+
+
+/* ---------------------------------------------------------
+   Celulares pequenos
+   --------------------------------------------------------- */
+
+@media (max-width: 420px) {
+
+  .consultas-container {
+
+    .hero-banner {
+
+      .hero-content {
+
+        .page-title {
+          font-size: 1.75rem;
+        }
+      }
+    }
+
+
+    .form-section {
+      padding: 18px 15px;
+    }
+
+
+    .table-card {
+      padding: 15px;
     }
   }
 }

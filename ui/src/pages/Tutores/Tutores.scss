@@ -1,384 +1,916 @@
-/* src/pages/Tutores/Tutores.scss */
+/* =========================================================
+   TUTORES
+   Mesmo padrão visual da página de Consultas
+   ========================================================= */
 
-/* Padrão SVG com Patinhas Grandes para cobertura total da tela */
-$paw-svg-large: "data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2361122e' fill-opacity='0.06' fill-rule='evenodd'%3E%3Cpath d='M40 36c3.3 0 6-3.58 6-8s-2.7-8-6-8-6 3.58-6 8 2.7 8 6 8zm20-4c3.3 0 6-3.58 6-8s-2.7-8-6-8-6 3.58-6 8 2.7 8 6 8zm-40 4c3.3 0 6-3.58 6-8s-2.7-8-6-8-6 3.58-6 8 2.7 8 6 8zm60-4c3.3 0 6-3.58 6-8s-2.7-8-6-8-6 3.58-6 8 2.7 8 6 8zm-30 16c-8.84 0-16 7.16-16 16 0 8.84 7.16 16 16 16s16-7.16 16-16c0-8.84-7.16-16-16-16z'/%3E%3C/g%3E%3C/svg%3E";
+$verde: #557a46;
+$verde-escuro: #365d32;
+$verde-hover: #4b6d3e;
+
+$bege: #f4eee5;
+$bege-claro: #faf8f4;
+
+$branco: #ffffff;
+
+$texto: #293528;
+$texto-secundario: #73776f;
+
+$borda: #e4e3dc;
+$borda-card: #e7e5df;
+
+$vermelho: #d94d45;
+
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+   ========================================================= */
 
 .tutores-container {
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  background-color: #faf5f2; /* Creme suave */
-  background-image: url($paw-svg-large);
-  background-size: 120px 120px; /* Patinhas maiores */
-  background-repeat: repeat;
-  background-attachment: fixed; /* Ocupa e cobre a tela inteira */
-  min-height: 100vh;
-  border-radius: 1.5rem;
+  max-width: none;
+
+  min-height: 100%;
+
   box-sizing: border-box;
 
-  /* --- HERO BANNER --- */
-  .hero-banner {
+  padding: 28px 24px 40px;
+
+  background: #f5f6f4;
+
+  font-family:
+    "Inter",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+
+  color: $texto;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero-banner {
+  width: 100%;
+  min-height: 220px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+
+  overflow: hidden;
+
+  margin-bottom: 20px;
+
+  padding: 32px 52px;
+
+  border-radius: 20px;
+
+  background: $bege;
+
+  /* círculos decorativos */
+
+  &::before {
+    content: "";
+
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    top: -115px;
+    right: 240px;
+
+    border-radius: 50%;
+
+    background: rgba(85, 122, 70, 0.08);
+  }
+
+  &::after {
+    content: "+";
+
+    position: absolute;
+
+    right: 70px;
+    top: 36px;
+
+    color: $verde;
+
+    font-size: 26px;
+    font-weight: 600;
+  }
+}
+
+
+/* =========================================================
+   HERO - TEXTO
+   ========================================================= */
+
+.hero-content {
+  position: relative;
+
+  z-index: 2;
+
+  flex: 1;
+
+  max-width: 760px;
+}
+
+.page-title {
+  margin: 0 0 12px;
+
+  color: $verde-escuro;
+
+  font-size: clamp(2.3rem, 3.2vw, 3.2rem);
+
+  font-weight: 800;
+
+  line-height: 1.05;
+
+  letter-spacing: -0.04em;
+}
+
+.hero-subtitle {
+  max-width: 700px;
+
+  margin: 0;
+
+  color: #53584f;
+
+  font-size: 1rem;
+
+  line-height: 1.65;
+
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   HERO - IMAGEM
+   ========================================================= */
+
+.hero-image-wrapper {
+  position: relative;
+
+  width: 290px;
+  height: 220px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 20px;
+}
+
+.pet-hero-img {
+  position: relative;
+
+  z-index: 3;
+
+  width: 190px;
+  height: 190px;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  border: 7px solid $branco;
+
+  box-shadow:
+    0 12px 25px rgba(54, 93, 50, 0.16);
+}
+
+
+/* círculo verde atrás da imagem */
+
+.decor-shape {
+  position: absolute;
+
+  z-index: 1;
+
+  width: 190px;
+  height: 190px;
+
+  right: 24px;
+
+  border-radius: 50%;
+
+  background: $verde;
+
+  transform: translate(10px, 8px);
+}
+
+
+/* cruzes */
+
+.decor-cross {
+  position: absolute;
+
+  z-index: 4;
+
+  color: $verde;
+
+  font-size: 26px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  &.cross-1 {
+    top: 12px;
+    right: 4px;
+  }
+
+  &.cross-2 {
+    bottom: 5px;
+    left: 12px;
+  }
+}
+
+
+/* =========================================================
+   CARD DO FORMULÁRIO
+   ========================================================= */
+
+.form-section {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  margin-bottom: 20px;
+
+  padding: 22px;
+
+  background: $branco;
+
+  border: 1px solid $borda-card;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 5px 18px rgba(40, 50, 40, 0.04);
+
+  color: $texto;
+}
+
+
+/* =========================================================
+   CABEÇALHO DO FORMULÁRIO
+   ========================================================= */
+
+.section-header {
+  margin-bottom: 18px;
+
+  h2 {
+    margin: 0 0 5px;
+
+    color: $verde-escuro;
+
+    font-size: 1.3rem;
+
+    font-weight: 800;
+
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+
+    color: $texto-secundario;
+
+    font-size: 0.86rem;
+
+    line-height: 1.5;
+  }
+}
+
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  column-gap: 22px;
+  row-gap: 13px;
+
+  margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   INPUT GROUP
+   ========================================================= */
+
+.input-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  label {
+    color: #172217;
+
+    font-size: 0.76rem;
+
+    font-weight: 700;
+  }
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.input-wrapper {
+  width: 100%;
+
+  height: 42px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  padding: 0 13px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e1dc;
+
+  border-radius: 9px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: $verde;
+
+    box-shadow:
+      0 0 0 3px rgba(85, 122, 70, 0.10);
+  }
+
+  .input-icon {
+    width: 24px;
+
+    flex-shrink: 0;
+
+    margin-right: 8px;
+
+    color: $verde;
+
+    font-size: 0.95rem;
+
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
-    position: relative;
-    padding: 1rem 0;
-
-    .hero-content {
-      flex: 1;
-      max-width: 580px;
-
-      .badge-tag {
-        display: inline-block;
-        background-color: #f3e5ea;
-        color: #61122e;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        padding: 0.35rem 0.85rem;
-        border-radius: 9999px;
-        margin-bottom: 1rem;
-        letter-spacing: 0.05em;
-      }
-
-      .page-title {
-        font-size: 2.4rem;
-        font-weight: 800;
-        color: #61122e; /* Vinho Institucional */
-        line-height: 1.2;
-        margin-bottom: 0.75rem;
-      }
-
-      .hero-subtitle {
-        font-size: 1rem;
-        color: #6b5860;
-        line-height: 1.6;
-      }
-    }
-
-    /* Foto de Destaque com Formas Geométricas */
-    .hero-image-wrapper {
-      position: relative;
-      width: 280px;
-      height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      .pet-hero-img {
-        width: 220px;
-        height: 220px;
-        object-fit: cover;
-        border-radius: 1.5rem;
-        position: relative;
-        z-index: 2;
-        box-shadow: 0 20px 30px rgba(97, 18, 46, 0.2);
-      }
-
-      .decor-shape {
-        position: absolute;
-        z-index: 1;
-        width: 210px;
-        height: 210px;
-        background-color: #61122e;
-        border-radius: 2rem;
-        transform: rotate(12deg);
-        top: 10px;
-        right: 15px;
-      }
-
-      .decor-cross {
-        position: absolute;
-        color: #d99b82;
-        font-size: 2rem;
-        font-weight: bold;
-        z-index: 3;
-
-        &.cross-1 {
-          top: -10px;
-          right: 10px;
-        }
-
-        &.cross-2 {
-          bottom: 10px;
-          left: 0px;
-        }
-      }
-    }
+    justify-content: center;
   }
 
-  /* --- SEÇÃO FORMULÁRIO (Card Vinho Estilo BemTeVi) --- */
-  .form-section {
-    background-color: #61122e;
-    border-radius: 1.25rem;
-    padding: 2rem;
-    box-shadow: 0 15px 35px rgba(97, 18, 46, 0.25);
-    margin-bottom: 2.5rem;
-    color: #ffffff;
-    position: relative;
-    overflow: hidden;
+  input {
+    width: 100%;
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 150px;
-      height: 150px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      pointer-events: none;
-    }
+    height: 100%;
 
-    .section-header {
-      margin-bottom: 1.5rem;
-
-      h2 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.25rem;
-        color: #ffffff;
-      }
-
-      p {
-        font-size: 0.875rem;
-        color: #e5cbd3;
-      }
-    }
-
-    .form-card {
-      .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 1.5rem;
-
-        .input-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.4rem;
-
-          label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #f7e8ed;
-          }
-
-          .input-wrapper {
-            display: flex;
-            align-items: center;
-            background-color: #ffffff;
-            border-radius: 0.6rem;
-            padding: 0 0.75rem;
-            border: 2px solid transparent;
-            transition: all 0.2s ease;
-
-            &:focus-within {
-              border-color: #22c55e;
-              box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
-            }
-
-            .input-icon {
-              font-size: 0.9rem;
-              margin-right: 0.5rem;
-            }
-
-            input {
-              width: 100%;
-              padding: 0.65rem 0;
-              border: none;
-              outline: none;
-              font-size: 0.875rem;
-              color: #1f2937;
-              background: transparent;
-
-              &::placeholder {
-                color: #9ca3af;
-              }
-            }
-          }
-        }
-      }
-
-      .form-actions {
-        display: flex;
-        gap: 0.75rem;
-        justify-content: flex-end;
-      }
-    }
-  }
-
-  /* --- BOTÕES --- */
-  .btn-primary {
-    background-color: #22c55e; /* Verde Chamativo */
-    color: #ffffff;
-    padding: 0.75rem 1.75rem;
     border: none;
-    border-radius: 9999px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 0.9rem;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-    transition: all 0.2s ease;
 
-    &:hover {
-      background-color: #16a34a;
-      transform: translateY(-1px);
-    }
-  }
+    outline: none;
 
-  .btn-secondary {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 9999px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
+    background: transparent;
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-  }
+    color: $texto;
 
-  /* --- SEÇÃO DA TABELA --- */
-  .table-section {
-    .table-card {
-      background-color: #ffffff;
-      border-radius: 1.25rem;
-      padding: 1.75rem;
-      box-shadow: 0 10px 30px rgba(97, 18, 46, 0.08);
-      border: 1px solid #f0e2e7;
+    font-family: inherit;
 
-      .table-header {
-        margin-bottom: 1.25rem;
+    font-size: 0.84rem;
 
-        h3 {
-          font-size: 1.15rem;
-          color: #61122e;
-          font-weight: 700;
-        }
-      }
-
-      .tutores-table {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: left;
-
-        th, td {
-          padding: 0.9rem 1rem;
-          border-bottom: 1px solid #f5eaee;
-        }
-
-        th {
-          background-color: #fcf6f8;
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: #61122e;
-        }
-
-        td {
-          font-size: 0.875rem;
-          color: #374151;
-
-          &.tutor-nome-cell {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-
-            .tutor-avatar {
-              background-color: #f3e5ea;
-              padding: 0.25rem 0.4rem;
-              border-radius: 50%;
-              font-size: 0.8rem;
-            }
-
-            .tutor-nome {
-              color: #1f2937;
-              font-weight: 600;
-            }
-          }
-
-          .contact-info {
-            display: flex;
-            flex-direction: column;
-
-            .email {
-              font-weight: 500;
-              color: #1f2937;
-            }
-
-            .phone {
-              color: #6b7280;
-              font-size: 0.8rem;
-            }
-          }
-        }
-
-        .actions-cell {
-          display: flex;
-          gap: 0.5rem;
-
-          .btn-edit {
-            background-color: #61122e;
-            color: #ffffff;
-            padding: 0.35rem 0.75rem;
-            border: none;
-            border-radius: 0.4rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-
-            &:hover {
-              background-color: #430a1e;
-            }
-          }
-
-          .btn-delete {
-            background-color: #ef4444;
-            color: #ffffff;
-            padding: 0.35rem 0.75rem;
-            border: none;
-            border-radius: 0.4rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-
-            &:hover {
-              background-color: #dc2626;
-            }
-          }
-        }
-
-        .empty-state {
-          text-align: center;
-          color: #9ca3af;
-          padding: 2rem;
-        }
-      }
+    &::placeholder {
+      color: #858980;
     }
   }
 }
 
-/* Responsividade Mobile */
-@media (max-width: 768px) {
-  .tutores-container {
-    .hero-banner {
-      flex-direction: column;
-      text-align: center;
 
-      .hero-image-wrapper {
-        margin: 0 auto;
+/* =========================================================
+   AÇÕES DO FORMULÁRIO
+   ========================================================= */
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+/* =========================================================
+   BOTÃO PRINCIPAL
+   ========================================================= */
+
+.btn-primary {
+  height: 42px;
+
+  padding: 0 22px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: $verde;
+
+  color: $branco;
+
+  font-family: inherit;
+
+  font-size: 0.82rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background: $verde-hover;
+
+    transform: translateY(-1px);
+  }
+}
+
+
+/* =========================================================
+   BOTÃO SECUNDÁRIO
+   ========================================================= */
+
+.btn-secondary {
+  height: 42px;
+
+  padding: 0 20px;
+
+  border: 1px solid #deddd7;
+
+  border-radius: 8px;
+
+  background: $branco;
+
+  color: $texto;
+
+  font-family: inherit;
+
+  font-size: 0.82rem;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+  &:hover {
+    background: $bege-claro;
+
+    border-color: #ceccc4;
+  }
+}
+
+
+/* =========================================================
+   TABELA
+   Mesmo padrão de "Consultas Agendadas"
+   ========================================================= */
+
+.table-section {
+  width: 100%;
+}
+
+.table-card {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 20px 20px 0;
+
+  background: $branco;
+
+  border: 1px solid $borda-card;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 5px 18px rgba(40, 50, 40, 0.04);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   CABEÇALHO DA TABELA
+   ========================================================= */
+
+.table-header {
+  margin-bottom: 13px;
+
+  h3 {
+    margin: 0 0 5px;
+
+    color: $verde-escuro;
+
+    font-size: 1.25rem;
+
+    font-weight: 800;
+
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+
+    color: $texto-secundario;
+
+    font-size: 0.84rem;
+  }
+}
+
+
+/* =========================================================
+   TABELA
+   ========================================================= */
+
+.tutores-table {
+  width: 100%;
+
+  border-collapse: separate;
+
+  border-spacing: 0;
+
+  text-align: left;
+
+  overflow: hidden;
+
+  th,
+  td {
+    border-bottom: 1px solid #eeeee9;
+  }
+
+
+  /* CABEÇALHO */
+
+  th {
+    height: 36px;
+
+    padding: 0 10px;
+
+    background: #f1f3e9;
+
+    color: #33442f;
+
+    font-size: 0.66rem;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.02em;
+
+    white-space: nowrap;
+  }
+
+
+  /* primeira coluna */
+
+  th:first-child {
+    border-radius: 8px 0 0 8px;
+  }
+
+  th:last-child {
+    border-radius: 0 8px 8px 0;
+  }
+
+
+  /* CÉLULAS */
+
+  td {
+    min-height: 54px;
+
+    padding: 8px 10px;
+
+    color: #3d423c;
+
+    font-size: 0.78rem;
+
+    vertical-align: middle;
+
+    background: #ffffff;
+  }
+
+
+  tbody tr {
+    transition: background 0.15s ease;
+
+    &:hover td {
+      background: #fafbf8;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+
+/* =========================================================
+   NOME DO TUTOR
+   ========================================================= */
+
+.tutor-nome-cell {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  white-space: nowrap;
+}
+
+.tutor-avatar {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #edf2e8;
+
+  color: $verde;
+
+  font-size: 0.85rem;
+}
+
+.tutor-nome {
+  color: #253024;
+
+  font-size: 0.8rem;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   CONTATO
+   ========================================================= */
+
+.contact-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+  .email {
+    color: #30372e;
+
+    font-size: 0.77rem;
+
+    font-weight: 500;
+  }
+
+  .phone {
+    color: #888d86;
+
+    font-size: 0.7rem;
+  }
+}
+
+
+/* =========================================================
+   ENDEREÇO
+   ========================================================= */
+
+.tutores-table td:nth-child(3) {
+  color: #646a62;
+
+  max-width: 260px;
+}
+
+
+/* =========================================================
+   AÇÕES DA TABELA
+   ========================================================= */
+
+.actions-cell {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  gap: 8px;
+
+  white-space: nowrap;
+}
+
+
+/* botão editar */
+
+.btn-edit,
+.btn-delete {
+  width: 32px;
+  height: 32px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  border: none;
+
+  cursor: pointer;
+
+  font-size: 0;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+
+    opacity: 0.9;
+  }
+}
+
+
+/* lápis */
+
+.btn-edit {
+  background: $verde;
+
+  &::before {
+    content: "✎";
+
+    color: white;
+
+    font-size: 17px;
+
+    line-height: 1;
+  }
+}
+
+
+/* lixeira */
+
+.btn-delete {
+  background: #fff0ef;
+
+  border: 1px solid #ffc9c5;
+
+  &::before {
+    content: "♜";
+
+    color: $vermelho;
+
+    font-size: 14px;
+
+    line-height: 1;
+
+    transform: rotate(180deg);
+  }
+}
+
+
+/* =========================================================
+   ESTADO VAZIO
+   ========================================================= */
+
+.empty-state {
+  text-align: center;
+
+  color: #999e97 !important;
+
+  padding: 35px !important;
+
+  font-size: 0.82rem !important;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .tutores-container {
+    padding: 24px 18px 35px;
+  }
+
+  .hero-banner {
+    padding: 28px 35px;
+  }
+
+  .hero-image-wrapper {
+    width: 240px;
+  }
+
+  .pet-hero-img,
+  .decor-shape {
+    width: 165px;
+    height: 165px;
+  }
+}
+
+
+@media (max-width: 850px) {
+  .hero-banner {
+    min-height: 200px;
+
+    padding: 25px;
+
+    .hero-image-wrapper {
+      width: 190px;
+
+      .pet-hero-img,
+      .decor-shape {
+        width: 140px;
+        height: 140px;
       }
     }
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tutores-table {
+    min-width: 700px;
+  }
+
+  .table-card {
+    overflow-x: auto;
+  }
+}
+
+
+@media (max-width: 650px) {
+  .tutores-container {
+    padding: 15px 12px 25px;
+  }
+
+  .hero-banner {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 25px;
+
+    .hero-image-wrapper {
+      align-self: center;
+
+      margin-top: 10px;
+    }
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .form-section {
+    padding: 17px;
+  }
+
+  .table-card {
+    padding: 17px 17px 0;
   }
 }

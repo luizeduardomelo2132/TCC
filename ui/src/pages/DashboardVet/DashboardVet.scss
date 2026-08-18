@@ -1,241 +1,406 @@
-/* Variáveis baseadas na identidade visual padronizada */
-$burgundy: #4a0c25;
-$green-cta: #10b981; 
-$green-cta-hover: #059669;
-$medical-primary: #0f766e; /* Mantido para pequenos detalhes médicos */
-$bg-light: #f8fafc;
-$card-bg: #ffffff;
-$text-main: #0f172a;
-$text-muted: #64748b;
-$border: #e2e8f0;
-
+$green: #4f7f4f;
+$green-dark: #365f3a;
+$green-light: #edf4e8;
+$green-soft: #f3f7ef;
+$beige: #f7f0e4;
+$bg: #f8f8f5;
+$white: #ffffff;
+$text-main: #243024;
+$text-muted: #6f756d;
+$border: #e2e4dc;
+$warning: #d89a32;
 .dashboard-vet-container {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
-  padding-bottom: 2rem;
+  gap: 1.5rem;
+  padding: 1.5rem 1.5rem 2rem;
   font-family: 'Inter', system-ui, sans-serif;
-
-  /* ==========================================
-     1. HERO SECTION
-     ========================================== */
+  color: $text-main;
+  background: $bg;
+  min-height: 100%;
   .hero-section {
+    min-height: 270px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 4rem;
-
-    @media (max-width: 900px) {
-      flex-direction: column;
-      text-align: center;
-      gap: 2rem;
-    }
-
+    background: $beige;
+    border-radius: 20px;
+    padding: 2.5rem 3.2rem;
+    gap: 3rem;
+    overflow: hidden;
     .hero-content {
       flex: 1;
-
       h1 {
-        font-size: 2.8rem;
-        color: $burgundy;
+        margin: 0 0 1rem;
+        font-size: 2.5rem;
+        line-height: 1.15;
+        color: $green-dark;
         font-weight: 800;
-        margin-bottom: 1rem;
-        line-height: 1.2;
       }
-
       .hero-subtitle {
-        font-size: 1.1rem;
-        color: $text-muted;
-        margin-bottom: 2rem;
-        line-height: 1.6;
+        max-width: 650px;
+        margin: 0 0 1.5rem;
+        color: #555a52;
+        font-size: 1rem;
+        line-height: 1.65;
       }
-
       .hero-actions {
         display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        
-        @media (max-width: 900px) {
-          align-items: center;
-        }
-
-        .search-bar {
-          display: flex;
-          align-items: center;
-          background: #ffffff;
-          border: 1px solid $border;
+        align-items: center;
+        gap: 1rem;
+        .btn-primary {
+          border: none;
+          background: $green;
+          color: white;
+          padding: 0.85rem 1.5rem;
           border-radius: 50px;
-          padding: 0.8rem 1.5rem;
-          width: 100%;
-          max-width: 450px;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
-          .icon { color: $text-muted; margin-right: 0.5rem; }
-
-          input {
-            border: none; outline: none; width: 100%; font-size: 1rem;
-          }
-        }
-
-        .quick-buttons {
-          display: flex;
-          gap: 1rem;
-
-          .btn-primary {
-            background-color: $green-cta;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-
-            &:hover { background-color: $green-cta-hover; transform: translateY(-2px); }
+          font-size: 0.95rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          &:hover {
+            background: $green-dark;
+            transform: translateY(-1px);
           }
         }
       }
     }
-
     .hero-image {
-      flex: 1;
-      max-width: 500px;
-      
+      width: 270px;
+      height: 190px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      padding: 7px;
+      background: white;
+      box-shadow: 0 8px 20px rgba(54, 95, 58, 0.12);
       img {
-        width: 100%; height: 350px; object-fit: cover;
-        border-radius: 24px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
       }
     }
   }
-
-  /* ==========================================
-     2. BLOCO ESCURO (Identidade visual)
-     ========================================== */
-  .dark-block {
-    background-color: $burgundy;
-    border-radius: 24px;
-    padding: 3rem;
-    color: white;
-    box-shadow: 0 20px 25px -5px rgba(74, 12, 37, 0.3);
-
-    .dark-header {
-      text-align: center; margin-bottom: 2.5rem;
-      h2 { font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 700; }
-      p { color: rgba(255, 255, 255, 0.8); font-size: 1.1rem; }
+  .summary-section {
+    background: $white;
+    border: 1px solid $border;
+    border-radius: 18px;
+    padding: 1.5rem 1.5rem 1.7rem;
+    .section-header {
+      margin-bottom: 1.25rem;
+      h2 {
+        margin: 0 0 0.3rem;
+        color: $green-dark;
+        font-size: 1.35rem;
+        font-weight: 800;
+      }
+      p {
+        margin: 0;
+        color: $text-muted;
+        font-size: 0.9rem;
+      }
     }
-
-    /* 3. CARDS DE FOTOS REAIS */
-    .photo-cards-grid {
+    .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-
-      .photo-card {
-        background: #ffffff;
-        border-radius: 16px;
-        overflow: hidden;
-        color: $text-main;
-        transition: transform 0.3s;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-
-        &:hover { transform: translateY(-5px); }
-
-        .card-img { width: 100%; height: 180px; object-fit: cover; }
-
-        .card-info {
-          padding: 1.5rem; text-align: center;
-
-          h3 { font-size: 1.1rem; color: $text-muted; margin-bottom: 0.5rem; font-weight: 600; }
-          .kpi-number { font-size: 2.5rem; font-weight: 800; color: $burgundy; margin-bottom: 0.5rem; }
-          .kpi-detail {
-            font-size: 0.9rem; color: $text-muted;
-            &.alert-badge {
-              background: #fef3c7; color: #b45309; padding: 0.3rem 0.8rem;
-              border-radius: 50px; font-weight: 700; display: inline-block;
-            }
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      .summary-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.2rem;
+        background: $green-soft;
+        border: 1px solid #e1e9dc;
+        border-radius: 14px;
+        transition: transform 0.2s ease;
+        &:hover {
+          transform: translateY(-2px);
+        }
+        &.waiting {
+          background: #fffaf0;
+          border-color: #f0dfb8;
+        }
+        .summary-icon {
+          width: 52px;
+          height: 52px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 14px;
+          background: white;
+          font-size: 1.4rem;
+        }
+        .summary-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.1rem;
+          span {
+            color: $text-muted;
+            font-size: 0.82rem;
+            font-weight: 600;
+          }
+          strong {
+            color: $green-dark;
+            font-size: 1.8rem;
+            line-height: 1.2;
+          }
+          small {
+            color: $text-muted;
+            font-size: 0.75rem;
           }
         }
       }
     }
   }
-
-  /* ==========================================
-     4. FILA DE ATENDIMENTO
-     ========================================== */
   .agenda-section {
     .clinical-panel {
-      background: #ffffff;
+      background: $white;
       border: 1px solid $border;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
+      border-radius: 18px;
+      padding: 1.5rem;
       .panel-header {
-        margin-bottom: 1.5rem; border-bottom: 1px solid $border; padding-bottom: 1rem;
-        h2 { font-size: 1.5rem; color: $burgundy; }
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.3rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid $border;
+        h2 {
+          margin: 0 0 0.3rem;
+          color: $green-dark;
+          font-size: 1.35rem;
+          font-weight: 800;
+        }
+        p {
+          margin: 0;
+          color: $text-muted;
+          font-size: 0.9rem;
+        }
+        .agenda-count {
+          background: $green-light;
+          color: $green-dark;
+          padding: 0.45rem 0.9rem;
+          border-radius: 50px;
+          font-size: 0.8rem;
+          font-weight: 700;
+        }
       }
-
       .patients-list {
-        display: flex; flex-direction: column; gap: 1rem;
-
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        .empty-state {
+          padding: 2.5rem;
+          text-align: center;
+          color: $text-muted;
+        }
         .patient-item {
-          display: flex; align-items: center; padding: 1.2rem;
-          border: 1px solid $border; border-radius: 12px; transition: all 0.2s;
-
-          @media (max-width: 900px) { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
-
-          &.is-waiting { border-left: 4px solid #f59e0b; background: #fffbeb; }
-          &:hover:not(.is-waiting) { background: $bg-light; }
-
+          display: flex;
+          align-items: center;
+          gap: 1.5rem;
+          padding: 1rem;
+          border: 1px solid $border;
+          border-radius: 12px;
+          background: white;
+          transition: all 0.2s ease;
+          &:hover {
+            border-color: #cdd8c8;
+            background: #fcfdfb;
+          }
+          &.is-waiting {
+            border-left: 4px solid $warning;
+            background: #fffdf7;
+          }
           .time-block {
-            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-            padding-right: 1.5rem; border-right: 2px solid $border; min-width: 120px;
-
-            @media (max-width: 900px) {
-              flex-direction: row; border-right: none; border-bottom: 1px solid $border;
-              padding-bottom: 1rem; width: 100%;
+            min-width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.45rem;
+            padding-right: 1.3rem;
+            border-right: 1px solid $border;
+            .time {
+              color: $green-dark;
+              font-size: 1.25rem;
+              font-weight: 800;
             }
-
-            .time { font-size: 1.3rem; font-weight: 800; color: $burgundy; }
             .status-badge {
-              font-size: 0.8rem; padding: 0.3rem 0.8rem; border-radius: 50px;
-              font-weight: 700; text-transform: uppercase;
-              &.agendada { background: #e2e8f0; color: #475569; }
-              &.aguardando { background: #fef3c7; color: #b45309; }
-              &.concluída { background: #dcfce7; color: #166534; }
+              padding: 0.3rem 0.65rem;
+              border-radius: 50px;
+              font-size: 0.68rem;
+              font-weight: 700;
+              text-transform: uppercase;
+              &.agendada {
+                background: #eef0eb;
+                color: #66705f;
+              }
+              &.aguardando {
+                background: #fff0ce;
+                color: #a36d0d;
+              }
+              &.concluida {
+                background: #e3f3e6;
+                color: #347043;
+              }
             }
           }
-
           .patient-info {
-            flex: 1; padding-left: 1.5rem;
-            @media (max-width: 900px) { padding-left: 0; }
-            
-            .info-header h4 {
-              margin: 0 0 0.4rem 0; font-size: 1.15rem; color: $text-main;
-              span { color: $text-muted; font-weight: 400; font-size: 0.95rem; }
+            flex: 1;
+            .info-header {
+              display: flex;
+              align-items: center;
+              gap: 0.8rem;
+              margin-bottom: 0.6rem;
+              .pet-avatar {
+                width: 42px;
+                height: 42px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background: $green-light;
+                font-size: 1.3rem;
+              }
+              h4 {
+                margin: 0;
+                color: $text-main;
+                font-size: 1rem;
+                font-weight: 800;
+              }
+              span {
+                color: $text-muted;
+                font-size: 0.8rem;
+              }
             }
-            p { margin: 0 0 0.3rem 0; font-size: 0.95rem; color: $text-muted; strong { color: $text-main; } }
+            p {
+              margin: 0.2rem 0;
+              color: $text-muted;
+              font-size: 0.82rem;
+              strong {
+                color: $text-main;
+                font-weight: 700;
+              }
+            }
           }
-
           .action-buttons {
-            display: flex; gap: 1rem;
-            @media (max-width: 900px) { width: 100%; justify-content: flex-end; }
-
-            button {
-              padding: 0.8rem 1.2rem; border-radius: 8px; font-weight: 600;
-              cursor: pointer; transition: 0.2s; border: none; font-size: 0.95rem;
-            }
-
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            .btn-primary,
             .btn-secondary {
-              background: #f1f5f9; color: $text-main;
-              &:hover { background: #e2e8f0; }
+              border: none;
+              border-radius: 8px;
+              padding: 0.7rem 1rem;
+              font-size: 0.82rem;
+              font-weight: 700;
+              cursor: pointer;
+              transition: all 0.2s ease;
+              white-space: nowrap;
             }
-
             .btn-primary {
-              background: $green-cta; color: white;
-              &:hover { background: $green-cta-hover; }
+              background: $green;
+              color: white;
+              &:hover {
+                background: $green-dark;
+              }
+            }
+            .btn-secondary {
+              background: #f1f3ee;
+              color: $green-dark;
+              border: 1px solid #dfe4da;
+              &:hover {
+                background: #e7ebe3;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 1000px) {
+  .dashboard-vet-container {
+    .hero-section {
+      padding: 2rem;
+      .hero-image {
+        width: 220px;
+        height: 160px;
+      }
+    }
+    .summary-section {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .agenda-section {
+      .clinical-panel {
+        .patients-list {
+          .patient-item {
+            flex-wrap: wrap;
+            .patient-info {
+              min-width: calc(100% - 130px);
+            }
+            .action-buttons {
+              width: 100%;
+              justify-content: flex-end;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 700px) {
+  .dashboard-vet-container {
+    padding: 1rem;
+    .hero-section {
+      flex-direction: column;
+      text-align: center;
+      padding: 1.8rem;
+      .hero-content {
+        .hero-subtitle {
+          font-size: 0.9rem;
+        }
+        .hero-actions {
+          justify-content: center;
+        }
+      }
+      .hero-image {
+        width: 150px;
+        height: 150px;
+      }
+    }
+    .agenda-section {
+      .clinical-panel {
+        padding: 1rem;
+        .panel-header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 0.7rem;
+        }
+        .patients-list {
+          .patient-item {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            .time-block {
+              flex-direction: row;
+              justify-content: space-between;
+              border-right: none;
+              border-bottom: 1px solid $border;
+              padding: 0 0 0.8rem;
+            }
+            .patient-info {
+              min-width: 0;
+            }
+            .action-buttons {
+              flex-direction: column;
+              width: 100%;
+              .btn-primary,
+              .btn-secondary {
+                width: 100%;
+              }
             }
           }
         }

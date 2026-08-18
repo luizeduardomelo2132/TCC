@@ -1,309 +1,896 @@
-/* Variáveis baseadas na sua identidade visual */
-$burgundy: #4a0c25;
-$green-cta: #10b981; // Cor do botão "Solicitar Atendimento" da imagem
-$green-cta-hover: #059669;
-$text-main: #0f172a;
-$text-muted: #64748b;
-$bg-light: #f8fafc;
-$border: #e2e8f0;
+/* ==========================================
+   CORES DA CLÍNICA MAXIMUS
+   ========================================== */
+
+$green-dark: #315d32;
+$green-main: #4f7f4d;
+$green-light: #6f9665;
+
+$cream: #f7f0e3;
+$cream-light: #fbf8f1;
+
+$white: #ffffff;
+
+$text-main: #253526;
+$text-secondary: #596056;
+$text-muted: #858980;
+
+$border: #e4e1d8;
+
+$success-bg: #edf5e9;
+$success-text: #41663d;
+
+
+/* ==========================================
+   CONTAINER PRINCIPAL
+   ========================================== */
 
 .dashboard-admin-container {
+  width: 100%;
+  max-width: none;
+
+  margin: 0;
+  padding: 20px 24px 32px;
+
   display: flex;
   flex-direction: column;
-  gap: 3rem; // Espaçamento entre as grandes seções
-  padding-bottom: 2rem;
-  font-family: 'Inter', system-ui, sans-serif;
 
-  /* ==========================================
-     1. HERO SECTION
-     ========================================== */
-  .hero-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4rem;
+  gap: 20px;
 
-    @media (max-width: 900px) {
-      flex-direction: column;
-      text-align: center;
-      gap: 2rem;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+
+  color: $text-main;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   HERO
+   ========================================== */
+
+.dashboard-hero {
+  width: 100%;
+  min-height: 220px;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  overflow: hidden;
+
+  background: linear-gradient(
+    110deg,
+    #f8f0e2 0%,
+    #fbf7ed 55%,
+    #f5efdf 100%
+  );
+
+  border-radius: 18px;
+
+  padding: 32px 52px;
+
+  box-sizing: border-box;
+
+  .hero-content {
+    position: relative;
+    z-index: 4;
+
+    max-width: 760px;
+
+    h1 {
+      margin: 0 0 10px;
+
+      font-size: clamp(2rem, 3vw, 3.1rem);
+      line-height: 1.1;
+
+      font-weight: 800;
+
+      color: $green-dark;
+
+      letter-spacing: -1px;
     }
 
-    .hero-content {
-      flex: 1;
+    p {
+      margin: 0;
 
-      h1 {
-        font-size: 2.8rem;
-        color: $burgundy;
-        font-weight: 800;
-        margin-bottom: 1rem;
-        line-height: 1.2;
+      max-width: 720px;
+
+      color: #4f554d;
+
+      font-size: 1.02rem;
+      line-height: 1.6;
+    }
+  }
+
+
+  /* BOTÕES DO HERO */
+
+  .hero-actions {
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 22px;
+
+    .hero-btn {
+      border: none;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 7px;
+
+      height: 42px;
+
+      padding: 0 22px;
+
+      border-radius: 22px;
+
+      font-size: 0.92rem;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+
+      span {
+        font-size: 1.15rem;
+        line-height: 1;
       }
 
-      .hero-subtitle {
-        font-size: 1.1rem;
-        color: $text-muted;
-        margin-bottom: 2rem;
-        line-height: 1.6;
+      &:hover {
+        transform: translateY(-1px);
       }
 
-      .hero-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        
-        @media (max-width: 900px) {
-          align-items: center;
-        }
+      &.primary {
+        background: $green-main;
+        color: white;
 
-        .search-bar {
-          display: flex;
-          align-items: center;
-          background: #ffffff;
-          border: 1px solid $border;
-          border-radius: 50px;
-          padding: 0.8rem 1.5rem;
-          width: 100%;
-          max-width: 450px;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 5px 14px rgba(49, 93, 50, 0.2);
 
-          .icon {
-            color: $text-muted;
-            margin-right: 0.5rem;
-          }
-
-          input {
-            border: none;
-            outline: none;
-            width: 100%;
-            font-size: 1rem;
-          }
-        }
-
-        .quick-buttons {
-          display: flex;
-          gap: 1rem;
-
-          button {
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-          }
-
-          .btn-primary {
-            background-color: $green-cta;
-            color: white;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-
-            &:hover { background-color: $green-cta-hover; transform: translateY(-2px); }
-          }
-
-          .btn-secondary {
-            background-color: #f1f5f9;
-            color: $text-main;
-
-            &:hover { background-color: #e2e8f0; }
-          }
+        &:hover {
+          background: $green-dark;
         }
       }
+
+      &.secondary {
+        background: white;
+
+        color: $green-dark;
+
+        border: 1px solid #d9ded4;
+
+        &:hover {
+          background: #f5f7f2;
+        }
+      }
+    }
+  }
+
+
+  /* ==========================================
+     IMAGEM DO HERO
+     ========================================== */
+
+  .hero-image-wrapper {
+    width: 310px;
+    height: 190px;
+
+    position: relative;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 22px;
+
+    z-index: 3;
+
+    .hero-image-background {
+      position: absolute;
+
+      width: 190px;
+      height: 190px;
+
+      right: -4px;
+
+      border-radius: 50%;
+
+      background: #568152;
+
+      opacity: 0.95;
     }
 
     .hero-image {
-      flex: 1;
-      max-width: 500px;
-      
-      img {
-        width: 100%;
-        height: 350px;
-        object-fit: cover;
-        border-radius: 24px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      }
+      position: relative;
+      z-index: 2;
+
+      width: 172px;
+      height: 172px;
+
+      object-fit: cover;
+
+      border-radius: 50%;
+
+      border: 7px solid white;
+
+      box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .image-cross {
+      position: absolute;
+
+      z-index: 4;
+
+      right: -5px;
+      top: 14px;
+
+      color: $green-main;
+
+      font-size: 29px;
+      font-weight: 600;
     }
   }
 
-  /* ==========================================
-     2. BLOCO ESCURO (Identidade visual)
-     ========================================== */
-  .dark-block {
-    background-color: $burgundy;
-    border-radius: 24px;
-    padding: 3rem;
-    color: white;
-    box-shadow: 0 20px 25px -5px rgba(74, 12, 37, 0.3);
 
-    .dark-header {
-      text-align: center;
-      margin-bottom: 2.5rem;
+  /* DECORAÇÕES */
 
-      h2 {
-        font-size: 2.2rem;
-        margin-bottom: 0.5rem;
-        font-weight: 700;
+  .hero-decoration {
+    position: absolute;
+
+    pointer-events: none;
+  }
+
+  .hero-circle {
+    width: 190px;
+    height: 190px;
+
+    right: 165px;
+    top: -95px;
+
+    border-radius: 50%;
+
+    background: rgba(215, 210, 177, 0.28);
+  }
+
+  .hero-cross {
+    position: absolute;
+
+    color: $green-main;
+
+    font-size: 28px;
+
+    font-weight: 600;
+
+    z-index: 2;
+
+    pointer-events: none;
+
+    &.cross-one {
+      right: 395px;
+      bottom: 40px;
+    }
+
+    &.cross-two {
+      right: 70px;
+      top: 32px;
+    }
+  }
+}
+
+
+/* ==========================================
+   VISÃO GERAL
+   ========================================== */
+
+.overview-section {
+  width: 100%;
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin: 0 0 12px;
+
+    h2 {
+      margin: 0;
+
+      color: $green-dark;
+
+      font-size: 1.45rem;
+      font-weight: 750;
+
+      letter-spacing: -0.3px;
+    }
+
+    p {
+      margin: 5px 0 0;
+
+      color: $text-secondary;
+
+      font-size: 0.9rem;
+    }
+  }
+}
+
+
+/* ==========================================
+   CARDS DE INDICADORES
+   ========================================== */
+
+.stats-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 16px;
+
+  width: 100%;
+}
+
+
+.stat-card {
+  min-height: 135px;
+
+  background: $white;
+
+  border: 1px solid $border;
+
+  border-radius: 15px;
+
+  padding: 20px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 17px;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 2px 8px rgba(44, 51, 43, 0.035);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 7px 18px rgba(44, 51, 43, 0.08);
+  }
+
+
+  .stat-icon {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+
+    background: $success-bg;
+
+    color: $green-dark;
+  }
+
+  .pets-icon {
+    background: #eef5e9;
+  }
+
+  .tutors-icon {
+    background: #f3f1e7;
+
+    font-size: 27px;
+  }
+
+  .consultations-icon {
+    background: #edf2e9;
+  }
+
+
+  .stat-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    .stat-label {
+      color: $text-secondary;
+
+      font-size: 0.82rem;
+
+      font-weight: 600;
+    }
+
+    .stat-number {
+      margin-top: 2px;
+
+      color: $green-dark;
+
+      font-size: 2rem;
+
+      line-height: 1.1;
+
+      font-weight: 800;
+    }
+
+    .stat-description {
+      margin-top: 3px;
+
+      color: $text-muted;
+
+      font-size: 0.76rem;
+    }
+  }
+}
+
+
+/* ==========================================
+   AGENDA
+   ========================================== */
+
+.agenda-section {
+  width: 100%;
+
+  .agenda-card {
+    width: 100%;
+
+    background: $white;
+
+    border: 1px solid $border;
+
+    border-radius: 17px;
+
+    overflow: hidden;
+
+    box-shadow:
+      0 2px 8px rgba(44, 51, 43, 0.035);
+  }
+
+
+  /* CABEÇALHO */
+
+  .agenda-header {
+    min-height: 78px;
+
+    padding: 18px 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid $border;
+
+    box-sizing: border-box;
+
+    h2 {
+      margin: 0;
+
+      color: $green-dark;
+
+      font-size: 1.35rem;
+
+      font-weight: 750;
+    }
+
+    p {
+      margin: 5px 0 0;
+
+      color: $text-secondary;
+
+      font-size: 0.85rem;
+    }
+
+
+    .see-all-button {
+      border: none;
+
+      background: transparent;
+
+      color: $green-main;
+
+      font-size: 0.88rem;
+
+      font-weight: 650;
+
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+
+      gap: 7px;
+
+      padding: 8px 4px;
+
+      &:hover {
+        color: $green-dark;
       }
-      
-      p {
-        color: rgba(255, 255, 255, 0.8);
+
+      span {
         font-size: 1.1rem;
       }
     }
+  }
 
-    /* 3. CARDS DE FOTOS REAIS */
-    .photo-cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
 
-      .photo-card {
-        background: #ffffff;
-        border-radius: 16px;
-        overflow: hidden;
+  /* LISTA */
+
+  .agenda-list {
+    display: flex;
+    flex-direction: column;
+
+    padding: 4px 20px 10px;
+  }
+
+
+  /* ITEM DA CONSULTA */
+
+  .agenda-item {
+    min-height: 82px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 13px 2px;
+
+    border-bottom: 1px solid #eeeae1;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+
+    .appointment-time {
+      width: 75px;
+
+      flex-shrink: 0;
+
+      display: flex;
+      justify-content: center;
+
+      span {
+        color: $green-dark;
+
+        font-size: 1rem;
+
+        font-weight: 750;
+      }
+    }
+
+
+    .appointment-icon {
+      width: 44px;
+      height: 44px;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #f0f4ec;
+
+      font-size: 20px;
+    }
+
+
+    .appointment-info {
+      flex: 1;
+
+      min-width: 0;
+
+      h3 {
+        margin: 0 0 4px;
+
         color: $text-main;
-        transition: transform 0.3s;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
 
-        &:hover {
-          transform: translateY(-5px);
+        font-size: 0.98rem;
+
+        font-weight: 700;
+
+        span {
+          margin-left: 7px;
+
+          color: $text-muted;
+
+          font-size: 0.78rem;
+
+          font-weight: 500;
+        }
+      }
+
+      p {
+        margin: 2px 0;
+
+        color: $text-muted;
+
+        font-size: 0.78rem;
+
+        line-height: 1.35;
+
+        strong {
+          color: $text-secondary;
+
+          font-weight: 600;
+        }
+      }
+    }
+
+
+    .appointment-status {
+      width: 125px;
+
+      display: flex;
+
+      justify-content: flex-end;
+
+      flex-shrink: 0;
+
+      .status-badge {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        min-width: 82px;
+
+        padding: 6px 11px;
+
+        border-radius: 15px;
+
+        font-size: 0.7rem;
+
+        font-weight: 650;
+
+        background: #edf5e9;
+
+        color: $success-text;
+
+
+        &.agendada {
+          background: #edf5e9;
+          color: #41663d;
         }
 
-        .card-img {
-          width: 100%;
-          height: 180px;
-          object-fit: cover;
+        &.aguardando {
+          background: #fff4dc;
+          color: #90651d;
         }
 
-        .card-info {
-          padding: 1.5rem;
-          text-align: center;
+        &.em_atendimento {
+          background: #e9f0fa;
+          color: #45658b;
+        }
 
-          h3 {
-            font-size: 1.1rem;
-            color: $text-muted;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-          }
+        &.concluída,
+        &.concluida {
+          background: #e8f5e9;
+          color: #397044;
+        }
 
-          .kpi-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: $burgundy;
-            margin-bottom: 0.5rem;
-          }
-
-          .kpi-detail {
-            font-size: 0.9rem;
-            color: $text-muted;
-
-            &.alert-badge {
-              background: #fee2e2;
-              color: #dc2626;
-              padding: 0.3rem 0.8rem;
-              border-radius: 50px;
-              font-weight: 700;
-              display: inline-block;
-            }
-          }
+        &.cancelada {
+          background: #fceceb;
+          color: #a44a45;
         }
       }
     }
   }
+}
 
-  /* ==========================================
-     4. AGENDA DO DIA
-     ========================================== */
-  .agenda-section {
-    .agenda-panel {
-      background: #ffffff;
-      border: 1px solid $border;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 
-      .panel-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        border-bottom: 1px solid $border;
-        padding-bottom: 1rem;
+/* ==========================================
+   AGENDA VAZIA
+   ========================================== */
 
-        h2 { 
-          font-size: 1.5rem; 
-          color: $burgundy; 
-        }
-        
-        .btn-link {
-          background: none; 
-          border: none; 
-          color: $green-cta;
-          cursor: pointer; 
-          font-weight: 600;
-          font-size: 1rem;
-          
-          &:hover { text-decoration: underline; }
-        }
+.empty-agenda {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 210px;
+
+  text-align: center;
+
+  .empty-icon {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f0f4ec;
+
+    font-size: 24px;
+
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    margin: 0 0 5px;
+
+    color: $green-dark;
+
+    font-size: 1rem;
+  }
+
+  p {
+    margin: 0;
+
+    color: $text-muted;
+
+    font-size: 0.82rem;
+  }
+}
+
+
+/* ==========================================
+   RESPONSIVIDADE
+   ========================================== */
+
+@media (max-width: 1050px) {
+
+  .dashboard-hero {
+    padding: 28px 35px;
+
+    .hero-image-wrapper {
+      width: 250px;
+
+      .hero-image {
+        width: 155px;
+        height: 155px;
       }
 
-      .agenda-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+      .hero-image-background {
+        width: 170px;
+        height: 170px;
+      }
+    }
+  }
 
-        .agenda-item {
-          display: flex;
-          align-items: center;
-          padding: 1.2rem;
-          border: 1px solid $border;
-          border-radius: 12px;
-          transition: background 0.2s;
+  .stats-grid {
+    gap: 12px;
+  }
+}
 
-          &:hover { background: $bg-light; }
 
-          .time {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: $burgundy;
-            padding-right: 1.5rem;
-            border-right: 2px solid $border;
-            min-width: 90px;
-          }
+@media (max-width: 800px) {
 
-          .details {
-            flex: 1;
-            padding-left: 1.5rem;
-            
-            h4 {
-              margin: 0 0 0.3rem 0;
-              font-size: 1.15rem;
-              color: $text-main;
-              
-              span { font-weight: 400; color: $text-muted; font-size: 0.95rem;}
-            }
-            p {
-              margin: 0;
-              font-size: 0.9rem;
-              color: $text-muted;
-              &.vet { color: $text-main; font-weight: 600; margin-top: 0.3rem;}
-            }
-          }
+  .dashboard-admin-container {
+    padding: 16px;
+  }
 
-          .status-badge {
-            padding: 0.4rem 1rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
+  .dashboard-hero {
+    min-height: auto;
 
-            &.agendada { background: #e0f2fe; color: #0284c7; }
-            &.aguardando { background: #fef08a; color: #854d0e; }
-            &.em_atendimento { background: #dbeafe; color: #1e40af; }
-            &.concluída { background: #dcfce7; color: #166534; }
-          }
-        }
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 30px;
+
+    .hero-image-wrapper {
+      width: 100%;
+
+      margin: 5px 0 0;
+
+      justify-content: center;
+    }
+
+    .hero-cross {
+      display: none;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .dashboard-admin-container {
+    padding: 12px;
+  }
+
+  .dashboard-hero {
+    padding: 24px;
+
+    .hero-content {
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
+
+    .hero-actions {
+      flex-direction: column;
+
+      width: 100%;
+
+      .hero-btn {
+        width: 100%;
+      }
+    }
+
+    .hero-image-wrapper {
+      height: 160px;
+
+      .hero-image {
+        width: 140px;
+        height: 140px;
+      }
+
+      .hero-image-background {
+        width: 150px;
+        height: 150px;
+      }
+    }
+  }
+
+
+  .agenda-header {
+    align-items: flex-start !important;
+
+    .see-all-button {
+      margin-top: 3px;
+    }
+  }
+
+
+  .agenda-item {
+
+    .appointment-time {
+      width: 55px !important;
+
+      span {
+        font-size: 0.85rem !important;
+      }
+    }
+
+    .appointment-icon {
+      display: none;
+    }
+
+    .appointment-status {
+      width: auto !important;
+
+      .status-badge {
+        min-width: auto !important;
       }
     }
   }

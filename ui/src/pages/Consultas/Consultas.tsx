@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import api from '../../services/api';
 import './Consultas.scss';
+import { PawPrint } from 'lucide-react';
 
 interface Pet {
   _id: string;
@@ -168,7 +169,8 @@ export default function Consultas() {
             <div className="input-group">
               <label>Paciente (Pet)*</label>
               <div className="input-wrapper">
-                <span className="input-icon">🐾</span>
+                <PawPrint className="input-icon" size={17} />
+                
                 <select
                   required
                   value={typeof formData.petId === 'object' ? formData.petId._id : formData.petId}
@@ -282,67 +284,195 @@ export default function Consultas() {
       {/* TABELA DE CONSULTAS */}
       <section className="table-section">
         <div className="table-card">
+
           <div className="table-header">
-            <h3>Consultas Registradas ({consultas.length})</h3>
+            <div>
+              <h3>Consultas Agendadas</h3>
+              <p>Visualize, edite ou cancele as consultas cadastradas.</p>
+            </div>
           </div>
-          <table className="consultas-table">
-            <thead>
-              <tr>
-                <th>Data / Hora</th>
-                <th>Paciente</th>
-                <th>Veterinário</th>
-                <th>Tipo</th>
-                <th>Peso</th>
-                <th>Motivo</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {consultas.map((c) => (
-                <tr key={c._id}>
-                  <td className="date-cell">
-                    <span className="date-badge">
-                      {new Date(c.dataConsulta).toLocaleString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
-                  </td>
-                  <td>
-                    <span className="pet-tag">
-                      🐶 {typeof c.petId === 'object' && c.petId !== null ? c.petId.nome : 'Pet não encontrado'}
-                    </span>
-                  </td>
-                  <td>
-                    {typeof c.veterinarioId === 'object' && c.veterinarioId !== null
-                      ? `Dr(a). ${c.veterinarioId.nome}`
-                      : '-'}
-                  </td>
-                  <td>
-                    <span className="type-badge">
-                      {c.tipo_de_atendimento || '-'}
-                    </span>
-                  </td>
-                  <td>{c.pesoAtual ? `${c.pesoAtual} kg` : '-'}</td>
-                  <td className="motivo-cell">{c.motivo}</td>
-                  <td className="actions-cell">
-                    <button className="btn-edit" onClick={() => handleEdit(c)}>Editar</button>
-                    <button className="btn-delete" onClick={() => handleDelete(c._id!)}>Excluir</button>
-                  </td>
-                </tr>
-              ))}
-              {consultas.length === 0 && (
+
+          <div className="table-wrapper">
+            <table className="consultas-table">
+
+              <thead>
                 <tr>
-                  <td colSpan={7} className="empty-state">
-                    Nenhuma consulta registrada até o momento.
-                  </td>
+                  <th>DATA E HORA</th>
+                  <th>PET</th>
+                  <th>TUTOR</th>
+                  <th>VETERINÁRIO</th>
+                  <th>TIPO DE ATENDIMENTO</th>
+                  <th>PESO (KG)</th>
+                  <th>MOTIVO</th>
+                  <th>AÇÕES</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+
+                {consultas.map((c) => {
+
+                  const pet =
+                    typeof c.petId === 'object' && c.petId !== null
+                      ? c.petId
+                      : null;
+
+                  const veterinario =
+                    typeof c.veterinarioId === 'object' &&
+                      c.veterinarioId !== null
+                      ? c.veterinarioId
+                      : null;
+
+                  const data = new Date(c.dataConsulta);
+
+                  return (
+                    <tr key={c._id}>
+
+                      {/* DATA */}
+                      <td className="date-cell">
+                        <div className="date-content">
+                          <span>
+                            {data.toLocaleDateString('pt-BR')}
+                          </span>
+
+                          <small>
+                            {data.toLocaleTimeString('pt-BR', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </small>
+                        </div>
+                      </td>
+
+
+                      {/* PET */}
+                      <td>
+                        <div className="pet-info">
+
+                          <div className="pet-avatar">
+                            {pet?.especie?.toLowerCase() === 'gato'
+                              ? '🐱'
+                              : '🐶'}
+                          </div>
+
+                          <div className="pet-details">
+                            <strong>
+                              {pet?.nome || 'Pet não encontrado'}
+                            </strong>
+
+                            <span>
+                              {pet?.especie || 'Pet'}
+                            </span>
+                          </div>
+
+                        </div>
+                      </td>
+
+
+                      {/* TUTOR */}
+                      <td>
+                        <span className="tutor-name">
+                          {pet &&
+                            'tutorId' in pet &&
+                            typeof (pet as any).tutorId === 'object' &&
+                            (pet as any).tutorId !== null
+                            ? (pet as any).tutorId.nome
+                            : '-'}
+                        </span>
+                      </td>
+
+
+                      {/* VETERINÁRIO */}
+                      <td>
+                        <div className="vet-info">
+
+                          <strong>
+                            {veterinario
+                              ? `Dr. ${veterinario.nome}`
+                              : '-'}
+                          </strong>
+
+                          {veterinario?.especialidade && (
+                            <span>
+                              {veterinario.especialidade}
+                            </span>
+                          )}
+
+                        </div>
+                      </td>
+
+
+                      {/* TIPO */}
+                      <td>
+                        <span className="type-badge">
+                          {c.tipo_de_atendimento || 'Consulta'}
+                        </span>
+                      </td>
+
+
+                      {/* PESO */}
+                      <td>
+                        <span className="peso-value">
+                          {c.pesoAtual
+                            ? `${c.pesoAtual}`
+                            : '-'}
+                        </span>
+                      </td>
+
+
+                      {/* MOTIVO */}
+                      <td>
+                        <span className="motivo-cell">
+                          {c.motivo || '-'}
+                        </span>
+                      </td>
+
+
+                      {/* AÇÕES */}
+                      <td>
+                        <div className="actions-cell">
+
+                          <button
+                            type="button"
+                            className="btn-edit"
+                            title="Editar consulta"
+                            onClick={() => handleEdit(c)}
+                          >
+                            ✎
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn-delete"
+                            title="Excluir consulta"
+                            onClick={() => handleDelete(c._id!)}
+                          >
+                            🗑
+                          </button>
+
+                        </div>
+                      </td>
+
+                    </tr>
+                  );
+                })}
+
+
+                {consultas.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={8}
+                      className="empty-state"
+                    >
+                      Nenhuma consulta registrada até o momento.
+                    </td>
+                  </tr>
+                )}
+
+              </tbody>
+            </table>
+          </div>
+
         </div>
       </section>
     </div>

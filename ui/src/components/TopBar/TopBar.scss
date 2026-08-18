@@ -1,214 +1,477 @@
-$primary-teal: #0f766e; // Verde escuro/teal inspirado no botão do seu print
-$bg-light: #f1f5f9;     // Fundo acinzentado bem suave para os inputs
-$border-color: #e2e8f0;
-$text-main: #2d3748;    // Cinza escuro para melhor legibilidade da fonte
-$text-muted: #718096;
-$danger: #e63946;       // Vermelho mais vivo para a notificação
-$bg-white: #4a0c25;
+$verde: #557a46;
+$verde-escuro: #365d32;
+$verde-claro: #e8f0e3;
+
+$branco: #ffffff;
+
+$texto: #293528;
+$texto-secundario: #73776f;
+
+$borda: #e3e2db;
+
+$bege: #f4eee5;
 
 .topbar-container {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 90;
+
+  width: 100%;
+
+  height: 82px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
-  padding: 0 2.5rem;
-  background-color: $bg-white;
-  border-bottom: 1px solid rgba($border-color, 0.6);
-  position: sticky;
+
+  padding: 0 30px;
+
+  box-sizing: border-box;
+
+  background: $branco;
+
+  border-bottom: 1px solid #ecebe6;
+
+  font-family: 'Poppins', sans-serif;
+}
+
+
+/* =========================================
+   PESQUISA
+========================================= */
+
+.search-container {
+  width: 520px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 16px;
+
+  border: 1px solid $borda;
+
+  border-radius: 11px;
+
+  background: white;
+
+  transition: all 0.2s ease;
+}
+
+.search-container .search-icon {
+  width: 19px;
+  height: 19px;
+
+  margin-right: 11px;
+
+  color: #858980;
+
+  flex-shrink: 0;
+
+  stroke-width: 1.8;
+}
+
+.search-container input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: $texto;
+
+  font-family: 'Poppins', sans-serif;
+
+  font-size: 0.84rem;
+
+  font-weight: 400;
+}
+
+.search-container input::placeholder {
+  color: #858980;
+
+  opacity: 1;
+}
+
+.search-container:focus-within {
+  border-color: $verde;
+
+  box-shadow:
+    0 0 0 3px rgba(85, 122, 70, 0.08);
+}
+
+
+/* =========================================
+   AÇÕES
+========================================= */
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 22px;
+}
+
+
+/* =========================================
+   NOVO ATENDIMENTO
+========================================= */
+
+.quick-action-btn {
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 22px;
+
+  border: none;
+
+  border-radius: 13px;
+
+  background: $verde;
+
+  color: white;
+
+  font-family: 'Poppins', sans-serif;
+
+  font-size: 0.82rem;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 14px rgba(85, 122, 70, 0.16);
+
+  transition: all 0.2s ease;
+}
+
+.quick-action-btn:hover {
+  background: $verde-escuro;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 18px rgba(85, 122, 70, 0.2);
+}
+
+
+/* =========================================
+   NOTIFICAÇÃO
+========================================= */
+
+.icon-btn {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background: transparent;
+
+  color: $texto;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: $bege;
+}
+
+.notification-badge {
+  position: absolute;
+
   top: 0;
-  z-index: 50;
+  right: 0;
+
+  min-width: 16px;
+  height: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 4px;
+
+  border-radius: 50%;
+
+  background: #d84f47;
+
+  color: white;
+
+  border: 2px solid white;
+
+  font-family: 'Poppins', sans-serif;
+
+  font-size: 0.52rem;
+
+  font-weight: 700;
+}
+
+
+/* =========================================
+   PERFIL
+========================================= */
+
+.profile-menu {
+  position: relative;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 4px 5px;
+
+  border: none;
+
+  background: transparent;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-family: 'Poppins', sans-serif;
+
+  transition: background 0.2s ease;
+}
+
+.profile-btn:hover {
+  background: #f7f7f3;
+}
+
+
+/* AVATAR */
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: $verde;
+
+  color: white;
+
+  font-size: 0.9rem;
+
+  font-weight: 600;
+}
+
+
+/* INFORMAÇÕES */
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 75px;
+
+  text-align: left;
+}
+
+.profile-name {
+  color: $texto;
+
+  font-size: 0.82rem;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+.profile-role-text {
+  margin-top: 3px;
+
+  color: $texto-secundario;
+
+  font-size: 0.59rem;
+
+  font-weight: 600;
+
+  letter-spacing: 0.06em;
+
+  line-height: 1.2;
+}
+
+
+/* SETA */
+
+.dropdown-icon {
+  color: $verde-escuro;
+
+  margin-left: 4px;
+}
+
+
+/* =========================================
+   DROPDOWN
+========================================= */
+
+.dropdown-content {
+  position: absolute;
+
+  top: calc(100% + 10px);
+
+  right: 0;
+
+  width: 215px;
+
+  padding: 7px;
+
+  background: white;
+
+  border: 1px solid $borda;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.10);
+
+  animation: dropdownIn 0.15s ease;
+}
+
+.dropdown-content button {
+  width: 100%;
+
+  padding: 11px 13px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: $texto;
+
+  text-align: left;
+
+  font-family: 'Poppins', sans-serif;
+
+  font-size: 0.82rem;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: all 0.15s ease;
+}
+
+.dropdown-content button:hover {
+  background: $verde-claro;
+
+  color: $verde-escuro;
+}
+
+.dropdown-divider {
+  height: 1px;
+
+  margin: 5px 0;
+
+  background: $borda;
+}
+
+.dropdown-content .logout-btn {
+  color: #c95049;
+}
+
+.dropdown-content .logout-btn:hover {
+  background: #fae9e7;
+
+  color: #a63e38;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   RESPONSIVO
+========================================= */
+
+@media (max-width: 1200px) {
+  .search-container {
+    width: 420px;
+  }
+
+  .topbar-container {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 950px) {
+  .search-container {
+    width: 320px;
+  }
+
+  .profile-info {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar-container {
+    height: 72px;
+
+    padding: 0 15px;
+  }
 
   .search-container {
-    display: flex;
-    align-items: center;
-    background: $bg-white;
-    border: 1.5px solid $border-color;
-    border-radius: 50px; // Deixa o campo oval como no design
-    padding: 0.65rem 1.5rem;
-    width: 450px;
-    transition: all 0.3s ease;
+    flex: 1;
 
-    &:focus-within {
-      border-color: $primary-teal;
-      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
-    }
+    width: auto;
 
-    .search-icon {
-      margin-right: 0.8rem;
-      color: $text-muted;
-      font-size: 1.1rem;
-    }
-
-    input {
-      border: none;
-      background: transparent;
-      outline: none;
-      width: 100%;
-      font-size: 0.95rem;
-      color: $text-main;
-
-      &::placeholder {
-        color: #a0aec0;
-      }
-    }
+    margin-right: 12px;
   }
 
   .topbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 1.8rem;
+    gap: 6px;
+  }
 
-    .quick-action-btn {
-      background-color: $primary-teal;
-      color: white;
-      border: none;
-      padding: 0.7rem 1.4rem;
-      border-radius: 50px; // Botão arredondado idêntico ao do print
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
+  .quick-action-btn {
+    width: 42px;
 
-      &:hover { 
-        background-color: darken($primary-teal, 8%); 
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba($primary-teal, 0.2);
-      }
-    }
+    padding: 0;
 
-    .icon-btn {
-      background: none;
-      border: none;
-      font-size: 1.4rem;
-      cursor: pointer;
-      position: relative;
-      padding: 0.5rem;
-      border-radius: 50%;
-      transition: background 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    border-radius: 12px;
+  }
 
-      &:hover { background: $bg-light; }
+  .quick-action-btn span {
+    display: none;
+  }
 
-      .notification-badge {
-        position: absolute;
-        top: 2px;
-        right: 2px;
-        background: $danger;
-        color: white;
-        font-size: 0.6rem;
-        font-weight: bold;
-        padding: 0.15rem 0.35rem;
-        border-radius: 50px;
-        border: 2px solid $bg-white; // Dá o efeito de recorte envolta da bolinha
-      }
-    }
-
-    .profile-menu {
-      position: relative;
-
-      .profile-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.3rem 0.5rem;
-        border-radius: 50px;
-        transition: background 0.2s;
-
-        &:hover { background: $bg-light; }
-
-        .profile-avatar {
-          width: 42px;
-          height: 42px;
-          border-radius: 50%;
-          background-color: $primary-teal;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 700;
-          font-size: 1.1rem;
-        }
-
-        .profile-info {
-          display: flex;
-          flex-direction: column;
-          text-align: left;
-
-          .profile-name { 
-            font-weight: 600; 
-            color: $text-main; 
-            font-size: 0.95rem; 
-            line-height: 1.2;
-          }
-          .profile-role-text { 
-            font-size: 0.7rem; 
-            color: $text-muted; 
-            font-weight: 600; 
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-          }
-        }
-
-        .dropdown-icon { 
-          font-size: 0.6rem; 
-          color: $text-muted; 
-          margin-left: 0.5rem;
-        }
-      }
-
-      .dropdown-content {
-        position: absolute;
-        top: 120%;
-        right: 0;
-        background: $bg-white;
-        border: 1px solid rgba($border-color, 0.5);
-        border-radius: 12px;
-        width: 220px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-        display: flex;
-        flex-direction: column;
-        padding: 0.5rem;
-        overflow: hidden;
-
-        button {
-          text-align: left;
-          padding: 0.8rem 1rem;
-          background: none;
-          border: none;
-          border-radius: 8px;
-          font-size: 0.95rem;
-          color: $text-main;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s ease;
-
-          &:hover { 
-            background: $bg-light; 
-            color: $primary-teal;
-          }
-        }
-
-        .dropdown-divider {
-          height: 1px;
-          background-color: rgba($border-color, 0.5);
-          margin: 0.4rem 0;
-        }
-
-        .logout-btn {
-          color: $danger;
-          font-weight: 600;
-          
-          &:hover { 
-            background: #fff0f2; 
-            color: darken($danger, 10%);
-          }
-        }
-      }
-    }
+  .profile-info {
+    display: none;
   }
 }

@@ -1,35 +1,243 @@
+$verde: #557a46;
+$verde-escuro: #315b2f;
+$verde-hover: #426f3c;
+$verde-ativo: rgba(255, 255, 255, 0.18);
+
+$branco: #ffffff;
+$bege: #f4eee5;
+$vermelho: #d56a61;
+
 .sidebar {
-  width: 250px;
-  background-color: #4a0c25;
-  color: #ffffff;
-  padding: 1.5rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 215px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 12px 20px;
+  background: linear-gradient(
+    180deg,
+    #315b2f 0%,
+    #315d31 100%
+  );
+
+  color: $branco;
+  z-index: 100;
+  box-shadow: 4px 0 20px rgba(36, 62, 34, 0.08);
+  font-family: 'Poppins', sans-serif;
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 13px;
+  margin-bottom: 48px;
+}
+
+.brand-icon {
+  width: 39px;
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(244, 238, 229, 0.18);
+  color: $bege;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.brand-name {
+  color: white;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.brand-text small {
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.47rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+}
+
+
+/* =========================================
+   MENU
+========================================= */
+
+.nav-menu {
   display: flex;
   flex-direction: column;
 
-  .brand {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 2rem;
+  gap: 6px;
+
+  width: 100%;
+}
+
+
+/* =========================================
+   LINKS
+========================================= */
+
+.nav-link,
+.logout-link {
+  width: 100%;
+  min-height: 48px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.95);
+
+  font-family: 'Poppins', sans-serif;
+
+  font-size: 0.91rem;
+
+  font-weight: 500;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-link svg,
+.logout-link svg {
+  width: 21px;
+  height: 21px;
+
+  flex-shrink: 0;
+
+  stroke-width: 1.8;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.10);
+
+  color: white;
+}
+
+.nav-link.active {
+  background: rgba(220, 236, 211, 0.28);
+
+  color: white;
+
+  font-weight: 600;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.nav-link.active svg {
+  stroke-width: 2;
+}
+
+
+/* =========================================
+   RODAPÉ
+========================================= */
+
+.nav-footer {
+  margin-top: auto;
+
+  width: 100%;
+}
+
+.logout-link {
+  color: rgba(255, 255, 255, 0.82);
+  margin-top: 10px;
+}
+
+.logout-link svg {
+  color: #efaaa3;
+}
+
+.logout-link:hover {
+  background: rgba(213, 106, 97, 0.13);
+  color: #ffffff;
+}
+
+
+/* =========================================
+   RESPONSIVO
+========================================= */
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 200px;
   }
 
-  .nav-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  .brand-name {
+    font-size: 1rem;
+  }
 
-    .nav-link {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 0.5rem;
-      transition: background-color 0.2s;
+  .nav-link,
+  .logout-link {
+    font-size: 0.85rem;
+  }
+}
 
-      &:hover {
-        background-color: #047857;
-      }
-    }
+
+@media (max-width: 700px) {
+  .sidebar {
+    width: 72px;
+    padding: 22px 10px;
+  }
+
+  .sidebar-brand {
+    justify-content: center;
+    padding: 0;
+    margin-bottom: 32px;
+  }
+
+  .brand-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .nav-link,
+  .logout-link {
+    justify-content: center;
+    width: 48px;
+    padding: 0;
+    gap: 0;
+    font-size: 0;
+  }
+
+  .nav-link svg,
+  .logout-link svg {
+    width: 21px;
+    height: 21px;
   }
 }

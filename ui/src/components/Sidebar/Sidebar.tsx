@@ -1,63 +1,143 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, Users, Dog, LayoutDashboard, ClipboardList, LogOut } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  CalendarDays,
+  Users,
+  Dog,
+  LayoutDashboard,
+  ClipboardList,
+  LogOut,
+  Stethoscope,
+  PawPrint
+} from 'lucide-react';
+
 import './Sidebar.scss';
 
 export default function Sidebar() {
   const navigate = useNavigate();
+
   const userRole = localStorage.getItem('@TCC:role') || 'tutor';
+
+  // 1. Lógica simples para retornar a rota específica de cada dashboard
+  const getDashboardRoute = () => {
+    switch (userRole) {
+      case 'admin':
+        return '/dashboard-admin'; // Altere para a sua rota real do admin
+      case 'veterinario':
+        return '/dashboard-vet'; // Altere para a sua rota real do veterinário
+      case 'tutor':
+      default:
+        return '/dashboard-tutor'; // Altere para a sua rota real do tutor
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('@TCC:token');
     localStorage.removeItem('@TCC:role');
+
     navigate('/login');
-    window.location.reload(); 
+    window.location.reload();
   };
 
   return (
     <aside className="sidebar">
-      <h1 className="brand"> Clínica Maximus</h1>
-      
+
+      {/* LOGO */}
+      <div className="sidebar-brand">
+        <div className="brand-icon">
+          <PawPrint size={23} strokeWidth={1.8} />
+        </div>
+
+        <div className="brand-text">
+          <span className="brand-name">Clínica</span>
+          <span className="brand-name">Maximus</span>
+          <small>SAÚDE ANIMAL</small>
+        </div>
+      </div>
+
+      {/* MENU */}
       <nav className="nav-menu">
-        <Link to="/" className="nav-link">
-          <LayoutDashboard size={20} /> Início
-        </Link>
+
+        {/* 2. Chamamos a função no 'to' para enviar o usuário ao lugar certo */}
+        <NavLink
+          to={getDashboardRoute()}
+          end
+          className={({ isActive }) =>
+            `nav-link ${isActive ? 'active' : ''}`
+          }
+        >
+          <LayoutDashboard />
+          <span>Início</span>
+        </NavLink>
 
         {(userRole === 'admin' || userRole === 'veterinario') && (
           <>
-            <Link to="/tutores" className="nav-link">
-              <Users size={20} /> Tutores
-            </Link>
-            <Link to="/pets" className="nav-link">
-              <Dog size={20} /> Pets
-            </Link>
+            <NavLink
+              to="/tutores"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? 'active' : ''}`
+              }
+            >
+              <Users />
+              <span>Tutores</span>
+            </NavLink>
+
+            <NavLink
+              to="/pets"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? 'active' : ''}`
+              }
+            >
+              <Dog />
+              <span>Pets</span>
+            </NavLink>
           </>
         )}
 
-        <Link to="/consultas" className="nav-link">
-          <Calendar size={20} /> Consultas
-        </Link>
+        <NavLink
+          to="/consultas"
+          className={({ isActive }) =>
+            `nav-link ${isActive ? 'active' : ''}`
+          }
+        >
+          <CalendarDays />
+          <span>Consultas</span>
+        </NavLink>
 
         {userRole === 'veterinario' && (
-          <Link to="/prontuarios" className="nav-link">
-            <ClipboardList size={20} /> Prontuários
-          </Link>
+          <NavLink
+            to="/prontuarios"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? 'active' : ''}`
+            }
+          >
+            <ClipboardList />
+            <span>Prontuários</span>
+          </NavLink>
         )}
-      
-        <Link to="/veterinarios" className="nav-link">
-          <Users size={20} /> Veterinários
-        </Link>
+
+        <NavLink
+          to="/veterinarios"
+          className={({ isActive }) =>
+            `nav-link ${isActive ? 'active' : ''}`
+          }
+        >
+          <Stethoscope />
+          <span>Veterinários</span>
+        </NavLink>
+
       </nav>
 
-      {/* Botão de Sair fixado no final do menu */}
-      <div className="nav-footer" style={{ marginTop: 'auto', padding: '1rem' }}>
-        <button 
-          onClick={handleLogout} 
-          className="nav-link" 
-          style={{ width: '100%', border: 'none', background: 'transparent', cursor: 'pointer', color: '#ef4444' }}
+      {/* SAIR */}
+      <div className="nav-footer">
+        <button
+          onClick={handleLogout}
+          className="logout-link"
         >
-          <LogOut size={20} /> Sair do Sistema
+          <LogOut />
+          <span>Sair do Sistema</span>
         </button>
       </div>
+
     </aside>
   );
 }

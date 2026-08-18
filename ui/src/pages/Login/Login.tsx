@@ -10,6 +10,8 @@ export default function Login() {
   const [endereco, setEndereco] = useState('');
   const [senha, setSenha] = useState('');
   const [role, setRole] = useState('tutor');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [lembrar, setLembrar] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,31 +19,36 @@ export default function Login() {
 
     try {
       if (modoLogin) {
-        const response = await api.post('/auth/login', { email, senha });
+        const response = await api.post('/auth/login', {
+          email,
+          senha
+        });
 
-        // Captura a role (cargo/perfil) e o nome retornados pelo back-end
         const usuarioRole = response.data.usuario.role;
         const usuarioNome = response.data.usuario.nome;
 
-        // Salva token, perfil e NOME no localStorage com o prefixo @TCC
         localStorage.setItem('@TCC:token', response.data.token);
         localStorage.setItem('@TCC:role', usuarioRole);
-        localStorage.setItem('@TCC:nome', usuarioNome); // <-- CORREÇÃO FEITA AQUI
+        localStorage.setItem('@TCC:nome', usuarioNome);
 
-        // Redireciona para o dashboard correto baseado no perfil do usuário
         if (usuarioRole === 'tutor') {
           navigate('/dashboard-tutor');
         } else if (usuarioRole === 'veterinario') {
-          navigate('/dashboard-vet'); 
+          navigate('/dashboard-vet');
         } else if (usuarioRole === 'admin') {
           navigate('/dashboard-admin');
         } else {
           navigate('/dashboard-tutor');
         }
-
       } else {
-        // Envia todos os campos preenchidos no cadastro
-        await api.post('/auth/registrar', { nome, email, senha, role, endereco });
+        await api.post('/auth/registrar', {
+          nome,
+          email,
+          senha,
+          role,
+          endereco
+        });
+
         alert('Conta criada com sucesso! Faça login para entrar.');
         setModoLogin(true);
       }
@@ -53,154 +60,318 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <div className="login-wrapper">
-        {/* LADO ESQUERDO: FOTO DO TUTOR COM SEU PET & MENSAGENS INSTITUCIONAIS */}
-        <div className="login-hero-side">
-          <div className="hero-overlay"></div>
-          <img
-            src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=900"
-            alt="Tutor com seu Pet"
-            className="hero-bg-img"
-          />
-          <div className="hero-content">
-            <div className="brand-badge">
-              <span className="paw-icon">🐾</span>
-              <span>Clínica Maximus</span>
-            </div>
+      <div className="login-page">
+        <section className="login-left">
+          <div className="decor-circle decor-circle-top"></div>
+          <div className="decor-circle decor-circle-bottom"></div>
+          <span className="decor-plus plus-top">+</span>
+          <span className="decor-plus plus-bottom">+</span>
 
-            <h1 className="hero-title">
-              Cuidando de quem enche a sua vida de amor.
+          <div className="left-content">
+            <h1>
+              Cuidamos de quem
+              <br />
+              faz parte da sua
+              <br />
+              melhor companhia.
             </h1>
 
-            <p className="hero-description">
-              Acesse a plataforma para acompanhar prontuários, consultas, vacinas e ter gestão completa da saúde do seu pet com toda a praticidade e carinho.
+            <p className="left-description">
+              Aqui, tecnologia e carinho trabalham juntos
+              <br />
+              para oferecer o melhor atendimento para
+              <br />
+              seu pet e tranquilidade para você.
             </p>
 
-            <div className="hero-features">
-              <div className="feature-item">
-                <span className="feature-icon">✨</span>
+            <div className="features">
+              <div className="feature">
+                <div className="feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="12" y1="12" x2="12" y2="17"></line>
+                    <line x1="9.5" y1="14.5" x2="14.5" y2="14.5"></line>
+                  </svg>
+                </div>
                 <div>
-                  <strong>Prontuário Digital</strong>
-                  <p>Histórico clínico centralizado e seguro</p>
+                  <strong>Agendamentos simples</strong>
+                  <p>
+                    Marque consultas com praticidade
+                    <br />
+                    e rapidez.
+                  </p>
                 </div>
               </div>
 
-              <div className="feature-item">
-                <span className="feature-icon">🗓️</span>
+              <div className="feature">
+                <div className="feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <circle cx="12" cy="12" r="8.5"></circle>
+                    <path d="M8 12h8"></path>
+                    <path d="M10 9.5h.01"></path>
+                    <path d="M14 9.5h.01"></path>
+                  </svg>
+                </div>
                 <div>
-                  <strong>Consultas e Vacinas</strong>
-                  <p>Lembretes e agendamentos simplificados</p>
+                  <strong>Histórico completo</strong>
+                  <p>
+                    Acompanhe o histórico de saúde
+                    <br />
+                    do seu pet em um só lugar.
+                  </p>
                 </div>
               </div>
 
-              <div className="feature-item">
-                <span className="feature-icon">🩺</span>
+              <div className="feature">
+                <div className="feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M20.8 8.8c0 5.5-8.8 10.2-8.8 10.2S3.2 14.3 3.2 8.8C3.2 6.2 5.1 4 7.7 4c1.8 0 3.4 1 4.3 2.4C12.9 5 14.5 4 16.3 4c2.6 0 4.5 2.2 4.5 4.8Z"></path>
+                  </svg>
+                </div>
                 <div>
-                  <strong>Equipe Especializada</strong>
-                  <p>Medicina veterinária humanizada</p>
+                  <strong>Cuidado que acolhe</strong>
+                  <p>
+                    Nossa equipe está sempre pronta
+                    <br />
+                    para cuidar com amor.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* LADO DIREITO: CARD PRINCIPAL COM O FORMULÁRIO */}
-        <div className="login-card">
-          <div className="form-header">
-            <h1 className="brand-mobile">🐾 Clínica Vet</h1>
-            <h2>{modoLogin ? 'Acesse sua conta' : 'Crie sua conta'}</h2>
-            <p className="subtitle">
-              {modoLogin
-                ? 'Insira suas credenciais para entrar no sistema'
-                : 'Preencha os campos abaixo para criar seu cadastro'}
-            </p>
+          <div className="hero-photo">
+            <img
+              src="https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&q=85&w=1200"
+              alt="Família com seus animais de estimação"
+            />
           </div>
 
-          <form onSubmit={handleSubmit}>
-            {!modoLogin && (
-              <>
-                <div className="input-group">
-                  <label>Nome Completo</label>
-                  <div className="input-wrapper">
-                    <span className="input-icon">👤</span>
+          <div className="security-card">
+            <div className="security-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3Z"></path>
+                <path d="m8.5 12 2.2 2.2 4.8-5"></path>
+              </svg>
+            </div>
+            <div>
+              <strong>
+                Seus dados e os do seu pet
+                <br />
+                sempre protegidos.
+              </strong>
+              <p>Segurança e privacidade são nossa prioridade.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="login-right">
+          <div className="login-card">
+            <div className="maximus-logo">
+              <div className="logo-symbol">
+                <svg viewBox="0 0 70 80" fill="none">
+                  <path
+                    d="M35 2L61 20V52L35 77L9 52V20L35 2Z"
+                    fill="#80976B"
+                  />
+                  <path
+                    d="M35 12L52 25V48L35 64L18 48V25L35 12Z"
+                    fill="#F7F5ED"
+                  />
+                  <ellipse cx="25" cy="30" rx="4.5" ry="6" fill="#80976B" />
+                  <ellipse cx="45" cy="30" rx="4.5" ry="6" fill="#80976B" />
+                  <ellipse cx="21" cy="40" rx="4" ry="5.5" fill="#80976B" />
+                  <ellipse cx="49" cy="40" rx="4" ry="5.5" fill="#80976B" />
+                  <path
+                    d="M35 35C29 35 25 39 25 44C25 49 29 53 35 53C41 53 45 49 45 44C45 39 41 35 35 35Z"
+                    fill="#80976B"
+                  />
+                </svg>
+              </div>
+              <div className="logo-text">
+                <strong>Clínica</strong>
+                <strong>Maximus</strong>
+                <span>SAÚDE ANIMAL</span>
+              </div>
+            </div>
+
+            <div className="form-header">
+              <h2>{modoLogin ? 'Acesse sua conta' : 'Crie sua conta'}</h2>
+              <p>
+                {modoLogin
+                  ? 'Entre para gerenciar pacientes, tutores e consultas.'
+                  : 'Preencha os campos abaixo para criar seu cadastro.'}
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              {!modoLogin && (
+                <>
+                  <div className="input-group">
+                    <label>Nome Completo</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                          <circle cx="12" cy="8" r="4"></circle>
+                          <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"></path>
+                        </svg>
+                      </span>
+                      <input
+                        type="text"
+                        value={nome}
+                        onChange={(e) => setNome(e.target.value)}
+                        placeholder="Ex: Maria Silva"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="input-group">
+                    <label>Eu sou um(a):</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                          <path d="M20 12a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"></path>
+                          <path d="M8 12h8"></path>
+                        </svg>
+                      </span>
+                      <select value={role} onChange={(e) => setRole(e.target.value)}>
+                        <option value="tutor">Tutor (Cliente)</option>
+                        <option value="veterinario">Veterinário</option>
+                        <option value="admin">Recepcionista / Admin</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="input-group">
+                    <label>Endereço</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                          <path d="M12 21s7-6.2 7-12A7 7 0 0 0 5 9c0 5.8 7 12 7 12Z"></path>
+                          <circle cx="12" cy="9" r="2.5"></circle>
+                        </svg>
+                      </span>
+                      <input
+                        type="text"
+                        value={endereco}
+                        onChange={(e) => setEndereco(e.target.value)}
+                        placeholder="Rua, Número, Bairro"
+                        required
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <div className="input-group">
+                <label>E-mail</label>
+                <div className="input-wrapper">
+                  <span className="input-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                      <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                      <path d="m4 7 8 6 8-6"></path>
+                    </svg>
+                  </span>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Senha</label>
+                <div className="input-wrapper">
+                  <span className="input-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                      <rect x="5" y="10" width="14" height="11" rx="2"></rect>
+                      <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                    </svg>
+                  </span>
+                  <input
+                    type={mostrarSenha ? 'text' : 'password'}
+                    value={senha}
+                    onChange={(e) => setSenha(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setMostrarSenha(!mostrarSenha)}
+                    aria-label="Mostrar senha"
+                  >
+                    {mostrarSenha ? (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                        <path d="M3 3l18 18"></path>
+                        <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+                        <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c5.5 0 9 5.8 9 7s-1.2 3.1-3.7 4.9"></path>
+                        <path d="M6.6 7.1C4.2 8.8 3 11.1 3 12c0 1.2 3.5 7 9 7 1 0 2-.2 2.9-.5"></path>
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                        <circle cx="12" cy="12" r="2.5"></circle>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {modoLogin && (
+                <div className="form-options">
+                  <label className="remember">
                     <input
-                      type="text"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      placeholder="Ex: Maria Silva"
-                      required
+                      type="checkbox"
+                      checked={lembrar}
+                      onChange={(e) => setLembrar(e.target.checked)}
                     />
-                  </div>
-                </div>
+                    <span></span>
+                    Lembrar-me
+                  </label>
 
-                <div className="input-group">
-                  <label>Eu sou um(a):</label>
-                  <div className="input-wrapper">
-                    <span className="input-icon">🏷️</span>
-                    <select value={role} onChange={(e) => setRole(e.target.value)}>
-                      <option value="tutor">Tutor (Cliente)</option>
-                      <option value="veterinario">Veterinário</option>
-                      <option value="admin">Recepcionista / Admin</option>
-                    </select>
-                  </div>
+                  <button
+                    type="button"
+                    className="forgot-password"
+                    onClick={() => alert('Entre em contato com a recepção para recuperar sua senha.')}
+                  >
+                    Esqueci minha senha
+                  </button>
                 </div>
+              )}
 
-                <div className="input-group">
-                  <label>Endereço</label>
-                  <div className="input-wrapper">
-                    <span className="input-icon">🏠</span>
-                    <input
-                      type="text"
-                      value={endereco}
-                      onChange={(e) => setEndereco(e.target.value)}
-                      placeholder="Rua, Número, Bairro"
-                      required
-                    />
-                  </div>
-                </div>
-              </>
-            )}
+              <button type="submit" className="btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M10 17l5-5-5-5"></path>
+                  <path d="M15 12H3"></path>
+                  <path d="M14 5h5a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"></path>
+                </svg>
+                {modoLogin ? 'Entrar' : 'Cadastrar'}
+              </button>
+            </form>
 
-            <div className="input-group">
-              <label>E-mail</label>
-              <div className="input-wrapper">
-                <span className="input-icon">✉️</span>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu.email@exemplo.com"
-                  required
-                />
-              </div>
+            <div className="register-link">
+              <span>
+                {modoLogin
+                  ? 'Ainda não tem uma conta?'
+                  : 'Já possui uma conta?'}
+              </span>
+              <button
+                type="button"
+                onClick={() => setModoLogin(!modoLogin)}
+              >
+                {modoLogin ? 'Fale com a recepção' : 'Faça login'}
+              </button>
             </div>
-
-            <div className="input-group">
-              <label>Senha</label>
-              <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
-                <input
-                  type="password"
-                  value={senha}
-                  onChange={(e) => setSenha(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-            </div>
-
-            <button type="submit" className="btn-primary">
-              {modoLogin ? 'Entrar no Sistema' : 'Cadastrar'}
-            </button>
-          </form>
-
-          <div className="toggle-mode">
-            <span>{modoLogin ? 'Ainda não tem conta?' : 'Já possui uma conta?'}</span>
-            <button type="button" onClick={() => setModoLogin(!modoLogin)}>
-              {modoLogin ? 'Cadastre-se' : 'Faça login'}
-            </button>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

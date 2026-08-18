@@ -1,204 +1,201 @@
-/* src/pages/Pets/Pets.scss */
-
-/* Padrão SVG de Patinhas em background */
-$paw-svg: "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2361122e' fill-opacity='0.04' fill-rule='evenodd'%3E%3Cpath d='M20 18c1.65 0 3-1.79 3-4s-1.35-4-3-4-3 1.79-3 4 1.35 4 3 4zm10-2c1.65 0 3-1.79 3-4s-1.35-4-3-4-3 1.79-3 4 1.35 4 3 4zm-20 2c1.65 0 3-1.79 3-4s-1.35-4-3-4-3 1.79-3 4 1.35 4 3 4zm30-2c1.65 0 3-1.79 3-4s-1.35-4-3-4-3 1.79-3 4 1.35 4 3 4zm-15 8c-4.42 0-8 3.58-8 8 0 4.42 3.58 8 8 8s8-3.58 8-8c0-4.42-3.58-8-8-8z'/%3E%3C/g%3E%3C/svg%3E";
-
 .pets-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  background-color: #faf5f2;
-  /* Tom creme aquecido da referência */
-  background-image: url($paw-svg);
-  min-height: 100vh;
-  border-radius: 1.5rem;
+  width: 100%;
+  max-width: none;
+  min-height: calc(100vh - 80px);
+  padding: 28px 24px 40px;
   box-sizing: border-box;
+  background: #f6f7f5;
+  color: #263b29;
 
-  /* --- HERO BANNER --- */
   .hero-banner {
+    width: 100%;
+    min-height: 220px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
     position: relative;
-    padding: 1rem 0;
+    overflow: hidden;
+    padding: 34px 52px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    background: #f5efe5;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(197, 197, 169, 0.22);
+      top: -120px;
+      right: 180px;
+    }
 
     .hero-content {
-      flex: 1;
-      max-width: 580px;
-
-      .badge-tag {
-        display: inline-block;
-        background-color: #f3e5ea;
-        color: #61122e;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        padding: 0.35rem 0.85rem;
-        border-radius: 9999px;
-        margin-bottom: 1rem;
-        letter-spacing: 0.05em;
-      }
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
 
       .page-title {
-        font-size: 2.4rem;
+        margin: 0 0 14px;
+        color: #285b32;
+        font-size: 46px;
+        line-height: 1.05;
         font-weight: 800;
-        color: #61122e;
-        /* Tom Vinho Principal */
-        line-height: 1.2;
-        margin-bottom: 0.75rem;
+        letter-spacing: -1.5px;
       }
 
       .hero-subtitle {
-        font-size: 1rem;
-        color: #6b5860;
+        margin: 0;
+        max-width: 680px;
+        color: #50534d;
+        font-size: 16px;
         line-height: 1.6;
+        font-weight: 400;
       }
     }
 
-    /* Foto de Pet com Molduras Geométricas (Igual Print BemTeVi) */
     .hero-image-wrapper {
-      position: relative;
       width: 280px;
-      height: 260px;
+      height: 210px;
+      position: relative;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
 
-      .pet-hero-img {
-        width: 220px;
-        height: 220px;
-        object-fit: cover;
-        border-radius: 1.5rem;
-        position: relative;
-        z-index: 2;
-        box-shadow: 0 20px 30px rgba(97, 18, 46, 0.2);
+      .hero-circle {
+        position: absolute;
+        width: 190px;
+        height: 190px;
+        right: 10px;
+        top: 12px;
+        border-radius: 50%;
+        background: #4f7d4b;
       }
 
-      .decor-shape {
-        position: absolute;
-        z-index: 1;
-        width: 210px;
-        height: 210px;
-        background-color: #61122e;
-        border-radius: 2rem;
-        transform: rotate(12deg);
-        top: 10px;
-        right: 15px;
+      .pet-hero-img {
+        width: 190px;
+        height: 190px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 7px solid #fff;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 10px 25px rgba(44, 67, 45, 0.15);
       }
 
       .decor-cross {
         position: absolute;
-        color: #d99b82;
-        font-size: 2rem;
-        font-weight: bold;
-        z-index: 3;
+        z-index: 4;
+        color: #39713d;
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 1;
 
         &.cross-1 {
-          top: -10px;
-          right: 10px;
+          top: 12px;
+          right: -2px;
         }
 
         &.cross-2 {
-          bottom: 10px;
-          left: 0px;
+          bottom: 5px;
+          left: 10px;
         }
       }
     }
   }
 
-  /* --- SEÇÃO FORMULÁRIO (Card Vinho Estilo BemTeVi) --- */
   .form-section {
-    background-color: #61122e;
-    /* Card escuro em tom Vinho */
-    border-radius: 1.25rem;
-    padding: 2rem;
-    box-shadow: 0 15px 35px rgba(97, 18, 46, 0.25);
-    margin-bottom: 2.5rem;
-    color: #ffffff;
-    position: relative;
-    overflow: hidden;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 150px;
-      height: 150px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      pointer-events: none;
-    }
+    width: 100%;
+    box-sizing: border-box;
+    padding: 22px 22px 12px;
+    margin-bottom: 14px;
+    border: 1px solid #e7e5df;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(39, 57, 41, 0.035);
 
     .section-header {
-      margin-bottom: 1.5rem;
+      margin-bottom: 18px;
 
       h2 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.25rem;
-        color: #ffffff;
+        margin: 0 0 5px;
+        color: #294d2f;
+        font-size: 21px;
+        line-height: 1.2;
+        font-weight: 750;
       }
 
       p {
-        font-size: 0.875rem;
-        color: #e5cbd3;
+        margin: 0;
+        color: #666862;
+        font-size: 14px;
+        line-height: 1.5;
       }
     }
 
     .form-card {
       .form-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 1.5rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 13px 22px;
+        margin-bottom: 12px;
 
         .input-group {
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 6px;
 
           label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #f7e8ed;
+            color: #18231b;
+            font-size: 13px;
+            font-weight: 700;
           }
 
           .input-wrapper {
+            width: 100%;
+            height: 42px;
+            box-sizing: border-box;
             display: flex;
             align-items: center;
-            background-color: #ffffff;
-            border-radius: 0.6rem;
-            padding: 0 0.75rem;
-            border: 2px solid transparent;
-            transition: all 0.2s ease;
+            padding: 0 12px;
+            border: 1px solid #dfddd7;
+            border-radius: 9px;
+            background: #fff;
+            transition: .2s ease;
 
             &:focus-within {
-              border-color: #22c55e;
-              /* Foco em verde destaque */
-              box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+              border-color: #527e4f;
+              box-shadow: 0 0 0 2px rgba(82, 126, 79, .10);
             }
 
             .input-icon {
-              font-size: 0.9rem;
-              margin-right: 0.5rem;
+              flex-shrink: 0;
+              margin-right: 10px;
+              color: #7c75c9;
             }
 
             input,
             select {
               width: 100%;
-              padding: 0.65rem 0;
+              height: 100%;
+              padding: 0;
               border: none;
               outline: none;
-              font-size: 0.875rem;
-              color: #1f2937;
               background: transparent;
+              color: #444742;
+              font-family: inherit;
+              font-size: 14px;
 
               &::placeholder {
-                color: #9ca3af;
+                color: #8b8c87;
               }
+            }
+
+            select {
+              cursor: pointer;
             }
           }
         }
@@ -206,193 +203,325 @@ $paw-svg: "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' 
 
       .form-actions {
         display: flex;
-        gap: 0.75rem;
         justify-content: flex-end;
+        gap: 9px;
+        padding-top: 1px;
       }
     }
   }
 
-  /* --- BOTÕES --- */
-  .btn-primary {
-    background-color: #22c55e;
-    /* Verde Chamativo da Referência */
-    color: #ffffff;
-    padding: 0.75rem 1.75rem;
-    border: none;
-    border-radius: 9999px;
-    cursor: pointer;
+  .btn-primary,
+  .btn-secondary {
+    height: 42px;
+    padding: 0 22px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 14px;
     font-weight: 700;
-    font-size: 0.9rem;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-    transition: all 0.2s ease;
+    cursor: pointer;
+    transition: .2s ease;
+  }
+
+  .btn-primary {
+    border: 1px solid #4f7c4b;
+    background: #4f7c4b;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(55, 91, 55, .15);
 
     &:hover {
-      background-color: #16a34a;
-      transform: translateY(-1px);
+      background: #416a3e;
     }
   }
 
   .btn-secondary {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 9999px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
+    border: 1px solid #dddcd7;
+    background: #fff;
+    color: #315a35;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.25);
+      background: #f7f7f4;
     }
   }
 
-  /* --- SEÇÃO DA TABELA --- */
   .table-section {
+    width: 100%;
+
     .table-card {
-      background-color: #ffffff;
-      border-radius: 1.25rem;
-      padding: 1.75rem;
-      box-shadow: 0 10px 30px rgba(97, 18, 46, 0.08);
-      border: 1px solid #f0e2e7;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+      border: 1px solid #e7e5df;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(39, 57, 41, .035);
 
       .table-header {
-        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px 14px;
 
         h3 {
-          font-size: 1.15rem;
-          color: #61122e;
+          margin: 0 0 5px;
+          color: #294d2f;
+          font-size: 21px;
+          line-height: 1.2;
+          font-weight: 750;
+        }
+
+        p {
+          margin: 0;
+          color: #6c6e69;
+          font-size: 14px;
+        }
+
+        .total-badge {
+          padding: 7px 12px;
+          border-radius: 20px;
+          background: #f0f4eb;
+          color: #42653f;
+          font-size: 12px;
           font-weight: 700;
         }
+      }
+
+      .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
       }
 
       .pets-table {
         width: 100%;
         border-collapse: collapse;
+        table-layout: auto;
         text-align: left;
 
         th,
         td {
-          padding: 0.9rem 1rem;
-          border-bottom: 1px solid #f5eaee;
+          border-bottom: 1px solid #eeeeea;
         }
 
         th {
-          background-color: #fcf6f8;
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: #61122e;
+          height: 34px;
+          padding: 0 14px;
+          background: #f0f3e8;
+          color: #29472d;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: .02em;
+          white-space: nowrap;
         }
 
         td {
-          font-size: 0.875rem;
-          color: #374151;
+          height: 61px;
+          padding: 7px 14px;
+          color: #3f433f;
+          font-size: 13px;
+          vertical-align: middle;
+        }
 
-          &.pet-name-td {
+        tbody tr {
+          transition: background .15s ease;
+
+          &:hover {
+            background: #fafbf8;
+          }
+
+          &:last-child td {
+            border-bottom: none;
+          }
+        }
+
+        .pet-info {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .pet-avatar {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f0eee8;
+            color: #7a776f;
+          }
 
-            .pet-avatar {
-              background-color: #f7e8ed;
-              padding: 0.3rem;
-              border-radius: 50%;
-              font-size: 0.9rem;
+          div:last-child {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            strong {
+              color: #263b29;
+              font-size: 13px;
+              font-weight: 750;
+            }
+
+            span {
+              color: #898b86;
+              font-size: 11px;
             }
           }
+        }
+
+        .species-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
 
           .badge-especie {
-            display: inline-block;
-            background-color: #f3e5ea;
-            color: #61122e;
-            padding: 0.2rem 0.5rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            font-size: 0.75rem;
-            margin-right: 0.5rem;
+            padding: 5px 9px;
+            border-radius: 15px;
+            background: #eef3e9;
+            color: #365a35;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
           }
 
-          .raca-sub {
-            color: #71717a;
+          small {
+            color: #777a75;
+            font-size: 12px;
+          }
+        }
+
+        .age-info,
+        .tutor-info {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          color: #555954;
+
+          svg {
+            color: #777a73;
           }
         }
 
         .actions-cell {
           display: flex;
-          gap: 0.5rem;
+          align-items: center;
+          gap: 8px;
+          white-space: nowrap;
+
+          button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: .2s ease;
+          }
+
+          .btn-edit,
+          .btn-delete {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 7px;
+            border: none;
+          }
 
           .btn-edit {
-            background-color: #61122e;
-            color: #ffffff;
-            padding: 0.35rem 0.75rem;
-            border: none;
-            border-radius: 0.4rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
+            background: #4f7c4b;
+            color: #fff;
 
             &:hover {
-              background-color: #430a1e;
+              background: #416a3e;
             }
           }
 
           .btn-delete {
-            background-color: #ef4444;
-            color: #ffffff;
-            padding: 0.35rem 0.75rem;
-            border: none;
-            border-radius: 0.4rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
+            background: #fff0ef;
+            color: #ef5c55;
+            border: 1px solid #ffc5c0;
 
             &:hover {
-              background-color: #dc2626;
+              background: #ffe1df;
             }
           }
 
           .btn-ver-ficha {
-            background-color: #e0f2fe;
-            color: #0284c7;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            height: 32px;
+            padding: 0 11px;
+            border: 1px solid #dce5d8;
+            border-radius: 7px;
+            background: #f5f8f3;
+            color: #426640;
+            font-size: 11px;
+            font-weight: 700;
 
             &:hover {
-              background-color: #bae6fd;
-              color: #0369a1;
+              background: #e9f0e5;
             }
           }
         }
 
         .empty-state {
+          padding: 35px;
           text-align: center;
-          color: #9ca3af;
-          padding: 2rem;
+          color: #999b96;
+          font-size: 13px;
         }
       }
     }
   }
 }
 
-/* Responsividade para telas menores */
+@media (max-width: 1000px) {
+  .pets-container {
+    .hero-banner {
+      padding: 30px;
+
+      .hero-content .page-title {
+        font-size: 38px;
+      }
+
+      .hero-image-wrapper {
+        width: 220px;
+      }
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .pets-container {
+    padding: 18px 14px 30px;
+
     .hero-banner {
       flex-direction: column;
       text-align: center;
+      padding: 28px 20px;
+
+      .hero-content {
+        .page-title {
+          font-size: 32px;
+        }
+      }
 
       .hero-image-wrapper {
-        margin: 0 auto;
+        height: 190px;
+      }
+    }
+
+    .form-section {
+      padding: 18px 15px;
+
+      .form-card .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .table-section .table-card {
+      .table-header {
+        align-items: flex-start;
+        gap: 10px;
+        flex-direction: column;
+      }
+
+      .pets-table {
+        min-width: 850px;
       }
     }
   }
