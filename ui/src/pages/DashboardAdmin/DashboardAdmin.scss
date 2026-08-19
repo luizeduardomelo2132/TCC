@@ -21,6 +21,23 @@ $success-bg: #edf5e9;
 $success-text: #41663d;
 
 
+// ==========================================
+// CORES - MODO ESCURO
+// ==========================================
+
+$dark-bg: #111512;
+$dark-surface: #191e1a;
+$dark-surface-hover: #202720;
+$dark-border: #303830;
+
+$dark-text-main: #f2f5f1;
+$dark-text-secondary: #b2bbb2;
+$dark-text-muted: #818a81;
+
+$dark-cream: #242820;
+$dark-cream-light: #1d221d;
+
+
 /* ==========================================
    CONTAINER PRINCIPAL
    ========================================== */
@@ -893,5 +910,438 @@ $success-text: #41663d;
         min-width: auto !important;
       }
     }
+  }
+}
+
+// ==========================================
+// MODO ESCURO
+// ==========================================
+
+.dark-mode {
+
+  // ==========================================
+  // CONTAINER
+  // ==========================================
+
+  .dashboard-admin-container {
+    background: $dark-bg;
+    color: $dark-text-main;
+  }
+
+
+  // ==========================================
+  // HERO
+  // ==========================================
+
+  .dashboard-hero {
+    background: linear-gradient(
+      110deg,
+      #1c231d 0%,
+      #202720 55%,
+      #1a211b 100%
+    );
+
+    .hero-content {
+
+      h1 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: #b4bbb4;
+      }
+    }
+
+    .hero-circle {
+      background: rgba(111, 150, 101, 0.12);
+    }
+
+    .hero-cross {
+      color: #6f9665;
+    }
+
+    .hero-image-background {
+      background: #456d42;
+    }
+
+    .hero-image {
+      border-color: #252b25;
+    }
+
+    .image-cross {
+      color: #7fa576;
+    }
+
+    .hero-btn {
+
+      &.primary {
+        background: $green-main;
+        color: #ffffff;
+
+        &:hover {
+          background: $green-light;
+        }
+      }
+
+      &.secondary {
+        background: #242b24;
+        color: #a8c4a1;
+        border-color: #394339;
+
+        &:hover {
+          background: #2c342c;
+        }
+      }
+    }
+  }
+
+
+  // ==========================================
+  // VISÃO GERAL
+  // ==========================================
+
+  .overview-section {
+
+    .section-title {
+
+      h2 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: $dark-text-secondary;
+      }
+    }
+  }
+
+
+  // ==========================================
+  // CARDS
+  // ==========================================
+
+  .stat-card {
+    background: $dark-surface;
+    border-color: $dark-border;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+
+    &:hover {
+      background: $dark-surface-hover;
+
+      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .stat-icon {
+      background: #283128;
+      color: #9fbd98;
+    }
+
+    .pets-icon {
+      background: #283428;
+    }
+
+    .tutors-icon {
+      background: #302f27;
+    }
+
+    .consultations-icon {
+      background: #283128;
+    }
+
+    .stat-content {
+
+      .stat-label {
+        color: $dark-text-secondary;
+      }
+
+      .stat-number {
+        color: #a8c4a1;
+      }
+
+      .stat-description {
+        color: $dark-text-muted;
+      }
+    }
+  }
+
+
+  // ==========================================
+  // AGENDA
+  // ==========================================
+
+  .agenda-section {
+
+    .agenda-card {
+      background: $dark-surface;
+      border-color: $dark-border;
+
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .agenda-header {
+      border-bottom-color: $dark-border;
+
+      h2 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: $dark-text-secondary;
+      }
+
+      .see-all-button {
+        color: #8eae87;
+
+        &:hover {
+          color: #b0cda9;
+        }
+      }
+    }
+
+
+    // ==========================================
+    // ITENS DA AGENDA
+    // ==========================================
+
+    .agenda-item {
+      border-bottom-color: #2b302b;
+
+      .appointment-time {
+
+        span {
+          color: #9fbd98;
+        }
+      }
+
+      .appointment-icon {
+        background: #283128;
+      }
+
+      .appointment-info {
+
+        h3 {
+          color: $dark-text-main;
+
+          span {
+            color: $dark-text-muted;
+          }
+        }
+
+        p {
+          color: $dark-text-muted;
+
+          strong {
+            color: $dark-text-secondary;
+          }
+        }
+      }
+
+
+      // ==========================================
+      // STATUS
+      // ==========================================
+
+      .appointment-status {
+
+        .status-badge {
+
+          &.agendada {
+            background: #263526;
+            color: #9bc293;
+          }
+
+          &.aguardando {
+            background: #3a321f;
+            color: #d5b56a;
+          }
+
+          &.em_atendimento {
+            background: #26333d;
+            color: #8ba9c5;
+          }
+
+          &.concluída,
+          &.concluida {
+            background: #253628;
+            color: #8fc095;
+          }
+
+          &.cancelada {
+            background: #3b2928;
+            color: #d18b86;
+          }
+        }
+      }
+    }
+  }
+
+
+  // ==========================================
+  // AGENDA VAZIA
+  // ==========================================
+
+  .empty-agenda {
+
+    .empty-icon {
+      background: #283128;
+    }
+
+    h3 {
+      color: #9fbd98;
+    }
+
+    p {
+      color: $dark-text-muted;
+    }
+  }
+}
+
+
+
+
+/* ==========================================
+   MODO ESCURO
+========================================== */
+html.dark-mode {
+  background: #111512;
+
+  body {
+    background: #111512;
+  }
+
+  .dashboard-admin-container {
+    background: #111512;
+    color: #f2f5f1;
+  }
+
+  .dashboard-hero {
+    background: linear-gradient(110deg, #1c231d 0%, #202720 55%, #1a211b 100%);
+  }
+
+  .hero-content h1 {
+    color: #9fbd98;
+  }
+
+  .hero-content p {
+    color: #b2bbb2;
+  }
+
+  .hero-circle {
+    background: rgba(111, 150, 101, 0.12);
+  }
+
+  .hero-cross,
+  .image-cross {
+    color: #6f9665;
+  }
+
+  .hero-image-background {
+    background: #456d42;
+  }
+
+  .hero-image {
+    border-color: #303830;
+  }
+
+  .hero-btn.secondary {
+    background: #242b24;
+    color: #a8c4a1;
+    border-color: #394339;
+  }
+
+  .section-title h2 {
+    color: #9fbd98;
+  }
+
+  .section-title p {
+    color: #b2bbb2;
+  }
+
+  .stat-card {
+    background: #191e1a;
+    border-color: #303830;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .stat-card:hover {
+    background: #202720;
+  }
+
+  .stat-icon {
+    background: #283128;
+  }
+
+  .stat-label {
+    color: #b2bbb2;
+  }
+
+  .stat-number {
+    color: #a8c4a1;
+  }
+
+  .stat-description {
+    color: #818a81;
+  }
+
+  .agenda-card {
+    background: #191e1a;
+    border-color: #303830;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .agenda-header {
+    border-bottom-color: #303830;
+  }
+
+  .agenda-header h2 {
+    color: #9fbd98;
+  }
+
+  .agenda-header p {
+    color: #b2bbb2;
+  }
+
+  .see-all-button {
+    color: #8eae87;
+  }
+
+  .agenda-item {
+    border-bottom-color: #2b302b;
+  }
+
+  .appointment-time span {
+    color: #9fbd98;
+  }
+
+  .appointment-icon {
+    background: #283128;
+  }
+
+  .appointment-info h3 {
+    color: #f2f5f1;
+  }
+
+  .appointment-info h3 span {
+    color: #818a81;
+  }
+
+  .appointment-info p {
+    color: #818a81;
+  }
+
+  .appointment-info p strong {
+    color: #b2bbb2;
+  }
+
+  .empty-agenda .empty-icon {
+    background: #283128;
+  }
+
+  .empty-agenda h3 {
+    color: #9fbd98;
+  }
+
+  .empty-agenda p {
+    color: #818a81;
   }
 }

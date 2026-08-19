@@ -25,10 +25,18 @@ html,
 body,
 #root {
   margin: 0;
+  padding: 0;
   min-height: 100%;
   font-family: 'Poppins', sans-serif;
+  background: #f5f6f4;
 }
 
+html.dark-mode,
+html.dark-mode body,
+html.dark-mode #root {
+  background: #151a16;
+  color: #f2f5f1;
+}
 
 .hero {
   position: relative;

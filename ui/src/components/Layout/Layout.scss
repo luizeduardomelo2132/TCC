@@ -18,13 +18,51 @@
   background: #f5f6f4;
 }
 
+html.dark-mode,
+html.dark-mode body,
+html.dark-mode #root {
+  background: #151a16;
+}
+
+html.dark-mode .layout-container {
+  background: #151a16;
+}
+
+html.dark-mode .main-wrapper {
+  background: #151a16;
+}
+
+html.dark-mode .main-content {
+  background: #151a16;
+  color: #f2f5f1;
+}
+
+html.dark-mode {
+  scrollbar-color: #3d4a3d #151a16;
+}
+
+html.dark-mode::-webkit-scrollbar {
+  width: 10px;
+}
+
+html.dark-mode::-webkit-scrollbar-track {
+  background: #151a16;
+}
+
+html.dark-mode::-webkit-scrollbar-thumb {
+  background: #3d4a3d;
+  border-radius: 10px;
+}
+
+html.dark-mode::-webkit-scrollbar-thumb:hover {
+  background: #557a46;
+}
 
 @media (max-width: 900px) {
   .main-wrapper {
     margin-left: 200px;
   }
 }
-
 
 @media (max-width: 700px) {
   .main-wrapper {

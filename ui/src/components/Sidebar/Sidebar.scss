@@ -2,7 +2,6 @@ $verde: #557a46;
 $verde-escuro: #315b2f;
 $verde-hover: #426f3c;
 $verde-ativo: rgba(255, 255, 255, 0.18);
-
 $branco: #ffffff;
 $bege: #f4eee5;
 $vermelho: #d56a61;
@@ -21,13 +20,11 @@ $vermelho: #d56a61;
     #315b2f 0%,
     #315d31 100%
   );
-
   color: $branco;
   z-index: 100;
   box-shadow: 4px 0 20px rgba(36, 62, 34, 0.08);
   font-family: 'Poppins', sans-serif;
 }
-
 
 /* =========================================
    LOGO
@@ -74,7 +71,6 @@ $vermelho: #d56a61;
   letter-spacing: 0.16em;
 }
 
-
 /* =========================================
    MENU
 ========================================= */
@@ -82,12 +78,9 @@ $vermelho: #d56a61;
 .nav-menu {
   display: flex;
   flex-direction: column;
-
   gap: 6px;
-
   width: 100%;
 }
-
 
 /* =========================================
    LINKS
@@ -97,31 +90,19 @@ $vermelho: #d56a61;
 .logout-link {
   width: 100%;
   min-height: 48px;
-
   display: flex;
   align-items: center;
-
   gap: 15px;
-
   padding: 0 16px;
-
   border: none;
   border-radius: 12px;
-
   background: transparent;
-
   color: rgba(255, 255, 255, 0.95);
-
   font-family: 'Poppins', sans-serif;
-
   font-size: 0.91rem;
-
   font-weight: 500;
-
   text-decoration: none;
-
   cursor: pointer;
-
   transition:
     background-color 0.2s ease,
     transform 0.2s ease,
@@ -132,25 +113,19 @@ $vermelho: #d56a61;
 .logout-link svg {
   width: 21px;
   height: 21px;
-
   flex-shrink: 0;
-
   stroke-width: 1.8;
 }
 
 .nav-link:hover {
   background: rgba(255, 255, 255, 0.10);
-
   color: white;
 }
 
 .nav-link.active {
   background: rgba(220, 236, 211, 0.28);
-
   color: white;
-
   font-weight: 600;
-
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
@@ -159,14 +134,12 @@ $vermelho: #d56a61;
   stroke-width: 2;
 }
 
-
 /* =========================================
    RODAPÉ
 ========================================= */
 
 .nav-footer {
   margin-top: auto;
-
   width: 100%;
 }
 
@@ -184,6 +157,61 @@ $vermelho: #d56a61;
   color: #ffffff;
 }
 
+/* =========================================
+   MODO ESCURO
+========================================= */
+
+html.dark-mode .sidebar {
+  background: #191e1a;
+  box-shadow: 4px 0 25px rgba(0, 0, 0, 0.25);
+}
+
+html.dark-mode .brand-icon {
+  background: rgba(232, 240, 227, 0.10);
+  color: #dce8d8;
+}
+
+html.dark-mode .brand-name {
+  color: #f1f5ef;
+}
+
+html.dark-mode .brand-text small {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+html.dark-mode .nav-link,
+html.dark-mode .logout-link {
+  color: rgba(241, 245, 239, 0.82);
+}
+
+html.dark-mode .nav-link:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+html.dark-mode .nav-link.active {
+  background: rgba(85, 122, 70, 0.42);
+  color: #ffffff;
+  box-shadow:
+    inset 0 0 0 1px rgba(151, 184, 139, 0.12);
+}
+
+html.dark-mode .nav-link.active svg {
+  color: #dcebd7;
+}
+
+html.dark-mode .logout-link {
+  color: rgba(241, 245, 239, 0.70);
+}
+
+html.dark-mode .logout-link svg {
+  color: #e29b96;
+}
+
+html.dark-mode .logout-link:hover {
+  background: rgba(213, 106, 97, 0.12);
+  color: #ffffff;
+}
 
 /* =========================================
    RESPONSIVO
@@ -203,7 +231,6 @@ $vermelho: #d56a61;
     font-size: 0.85rem;
   }
 }
-
 
 @media (max-width: 700px) {
   .sidebar {

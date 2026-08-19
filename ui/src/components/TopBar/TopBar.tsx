@@ -4,7 +4,9 @@ import {
   Search,
   Bell,
   ChevronDown,
-  Plus
+  Plus,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 import './TopBar.scss';
@@ -12,6 +14,10 @@ import './TopBar.scss';
 export default function TopBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [buscaGlobal, setBuscaGlobal] = useState('');
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem('@TCC:theme') === 'dark';
+  });
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -29,6 +35,18 @@ export default function TopBar() {
 
     navigate('/login');
   };
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (isDarkMode) {
+      root.classList.add('dark-mode');
+      localStorage.setItem('@TCC:theme', 'dark');
+    } else {
+      root.classList.remove('dark-mode');
+      localStorage.setItem('@TCC:theme', 'light');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -83,6 +101,24 @@ export default function TopBar() {
           <Plus size={18} strokeWidth={2.3} />
           <span>Novo Atendimento</span>
         </button>
+
+
+        <button
+          className="icon-btn theme-btn"
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          title={
+            isDarkMode
+              ? 'Ativar modo claro'
+              : 'Ativar modo escuro'
+          }
+        >
+          {isDarkMode ? (
+            <Sun size={21} strokeWidth={1.8} />
+          ) : (
+            <Moon size={21} strokeWidth={1.8} />
+          )}
+        </button>
+
 
 
         {/* NOTIFICAÇÕES */}
