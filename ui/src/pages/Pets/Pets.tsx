@@ -165,7 +165,7 @@ export default function Pets() {
                         <div className="pet-avatar">{getPetIcon(pet.especie)}</div>
                         <div>
                           <strong>{pet.nome}</strong>
-                          <span>Paciente</span>
+                         
                         </div>
                       </div>
                     </td>

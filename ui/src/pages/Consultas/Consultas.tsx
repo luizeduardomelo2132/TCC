@@ -1,7 +1,18 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import api from '../../services/api';
 import './Consultas.scss';
-import { PawPrint } from 'lucide-react';
+import {
+  PawPrint,
+  Stethoscope,
+  ClipboardList,
+  CalendarClock,
+  Scale,
+  FileText,
+  Cat,
+  Dog,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 
 interface Pet {
   _id: string;
@@ -170,7 +181,7 @@ export default function Consultas() {
               <label>Paciente (Pet)*</label>
               <div className="input-wrapper">
                 <PawPrint className="input-icon" size={17} />
-                
+
                 <select
                   required
                   value={typeof formData.petId === 'object' ? formData.petId._id : formData.petId}
@@ -189,7 +200,7 @@ export default function Consultas() {
             <div className="input-group">
               <label>Veterinário Responsável*</label>
               <div className="input-wrapper">
-                <span className="input-icon">🩺</span>
+                <Stethoscope className="input-icon" size={17} />
                 <select
                   required
                   value={typeof formData.veterinarioId === 'object' ? formData.veterinarioId._id : formData.veterinarioId}
@@ -209,7 +220,7 @@ export default function Consultas() {
             <div className="input-group">
               <label>Tipo de Atendimento*</label>
               <div className="input-wrapper">
-                <span className="input-icon">📋</span>
+                <ClipboardList className="input-icon" size={17} />
                 <select
                   required
                   value={formData.tipo_de_atendimento}
@@ -230,7 +241,7 @@ export default function Consultas() {
             <div className="input-group">
               <label>Data e Hora da Consulta*</label>
               <div className="input-wrapper">
-                <span className="input-icon">📅</span>
+                <CalendarClock className="input-icon" size={17} />
                 <input
                   type="datetime-local"
                   required
@@ -243,7 +254,7 @@ export default function Consultas() {
             <div className="input-group">
               <label>Peso Atual (kg)</label>
               <div className="input-wrapper">
-                <span className="input-icon">⚖️</span>
+                <Scale className="input-icon" size={17} />
                 <input
                   type="number"
                   step="0.1"
@@ -257,7 +268,7 @@ export default function Consultas() {
             <div className="input-group" style={{ gridColumn: '1 / -1' }}>
               <label>Motivo da Consulta*</label>
               <div className="input-wrapper textarea-wrapper">
-                <span className="input-icon">📝</span>
+                <FileText className="input-icon" size={17} />
                 <textarea
                   required
                   placeholder="Ex: Vacinação de rotina, exames gerais, sintomas oculares..."
@@ -325,6 +336,8 @@ export default function Consultas() {
 
                   const data = new Date(c.dataConsulta);
 
+                  const isGato = pet?.especie?.toLowerCase() === 'gato';
+
                   return (
                     <tr key={c._id}>
 
@@ -350,9 +363,7 @@ export default function Consultas() {
                         <div className="pet-info">
 
                           <div className="pet-avatar">
-                            {pet?.especie?.toLowerCase() === 'gato'
-                              ? '🐱'
-                              : '🐶'}
+                            {isGato ? <Cat /> : <Dog />}
                           </div>
 
                           <div className="pet-details">
@@ -438,7 +449,7 @@ export default function Consultas() {
                             title="Editar consulta"
                             onClick={() => handleEdit(c)}
                           >
-                            ✎
+                            <Pencil size={15} />
                           </button>
 
                           <button
@@ -447,7 +458,7 @@ export default function Consultas() {
                             title="Excluir consulta"
                             onClick={() => handleDelete(c._id!)}
                           >
-                            🗑
+                            <Trash2 size={15} />
                           </button>
 
                         </div>

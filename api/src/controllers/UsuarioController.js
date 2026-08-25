@@ -1,6 +1,7 @@
 import Usuario from '../models/Usuario.js';
 import Pet from '../models/Pet.js';
 import Consulta from '../models/Consulta.js';
+import bcrypt from 'bcrypt';
 
 // ==========================================
 // 1. GERENCIAMENTO GERAL / VETERINÁRIOS / ADMINS
@@ -63,6 +64,41 @@ export const atualizarUsuario = async (req, res) => {
   }
 };
 
+// Deletar Veterinário
+export const deletarVeterinario = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const veterinario = await Usuario.findById(id);
+
+    if (!veterinario) {
+      return res.status(404).json({
+        erro: 'Veterinário não encontrado'
+      });
+    }
+
+    // Impede que essa rota exclua tutores ou administradores
+    if (veterinario.role !== 'veterinario') {
+      return res.status(400).json({
+        erro: 'O usuário informado não é um veterinário'
+      });
+    }
+
+    await Usuario.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      mensagem: 'Veterinário excluído com sucesso'
+    });
+
+  } catch (error) {
+    console.error('Erro ao deletar veterinário:', error);
+
+    return res.status(500).json({
+      erro: 'Falha ao deletar veterinário',
+      detalhes: error.message
+    });
+  }
+};
 
 // ==========================================
 // 2. REGRAS ESPECÍFICAS DE TUTORES

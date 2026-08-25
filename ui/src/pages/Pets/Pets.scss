@@ -1,11 +1,52 @@
+/* =========================================================
+   PETS
+   Padrão visual alinhado com Consultas e Tutores
+   ========================================================= */
+
+$verde: #557a46;
+$verde-escuro: #365d32;
+$verde-hover: #4b6d3e;
+
+$bege: #f4eee5;
+$bege-claro: #faf8f4;
+
+$branco: #ffffff;
+
+$texto: #293528;
+$texto-secundario: #73776f;
+$texto-muted: #8b8c87;
+
+$borda: #e4e3dc;
+$borda-card: #e7e5df;
+
+$vermelho: #d94d45;
+
+$dark-bg: #111512;
+$dark-surface: #191e1a;
+$dark-surface-hover: #202720;
+$dark-border: #303830;
+
+$dark-text-main: #f2f5f1;
+$dark-text-secondary: #b2bbb2;
+$dark-text-muted: #818a81;
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+   ========================================================= */
+
 .pets-container {
   width: 100%;
   max-width: none;
   min-height: calc(100vh - 80px);
   padding: 28px 24px 40px;
   box-sizing: border-box;
-  background: #f6f7f5;
-  color: #263b29;
+  background: #f5f6f4;
+  color: $texto;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  /* =======================================================
+     HERO BANNER
+     ======================================================= */
 
   .hero-banner {
     width: 100%;
@@ -19,17 +60,18 @@
     padding: 34px 52px;
     margin-bottom: 20px;
     border-radius: 20px;
-    background: #f5efe5;
+    background: $bege;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       width: 220px;
       height: 220px;
       border-radius: 50%;
-      background: rgba(197, 197, 169, 0.22);
+      background: rgba(85, 122, 70, 0.08);
       top: -120px;
       right: 180px;
+      pointer-events: none;
     }
 
     .hero-content {
@@ -39,18 +81,18 @@
 
       .page-title {
         margin: 0 0 14px;
-        color: #285b32;
-        font-size: 46px;
+        color: $verde-escuro;
+        font-size: clamp(2.3rem, 3.2vw, 3.2rem);
         line-height: 1.05;
         font-weight: 800;
-        letter-spacing: -1.5px;
+        letter-spacing: -0.04em;
       }
 
       .hero-subtitle {
         margin: 0;
         max-width: 680px;
-        color: #50534d;
-        font-size: 16px;
+        color: #53584f;
+        font-size: 1rem;
         line-height: 1.6;
         font-weight: 400;
       }
@@ -72,7 +114,7 @@
         right: 10px;
         top: 12px;
         border-radius: 50%;
-        background: #4f7d4b;
+        background: $verde;
       }
 
       .pet-hero-img {
@@ -80,18 +122,18 @@
         height: 190px;
         object-fit: cover;
         border-radius: 50%;
-        border: 7px solid #fff;
+        border: 7px solid $branco;
         position: relative;
         z-index: 2;
-        box-shadow: 0 10px 25px rgba(44, 67, 45, 0.15);
+        box-shadow: 0 10px 25px rgba(54, 93, 50, 0.16);
       }
 
       .decor-cross {
         position: absolute;
         z-index: 4;
-        color: #39713d;
+        color: $verde;
         font-size: 28px;
-        font-weight: 500;
+        font-weight: 700;
         line-height: 1;
 
         &.cross-1 {
@@ -107,36 +149,42 @@
     }
   }
 
+  /* =======================================================
+     CARD DO FORMULÁRIO
+     ======================================================= */
+
   .form-section {
     width: 100%;
     box-sizing: border-box;
     padding: 22px 22px 12px;
     margin-bottom: 14px;
-    border: 1px solid #e7e5df;
+    border: 1px solid $borda-card;
     border-radius: 20px;
-    background: #fff;
-    box-shadow: 0 2px 12px rgba(39, 57, 41, 0.035);
+    background: $branco;
+    box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
 
     .section-header {
       margin-bottom: 18px;
 
       h2 {
         margin: 0 0 5px;
-        color: #294d2f;
-        font-size: 21px;
+        color: $verde-escuro;
+        font-size: 1.3rem;
         line-height: 1.2;
-        font-weight: 750;
+        font-weight: 800;
       }
 
       p {
         margin: 0;
-        color: #666862;
-        font-size: 14px;
+        color: $texto-secundario;
+        font-size: 0.86rem;
         line-height: 1.5;
       }
     }
 
     .form-card {
+      width: 100%;
+
       .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -149,48 +197,48 @@
           gap: 6px;
 
           label {
-            color: #18231b;
-            font-size: 13px;
+            color: #172217;
+            font-size: 0.76rem;
             font-weight: 700;
           }
 
           .input-wrapper {
             width: 100%;
-            height: 42px;
+            min-height: 42px;
             box-sizing: border-box;
             display: flex;
             align-items: center;
             padding: 0 12px;
-            border: 1px solid #dfddd7;
+            border: 1px solid #e2e1dc;
             border-radius: 9px;
-            background: #fff;
-            transition: .2s ease;
+            background: $branco;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
             &:focus-within {
-              border-color: #527e4f;
-              box-shadow: 0 0 0 2px rgba(82, 126, 79, .10);
+              border-color: $verde;
+              box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.1);
             }
 
             .input-icon {
               flex-shrink: 0;
               margin-right: 10px;
-              color: #7c75c9;
+              color: $verde;
             }
 
             input,
             select {
               width: 100%;
-              height: 100%;
+              height: 42px;
               padding: 0;
               border: none;
               outline: none;
               background: transparent;
-              color: #444742;
+              color: $texto;
               font-family: inherit;
-              font-size: 14px;
+              font-size: 0.84rem;
 
               &::placeholder {
-                color: #8b8c87;
+                color: $texto-muted;
               }
             }
 
@@ -204,282 +252,354 @@
       .form-actions {
         display: flex;
         justify-content: flex-end;
+        align-items: center;
         gap: 9px;
         padding-top: 1px;
       }
     }
   }
 
+  /* =======================================================
+     BOTÕES
+     ======================================================= */
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-edit,
+  .btn-delete,
+  .btn-ver-ficha {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-family: inherit;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.15s ease;
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
   .btn-primary,
   .btn-secondary {
-    height: 42px;
+    min-height: 42px;
     padding: 0 22px;
     border-radius: 9px;
-    font-family: inherit;
-    font-size: 14px;
+    font-size: 0.84rem;
     font-weight: 700;
-    cursor: pointer;
-    transition: .2s ease;
   }
 
   .btn-primary {
-    border: 1px solid #4f7c4b;
-    background: #4f7c4b;
-    color: #fff;
-    box-shadow: 0 4px 10px rgba(55, 91, 55, .15);
+    border: 1px solid $verde;
+    background: $verde;
+    color: $branco;
+    box-shadow: 0 4px 10px rgba(55, 91, 55, 0.15);
 
     &:hover {
-      background: #416a3e;
+      background: $verde-hover;
+      border-color: $verde-hover;
     }
   }
 
   .btn-secondary {
-    border: 1px solid #dddcd7;
-    background: #fff;
-    color: #315a35;
+    border: 1px solid $borda;
+    background: $branco;
+    color: $texto;
 
     &:hover {
-      background: #f7f7f4;
+      background: $bege-claro;
+      border-color: #d5d3cc;
     }
   }
 
+  .btn-edit {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid $verde;
+    border-radius: 7px;
+    background: $verde;
+    color: $branco;
+    font-size: 0.75rem;
+
+    &:hover {
+      background: $verde-hover;
+      border-color: $verde-hover;
+    }
+  }
+
+  .btn-delete {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid rgba(217, 77, 69, 0.25);
+    border-radius: 7px;
+    background: rgba(217, 77, 69, 0.08);
+    color: $vermelho;
+    font-size: 0.75rem;
+
+    &:hover {
+      background: rgba(217, 77, 69, 0.15);
+      border-color: rgba(217, 77, 69, 0.35);
+    }
+  }
+
+  .btn-ver-ficha {
+    min-height: 32px;
+    padding: 0 11px;
+    border: 1px solid $borda;
+    border-radius: 7px;
+    background: $bege-claro;
+    color: $verde-escuro;
+    font-size: 0.7rem;
+    font-weight: 700;
+
+    &:hover {
+      background: #eef2e9;
+      border-color: #d2d8cc;
+    }
+  }
+
+  /* =======================================================
+     TABELA
+     ======================================================= */
+
   .table-section {
     width: 100%;
+    box-sizing: border-box;
 
     .table-card {
       width: 100%;
       box-sizing: border-box;
       overflow: hidden;
-      border: 1px solid #e7e5df;
+      border: 1px solid $borda-card;
       border-radius: 20px;
-      background: #fff;
-      box-shadow: 0 2px 12px rgba(39, 57, 41, .035);
+      background: $branco;
+      box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
+    }
 
-      .table-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 18px 22px 14px;
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px 14px;
+
+      .table-title {
+        min-width: 0;
 
         h3 {
           margin: 0 0 5px;
-          color: #294d2f;
-          font-size: 21px;
+          color: $verde-escuro;
+          font-size: 1.3rem;
           line-height: 1.2;
-          font-weight: 750;
+          font-weight: 800;
         }
 
         p {
           margin: 0;
-          color: #6c6e69;
-          font-size: 14px;
-        }
-
-        .total-badge {
-          padding: 7px 12px;
-          border-radius: 20px;
-          background: #f0f4eb;
-          color: #42653f;
-          font-size: 12px;
-          font-weight: 700;
+          color: $texto-secundario;
+          font-size: 0.86rem;
+          line-height: 1.5;
         }
       }
 
-      .table-wrapper {
-        width: 100%;
-        overflow-x: auto;
+      .total-badge {
+        flex-shrink: 0;
+        padding: 7px 12px;
+        border-radius: 20px;
+        background: #eef3e9;
+        color: $verde-escuro;
+        font-size: 0.72rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .pets-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: auto;
+      text-align: left;
+
+      th,
+      td {
+        border-bottom: 1px solid $borda;
       }
 
-      .pets-table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: auto;
-        text-align: left;
+      th {
+        height: 34px;
+        padding: 0 14px;
+        background: #f0f3e8;
+        color: $verde-escuro;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
 
-        th,
-        td {
-          border-bottom: 1px solid #eeeeea;
+      td {
+        height: 61px;
+        padding: 7px 14px;
+        color: $texto;
+        font-size: 0.8rem;
+        vertical-align: middle;
+      }
+
+      tbody tr {
+        transition: background-color 0.15s ease;
+
+        &:hover {
+          background: #fafbf8;
         }
 
-        th {
-          height: 34px;
-          padding: 0 14px;
-          background: #f0f3e8;
-          color: #29472d;
-          font-size: 11px;
-          font-weight: 800;
-          letter-spacing: .02em;
-          white-space: nowrap;
+        &:last-child td {
+          border-bottom: none;
         }
+      }
 
-        td {
-          height: 61px;
-          padding: 7px 14px;
-          color: #3f433f;
-          font-size: 13px;
-          vertical-align: middle;
-        }
+      .pet-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 150px;
 
-        tbody tr {
-          transition: background .15s ease;
-
-          &:hover {
-            background: #fafbf8;
-          }
-
-          &:last-child td {
-            border-bottom: none;
-          }
-        }
-
-        .pet-info {
+        .pet-avatar {
+          width: 36px;
+          height: 36px;
+          flex-shrink: 0;
           display: flex;
           align-items: center;
-          gap: 10px;
+          justify-content: center;
+          overflow: hidden;
+          border-radius: 50%;
+          background: $bege;
+          color: $texto-muted;
 
-          .pet-avatar {
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: #f0eee8;
-            color: #7a776f;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
           }
 
-          div:last-child {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-
-            strong {
-              color: #263b29;
-              font-size: 13px;
-              font-weight: 750;
-            }
-
-            span {
-              color: #898b86;
-              font-size: 11px;
-            }
+          svg {
+            width: 18px;
+            height: 18px;
           }
         }
 
-        .species-info {
+        .pet-details {
+          min-width: 0;
           display: flex;
-          align-items: center;
-          gap: 8px;
+          flex-direction: column;
+          gap: 2px;
 
-          .badge-especie {
-            padding: 5px 9px;
-            border-radius: 15px;
-            background: #eef3e9;
-            color: #365a35;
-            font-size: 11px;
-            font-weight: 700;
+          strong {
+            color: $texto;
+            font-size: 0.8rem;
+            font-weight: 750;
             white-space: nowrap;
           }
 
-          small {
-            color: #777a75;
-            font-size: 12px;
+          span {
+            color: $texto-muted;
+            font-size: 0.68rem;
+            white-space: nowrap;
           }
         }
+      }
 
-        .age-info,
-        .tutor-info {
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          color: #555954;
+      .species-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 110px;
 
-          svg {
-            color: #777a73;
-          }
-        }
-
-        .actions-cell {
-          display: flex;
-          align-items: center;
-          gap: 8px;
+        .badge-especie {
+          padding: 5px 9px;
+          border-radius: 15px;
+          background: #eef3e9;
+          color: $verde-escuro;
+          font-size: 0.68rem;
+          font-weight: 700;
           white-space: nowrap;
-
-          button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: .2s ease;
-          }
-
-          .btn-edit,
-          .btn-delete {
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            border-radius: 7px;
-            border: none;
-          }
-
-          .btn-edit {
-            background: #4f7c4b;
-            color: #fff;
-
-            &:hover {
-              background: #416a3e;
-            }
-          }
-
-          .btn-delete {
-            background: #fff0ef;
-            color: #ef5c55;
-            border: 1px solid #ffc5c0;
-
-            &:hover {
-              background: #ffe1df;
-            }
-          }
-
-          .btn-ver-ficha {
-            height: 32px;
-            padding: 0 11px;
-            border: 1px solid #dce5d8;
-            border-radius: 7px;
-            background: #f5f8f3;
-            color: #426640;
-            font-size: 11px;
-            font-weight: 700;
-
-            &:hover {
-              background: #e9f0e5;
-            }
-          }
         }
 
-        .empty-state {
-          padding: 35px;
-          text-align: center;
-          color: #999b96;
-          font-size: 13px;
+        small {
+          color: $texto-muted;
+          font-size: 0.72rem;
         }
+      }
+
+      .age-info,
+      .tutor-info {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: $texto-secundario;
+        white-space: nowrap;
+
+        svg {
+          flex-shrink: 0;
+          color: $texto-muted;
+        }
+      }
+
+      .actions-cell {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        white-space: nowrap;
+      }
+
+      .empty-state {
+        padding: 35px;
+        text-align: center;
+        color: $texto-muted;
+        font-size: 0.8rem;
       }
     }
   }
 }
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
 
 @media (max-width: 1000px) {
   .pets-container {
     .hero-banner {
       padding: 30px;
 
-      .hero-content .page-title {
-        font-size: 38px;
+      .hero-content {
+        max-width: 60%;
+
+        .page-title {
+          font-size: 38px;
+        }
       }
 
       .hero-image-wrapper {
         width: 220px;
+
+        .hero-circle,
+        .pet-hero-img {
+          width: 170px;
+          height: 170px;
+        }
       }
     }
   }
@@ -495,33 +615,334 @@
       padding: 28px 20px;
 
       .hero-content {
+        max-width: 100%;
+
         .page-title {
           font-size: 32px;
+        }
+
+        .hero-subtitle {
+          font-size: 0.9rem;
         }
       }
 
       .hero-image-wrapper {
+        width: 100%;
         height: 190px;
+        margin-top: 16px;
+
+        .hero-circle,
+        .pet-hero-img {
+          width: 160px;
+          height: 160px;
+        }
       }
     }
 
     .form-section {
       padding: 18px 15px;
 
-      .form-card .form-grid {
-        grid-template-columns: 1fr;
+      .form-card {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+          flex-wrap: wrap;
+        }
       }
     }
 
-    .table-section .table-card {
-      .table-header {
-        align-items: flex-start;
-        gap: 10px;
-        flex-direction: column;
+    .table-section {
+      .table-card {
+        .table-header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .pets-table {
+          min-width: 850px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .pets-container {
+    padding: 14px 10px 24px;
+
+    .hero-banner {
+      min-height: auto;
+      padding: 24px 16px;
+
+      .hero-content {
+        .page-title {
+          font-size: 28px;
+        }
       }
 
-      .pets-table {
-        min-width: 850px;
+      .hero-image-wrapper {
+        height: 170px;
+
+        .hero-circle,
+        .pet-hero-img {
+          width: 140px;
+          height: 140px;
+        }
+
+        .pet-hero-img {
+          border-width: 5px;
+        }
+      }
+    }
+
+    .form-section {
+      padding: 16px 12px;
+
+      .section-header {
+        h2 {
+          font-size: 1.15rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+      }
+
+      .form-card {
+        .form-actions {
+          flex-direction: column;
+
+          .btn-primary,
+          .btn-secondary {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .table-section {
+      .table-header {
+        padding: 16px;
+      }
+    }
+  }
+}
+
+/* =========================================================
+   MODO ESCURO UNIFICADO — PETS
+   Ativado via html.dark-mode (mesmo padrão de Tutores)
+   ========================================================= */
+
+html.dark-mode {
+
+  .pets-container {
+    background: $dark-bg;
+    color: $dark-text-main;
+
+    /* HERO */
+    .hero-banner {
+      background: linear-gradient(110deg, #1c231d 0%, #202720 55%, #1a211b 100%);
+
+      .hero-content {
+        .page-title {
+          color: #9fbd98;
+        }
+
+        .hero-subtitle {
+          color: $dark-text-secondary;
+        }
+      }
+
+      .hero-image-wrapper {
+        .hero-circle {
+          background: #456d42;
+        }
+
+        .pet-hero-img {
+          border-color: $dark-border;
+        }
+
+        .decor-cross {
+          color: #6f9665;
+        }
+      }
+    }
+
+    /* FORMULÁRIO */
+    .form-section {
+      background: $dark-surface;
+      border-color: $dark-border;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+
+      .section-header {
+        h2 {
+          color: #9fbd98;
+        }
+
+        p {
+          color: $dark-text-secondary;
+        }
+      }
+
+      .form-card {
+        .form-grid {
+          .input-group {
+            label {
+              color: $dark-text-secondary;
+            }
+
+            .input-wrapper {
+              background: $dark-bg;
+              border-color: $dark-border;
+
+              .input-icon {
+                color: #9fbd98;
+              }
+
+              input,
+              select {
+                color: $dark-text-main;
+
+                &::placeholder {
+                  color: $dark-text-muted;
+                }
+              }
+
+              /* opções do <select> no Windows/alguns navegadores
+                 herdam o fundo do sistema; força o mesmo tom */
+              select option {
+                background: $dark-surface;
+                color: $dark-text-main;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /* BOTÕES */
+    .btn-secondary {
+      background: #242b24;
+      color: #a8c4a1;
+      border-color: #394339;
+
+      &:hover {
+        background: #2c342c;
+        border-color: #4a564a;
+      }
+    }
+
+    .btn-ver-ficha {
+      background: #242b24;
+      color: #a8c4a1;
+      border-color: #394339;
+
+      &:hover {
+        background: #2c342c;
+        border-color: #4a564a;
+      }
+    }
+
+    .btn-delete {
+      background: #3b2928;
+      border-color: #5c3a38;
+      color: #d18b86;
+
+      &:hover {
+        background: #472e2d;
+        border-color: #6b433f;
+      }
+    }
+
+    /* TABELA E CARD */
+    .table-section {
+      .table-card {
+        background: $dark-surface;
+        border-color: $dark-border;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+
+        .table-header {
+          .table-title {
+            h3 {
+              color: #9fbd98;
+            }
+
+            p {
+              color: $dark-text-secondary;
+            }
+          }
+
+          .total-badge {
+            background: #242b24;
+            color: #9fbd98;
+          }
+        }
+
+        .pets-table {
+
+          th,
+          td {
+            border-bottom-color: $dark-border;
+          }
+
+          th {
+            background: $dark-bg;
+            color: $dark-text-secondary;
+          }
+
+          td {
+            background: $dark-surface;
+            color: $dark-text-main;
+          }
+
+          tbody tr:hover {
+            background: $dark-surface-hover;
+          }
+
+          .pet-info {
+            .pet-avatar {
+              background: #283128;
+              color: #9fbd98;
+            }
+
+            .pet-details {
+              strong {
+                color: $dark-text-main;
+              }
+
+              span {
+                color: $dark-text-muted;
+              }
+            }
+          }
+
+          .species-info {
+            .badge-especie {
+              background: #242b24;
+              color: #9fbd98;
+            }
+
+            small {
+              color: $dark-text-muted;
+            }
+          }
+
+          .age-info,
+          .tutor-info {
+            color: $dark-text-secondary;
+
+            svg {
+              color: $dark-text-muted;
+            }
+          }
+
+          .empty-state {
+            color: $dark-text-muted;
+          }
+        }
       }
     }
   }

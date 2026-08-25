@@ -1,6 +1,17 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import api from '../../services/api';
 import './Veterinarios.scss';
+import {
+  User,
+  Mail,
+  GraduationCap,
+  Phone,
+  Lock,
+  Stethoscope,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
+
 interface Usuario {
   _id: string;
   nome: string;
@@ -10,6 +21,7 @@ interface Usuario {
   especialidade?: string;
   role: string;
 }
+
 export default function Veterinarios() {
   const [veterinarios, setVeterinarios] = useState<Usuario[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -20,6 +32,7 @@ export default function Veterinarios() {
     especialidade: '',
     senha: '',
   });
+
   const carregarVeterinarios = async () => {
     try {
       const res = await api.get('/usuarios');
@@ -29,9 +42,11 @@ export default function Veterinarios() {
       console.error('Erro ao carregar veterinários:', error);
     }
   };
+
   useEffect(() => {
     carregarVeterinarios();
   }, []);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const payload: Record<string, any> = {
@@ -57,6 +72,7 @@ export default function Veterinarios() {
       alert(`Erro: ${msg}`);
     }
   };
+
   const handleEdit = (vet: Usuario) => {
     setEditingId(vet._id);
     setFormData({
@@ -68,17 +84,25 @@ export default function Veterinarios() {
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  const handleDelete = async (id: string) => {
-    if (confirm('Tem certeza que deseja remover este veterinário?')) {
-      try {
-        await api.delete(`/usuarios/${id}`);
-        carregarVeterinarios();
-      } catch (error) {
-        console.error('Erro ao deletar veterinário:', error);
-        alert('Não foi possível excluir o usuário.');
-      }
+
+const handleDelete = async (id: string) => {
+  if (confirm("Tem certeza que deseja remover este veterinário?")) {
+    try {
+      await api.delete(`/usuarios/${id}`);
+      await carregarVeterinarios();
+    } catch (error: any) {
+      console.error("Erro ao deletar veterinário:", error);
+      console.error("Status:", error.response?.status);
+      console.error("Resposta da API:", error.response?.data);
+
+      alert(
+        error.response?.data?.message ||
+        "Não foi possível excluir o usuário."
+      );
     }
-  };
+  }
+};
+
   const limparFormulario = () => {
     setEditingId(null);
     setFormData({
@@ -89,6 +113,7 @@ export default function Veterinarios() {
       senha: '',
     });
   };
+
   return (
     <div className="veterinarios-container">
       <section className="hero-banner">
@@ -113,21 +138,21 @@ export default function Veterinarios() {
             <div className="input-group">
               <label>Nome Completo*</label>
               <div className="input-wrapper">
-                <span className="input-icon">♙</span>
+                <User className="input-icon" size={17} />
                 <input type="text" required placeholder="Ex: Dr. Roberto Silva" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
               </div>
             </div>
             <div className="input-group">
               <label>E-mail (Login)*</label>
               <div className="input-wrapper">
-                <span className="input-icon">✉</span>
+                <Mail className="input-icon" size={17} />
                 <input type="email" required placeholder="roberto.vet@clinica.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
               </div>
             </div>
             <div className="input-group">
               <label>Especialidade Médica*</label>
               <div className="input-wrapper">
-                <span className="input-icon">♧</span>
+                <GraduationCap className="input-icon" size={17} />
                 <select required value={formData.especialidade} onChange={(e) => setFormData({ ...formData, especialidade: e.target.value })}>
                   <option value="">Selecione a Especialidade...</option>
                   <option value="Clínica Geral">Clínica Geral</option>
@@ -145,14 +170,14 @@ export default function Veterinarios() {
             <div className="input-group">
               <label>Telefone / WhatsApp</label>
               <div className="input-wrapper">
-                <span className="input-icon">♧</span>
+                <Phone className="input-icon" size={17} />
                 <input type="text" placeholder="(11) 99999-9999" value={formData.telefone} onChange={(e) => setFormData({ ...formData, telefone: e.target.value })} />
               </div>
             </div>
             <div className="input-group full-width">
               <label>{editingId ? 'Nova Senha (deixe em branco para não alterar)' : 'Senha de Acesso*'}</label>
               <div className="input-wrapper">
-                <span className="input-icon">♢</span>
+                <Lock className="input-icon" size={17} />
                 <input type="password" required={!editingId} placeholder={editingId ? 'Digite apenas se quiser mudar a senha' : 'Mínimo de 6 caracteres'} value={formData.senha} onChange={(e) => setFormData({ ...formData, senha: e.target.value })} />
               </div>
             </div>
@@ -187,7 +212,9 @@ export default function Veterinarios() {
                   <tr key={vet._id}>
                     <td>
                       <div className="vet-name">
-                        <span className="vet-avatar">♙</span>
+                        <span className="vet-avatar">
+                          <Stethoscope size={16} />
+                        </span>
                         <div>
                           <strong>Dr(a). {vet.nome}</strong>
                           <small>Veterinário</small>
@@ -198,8 +225,12 @@ export default function Veterinarios() {
                     <td>{vet.email}</td>
                     <td>{vet.telefone || '-'}</td>
                     <td className="actions-cell">
-                      <button className="btn-edit" onClick={() => handleEdit(vet)} title="Editar">✎</button>
-                      <button className="btn-delete" onClick={() => handleDelete(vet._id)} title="Excluir">♜</button>
+                      <button className="btn-edit" onClick={() => handleEdit(vet)} title="Editar">
+                        <Pencil size={15} />
+                      </button>
+                      <button className="btn-delete" onClick={() => handleDelete(vet._id)} title="Excluir">
+                        <Trash2 size={15} />
+                      </button>
                     </td>
                   </tr>
                 ))}

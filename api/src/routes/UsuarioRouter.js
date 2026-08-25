@@ -1,8 +1,14 @@
 import express from 'express';
-import { listarUsuarios } from '../controllers/UsuarioController.js';
+
+import * as UsuarioController from '../controllers/UsuarioController.js';
+
+import { verificarToken, apenasCargos } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.get('/', listarUsuarios);
+const cargosPermitidos = apenasCargos(['admin']);
+
+router.get('/', verificarToken, cargosPermitidos,UsuarioController.listarUsuarios);
+router.delete( '/:id', verificarToken, cargosPermitidos, UsuarioController.deletarVeterinario);
 
 export default router;

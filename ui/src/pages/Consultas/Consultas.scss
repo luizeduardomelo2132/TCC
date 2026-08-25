@@ -1,32 +1,35 @@
 /* =========================================================
    CONSULTAS
    Identidade visual - Clínica Veterinária
+   Padrão unificado com Tutores e Pets
    ========================================================= */
 
-$verde-principal: #557a46;
-$verde-escuro: #3f6134;
-$verde-claro: #e8f0e3;
+$verde: #557a46;
+$verde-escuro: #365d32;
+$verde-hover: #4b6d3e;
 
 $bege: #f4eee5;
-$bege-escuro: #e6dccd;
-
-$marrom: #705b48;
-$marrom-claro: #8a7765;
-
-$texto: #2f342e;
-$texto-secundario: #74766f;
+$bege-claro: #faf8f4;
 
 $branco: #ffffff;
-$fundo: #f8f7f3;
 
-$vermelho: #c95b52;
-$vermelho-escuro: #ae4941;
+$texto: #293528;
+$texto-secundario: #73776f;
+$texto-muted: #8b8c87;
 
-$border: #e7e5df;
+$borda: #e4e3dc;
+$borda-card: #e7e5df;
 
-$radius-lg: 24px;
-$radius-md: 16px;
-$radius-sm: 10px;
+$vermelho: #d94d45;
+
+$dark-bg: #111512;
+$dark-surface: #191e1a;
+$dark-surface-hover: #202720;
+$dark-border: #303830;
+
+$dark-text-main: #f2f5f1;
+$dark-text-secondary: #b2bbb2;
+$dark-text-muted: #818a81;
 
 
 /* =========================================================
@@ -35,18 +38,13 @@ $radius-sm: 10px;
 
 .consultas-container {
   width: 100%;
-  max-width: 100%;
-  min-height: 100vh;
-
-  margin: 0 auto;
-  padding: 40px 44px 60px;
-
+  max-width: none;
+  min-height: calc(100vh - 80px);
+  padding: 28px 24px 40px;
   box-sizing: border-box;
-
-  background: $fundo;
+  background: #f5f6f4;
   color: $texto;
-
-  font-family: inherit;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
 
@@ -57,165 +55,103 @@ $radius-sm: 10px;
 .consultas-container {
 
   .hero-banner {
-    position: relative;
-
+    width: 100%;
+    min-height: 220px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    min-height: 270px;
-
-    margin-bottom: 34px;
-    padding: 38px 42px;
-
+    position: relative;
     overflow: hidden;
-
+    margin-bottom: 20px;
+    padding: 32px 52px;
+    border-radius: 20px;
     background: $bege;
 
-    border-radius: $radius-lg;
-
-    box-sizing: border-box;
-
-    /*
-      Elemento decorativo suave.
-    */
     &::before {
-      content: '';
-
+      content: "";
       position: absolute;
-
-      width: 260px;
-      height: 260px;
-
-      right: 170px;
-      top: -150px;
-
+      width: 240px;
+      height: 240px;
+      top: -115px;
+      right: 240px;
       border-radius: 50%;
-
       background: rgba(85, 122, 70, 0.08);
-
-      pointer-events: none;
     }
-
 
     .hero-content {
       position: relative;
       z-index: 2;
-
       flex: 1;
-      max-width: 650px;
-
-      padding-right: 30px;
-
+      max-width: 760px;
 
       .page-title {
-        margin: 0 0 14px;
-
+        margin: 0 0 12px;
         color: $verde-escuro;
-
-        font-size: clamp(2rem, 3vw, 3rem);
+        font-size: clamp(2.3rem, 3.2vw, 3.2rem);
         font-weight: 800;
-
-        line-height: 1.08;
+        line-height: 1.05;
         letter-spacing: -0.04em;
       }
 
-
       .hero-subtitle {
-        max-width: 600px;
-
+        max-width: 700px;
         margin: 0;
-
-        color: $marrom;
-
+        color: #53584f;
         font-size: 1rem;
-        line-height: 1.7;
+        line-height: 1.65;
+        font-weight: 400;
       }
     }
 
-
-    /* =====================================================
-       IMAGEM DO HERO
-       ===================================================== */
-
     .hero-image-wrapper {
       position: relative;
-
-      width: 280px;
-      height: 230px;
-
+      width: 290px;
+      height: 220px;
       flex-shrink: 0;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
+      margin-right: 20px;
 
       .pet-hero-img {
         position: relative;
-        z-index: 2;
-
-        width: 205px;
-        height: 205px;
-
+        z-index: 3;
+        width: 190px;
+        height: 190px;
         object-fit: cover;
-
-        border: 8px solid rgba(255, 255, 255, 0.9);
-
         border-radius: 50%;
-
-        box-shadow:
-          0 12px 30px rgba(63, 97, 52, 0.16);
+        border: 7px solid $branco;
+        box-shadow: 0 12px 25px rgba(54, 93, 50, 0.16);
       }
 
-
-      /*
-        Forma verde atrás da imagem
-      */
       .decor-shape {
         position: absolute;
         z-index: 1;
-
-        width: 175px;
-        height: 175px;
-
+        width: 190px;
+        height: 190px;
         right: 24px;
-        top: 30px;
-
-        background: $verde-principal;
-
-        border-radius: 48% 52% 45% 55%;
-
-        transform: rotate(12deg);
-
-        opacity: 0.95;
+        border-radius: 50%;
+        background: $verde;
+        transform: translate(10px, 8px);
       }
 
-
-      /*
-        Pequenos elementos decorativos
-      */
       .decor-cross {
         position: absolute;
-        z-index: 3;
-
-        color: $verde-principal;
-
-        font-size: 1.8rem;
+        z-index: 4;
+        color: $verde;
+        font-size: 26px;
         font-weight: 700;
-
         line-height: 1;
 
-
         &.cross-1 {
-          top: 4px;
-          right: 0;
+          top: 12px;
+          right: 4px;
         }
 
-
         &.cross-2 {
-          bottom: 6px;
-          left: 18px;
+          bottom: 5px;
+          left: 12px;
         }
       }
     }
@@ -230,187 +166,121 @@ $radius-sm: 10px;
 .consultas-container {
 
   .form-section {
-    position: relative;
-
-    margin-bottom: 32px;
-    padding: 30px;
-
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    padding: 22px;
     background: $branco;
-
-    border: 1px solid $border;
-    border-radius: $radius-lg;
-
-    box-shadow:
-      0 8px 30px rgba(53, 57, 48, 0.05);
-
+    border: 1px solid $borda-card;
+    border-radius: 20px;
+    box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
     color: $texto;
   }
 
-
-  /* =======================================================
-     CABEÇALHO DO FORMULÁRIO
-     ======================================================= */
-
   .section-header {
-    margin-bottom: 25px;
-
+    margin-bottom: 18px;
 
     h2 {
-      margin: 0 0 7px;
-
+      margin: 0 0 5px;
       color: $verde-escuro;
-
-      font-size: 1.45rem;
+      font-size: 1.3rem;
       font-weight: 800;
-
       letter-spacing: -0.02em;
     }
 
-
     p {
       margin: 0;
-
       color: $texto-secundario;
-
-      font-size: 0.9rem;
-      line-height: 1.6;
+      font-size: 0.86rem;
+      line-height: 1.5;
     }
   }
-
-
-  /* =======================================================
-     GRID
-     ======================================================= */
 
   .form-card {
 
     .form-grid {
       display: grid;
-
       grid-template-columns: repeat(2, minmax(0, 1fr));
-
-      gap: 20px;
-
-      margin-bottom: 26px;
+      column-gap: 22px;
+      row-gap: 13px;
+      margin-bottom: 16px;
     }
-
-
-    /* =====================================================
-       INPUT GROUP
-       ===================================================== */
 
     .input-group {
       display: flex;
       flex-direction: column;
-
-      gap: 8px;
-
+      gap: 6px;
 
       label {
-        color: $texto;
-
-        font-size: 0.82rem;
+        color: #172217;
+        font-size: 0.76rem;
         font-weight: 700;
-
-        letter-spacing: 0.01em;
       }
 
-
       .input-wrapper {
+        width: 100%;
+        min-height: 42px;
+        box-sizing: border-box;
         display: flex;
         align-items: center;
-
-        min-height: 48px;
-
-        padding: 0 14px;
-
-        background: #fbfbf9;
-
-        border: 1px solid $border;
-        border-radius: $radius-sm;
-
-        box-sizing: border-box;
-
-        transition:
-          border-color 0.2s ease,
-          box-shadow 0.2s ease,
-          background-color 0.2s ease;
-
+        padding: 0 13px;
+        background: #ffffff;
+        border: 1px solid #e2e1dc;
+        border-radius: 9px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
         &:hover {
           border-color: #d4d8ce;
         }
 
-
         &:focus-within {
-          background: $branco;
-
-          border-color: $verde-principal;
-
-          box-shadow:
-            0 0 0 3px rgba(85, 122, 70, 0.11);
+          border-color: $verde;
+          box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.10);
         }
-
 
         &.textarea-wrapper {
           align-items: flex-start;
-
           padding-top: 12px;
         }
 
-
         .input-icon {
           width: 24px;
-
-          margin-right: 9px;
-
-          color: $verde-principal;
-
-          font-size: 1rem;
-
-          text-align: center;
-
           flex-shrink: 0;
+          margin-right: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $verde;
         }
-
 
         input,
         select,
         textarea {
           width: 100%;
-
-          margin: 0;
-          padding: 12px 0;
-
+          height: 42px;
+          padding: 0;
           border: none;
           outline: none;
-
           background: transparent;
-
           color: $texto;
-
           font-family: inherit;
-          font-size: 0.88rem;
-
+          font-size: 0.84rem;
           box-sizing: border-box;
 
-
           &::placeholder {
-            color: #a4a59f;
+            color: #858980;
           }
         }
-
 
         select {
           cursor: pointer;
         }
 
-
         textarea {
+          height: auto;
           min-height: 88px;
-
+          padding: 12px 0;
           resize: vertical;
-
           line-height: 1.5;
         }
       }
@@ -427,86 +297,46 @@ $radius-sm: 10px;
 
   .form-actions {
     display: flex;
-
-    align-items: center;
     justify-content: flex-end;
-
-    gap: 10px;
-
-    padding-top: 4px;
+    align-items: center;
+    gap: 8px;
   }
-
 
   .btn-primary {
-    min-height: 44px;
-
+    height: 42px;
     padding: 0 22px;
-
-    background: $verde-principal;
-
-    color: $branco;
-
     border: none;
-    border-radius: 10px;
-
-    cursor: pointer;
-
+    border-radius: 8px;
+    background: $verde;
+    color: $branco;
     font-family: inherit;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 700;
-
-    box-shadow:
-      0 5px 14px rgba(85, 122, 70, 0.2);
-
-    transition:
-      background-color 0.2s ease,
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
 
     &:hover {
-      background: $verde-escuro;
-
+      background: $verde-hover;
       transform: translateY(-1px);
-
-      box-shadow:
-        0 7px 18px rgba(85, 122, 70, 0.25);
-    }
-
-
-    &:active {
-      transform: translateY(0);
     }
   }
 
-
   .btn-secondary {
-    min-height: 44px;
-
+    height: 42px;
     padding: 0 20px;
-
+    border: 1px solid #deddd7;
+    border-radius: 8px;
     background: $branco;
-
-    color: $marrom;
-
-    border: 1px solid $border;
-    border-radius: 10px;
-
-    cursor: pointer;
-
+    color: $texto;
     font-family: inherit;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 600;
-
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease;
-
+    cursor: pointer;
+    transition: 0.2s ease;
 
     &:hover {
-      background: $bege;
-
-      border-color: $bege-escuro;
+      background: $bege-claro;
+      border-color: #ceccc4;
     }
   }
 }
@@ -516,150 +346,91 @@ $radius-sm: 10px;
    TABELA
    ========================================================= */
 
-/* =========================================================
-   CONSULTAS AGENDADAS
-   ========================================================= */
-
 .consultas-container {
 
   .table-section {
     width: 100%;
-    margin-top: 0;
   }
-
 
   .table-card {
     width: 100%;
     box-sizing: border-box;
-
-    padding: 24px 22px 18px;
-
-    background: #ffffff;
-
-    border: 1px solid #e7e5df;
-    border-radius: 22px;
-
-    box-shadow:
-      0 5px 22px rgba(53, 57, 48, 0.045);
-
+    padding: 20px 20px 0;
+    background: $branco;
+    border: 1px solid $borda-card;
+    border-radius: 20px;
+    box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
     overflow: hidden;
   }
 
-
-  /* =======================================================
-     CABEÇALHO
-     ======================================================= */
-
   .table-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-
-    margin-bottom: 14px;
+    margin-bottom: 13px;
 
     h3 {
       margin: 0 0 5px;
-
-      color: #3f6134;
-
-      font-size: 1.28rem;
+      color: $verde-escuro;
+      font-size: 1.3rem;
       font-weight: 800;
-
-      letter-spacing: -0.025em;
+      letter-spacing: -0.02em;
     }
 
     p {
       margin: 0;
-
-      color: #74766f;
-
-      font-size: 0.82rem;
-      line-height: 1.5;
+      color: $texto-secundario;
+      font-size: 0.84rem;
     }
   }
 
-
-  /* =======================================================
-     WRAPPER
-     ======================================================= */
-
   .table-wrapper {
     width: 100%;
-
     overflow-x: auto;
   }
 
-
-  /* =======================================================
-     TABELA
-     ======================================================= */
-
   .consultas-table {
     width: 100%;
-
     min-width: 980px;
-
     border-collapse: separate;
     border-spacing: 0;
-
-    table-layout: auto;
-
     text-align: left;
-
+    overflow: hidden;
 
     th,
     td {
       box-sizing: border-box;
-
-      border-bottom: 1px solid #eeeeea;
-
+      border-bottom: 1px solid #eeeee9;
       vertical-align: middle;
     }
 
-
-    /* CABEÇALHO */
-
     th {
-      height: 40px;
-
+      height: 36px;
       padding: 0 10px;
-
-      background: #f4f6ed;
-
-      color: #30452d;
-
+      background: #f1f3e9;
+      color: #33442f;
       font-size: 0.66rem;
       font-weight: 800;
-
       text-transform: uppercase;
-
-      letter-spacing: 0.025em;
-
+      letter-spacing: 0.02em;
       white-space: nowrap;
     }
 
-
     th:first-child {
-      padding-left: 12px;
-
       border-radius: 8px 0 0 8px;
     }
-
 
     th:last-child {
       border-radius: 0 8px 8px 0;
     }
 
-
-    /* LINHAS */
+    td {
+      padding: 8px 10px;
+      color: #3d423c;
+      font-size: 0.78rem;
+    }
 
     tbody tr {
-      height: 64px;
+      transition: background 0.15s ease;
 
-      transition:
-        background-color 0.15s ease;
-
-      &:hover {
+      &:hover td {
         background: #fafbf8;
       }
 
@@ -667,510 +438,476 @@ $radius-sm: 10px;
         border-bottom: none;
       }
     }
-
-
-    td {
-      padding: 9px 10px;
-
-      color: #2f342e;
-
-      font-size: 0.76rem;
-
-      line-height: 1.35;
-    }
   }
-
-
-  /* =======================================================
-     DATA
-     ======================================================= */
 
   .date-cell {
     width: 125px;
   }
 
-
   .date-content {
     display: flex;
     flex-direction: column;
-
     gap: 2px;
-
-    color: #343a33;
+    color: $texto;
 
     span {
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       font-weight: 600;
     }
 
     small {
-      color: #8a8d86;
-
+      color: $texto-muted;
       font-size: 0.68rem;
       font-weight: 500;
     }
   }
 
-
-  /* =======================================================
-     PET
-     ======================================================= */
-
   .pet-info {
     display: flex;
     align-items: center;
-
     gap: 9px;
-
-    min-width: 120px;
+    min-width: 150px;
+    white-space: nowrap;
   }
-
 
   .pet-avatar {
     width: 34px;
     height: 34px;
-
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    flex-shrink: 0;
-
     border-radius: 50%;
+    background: #edf2e8;
+    color: $verde;
 
-    background: #f1eee7;
-
-    font-size: 1rem;
+    svg {
+      width: 17px;
+      height: 17px;
+    }
   }
-
 
   .pet-details {
     display: flex;
     flex-direction: column;
-
     gap: 2px;
 
     strong {
-      color: #293528;
-
-      font-size: 0.76rem;
-      font-weight: 800;
+      color: #253024;
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     span {
-      color: #858980;
-
-      font-size: 0.66rem;
+      color: $texto-muted;
+      font-size: 0.7rem;
     }
   }
 
-
-  /* =======================================================
-     TUTOR
-     ======================================================= */
-
   .tutor-name {
-    color: #444941;
-
-    font-size: 0.75rem;
+    color: #30372e;
+    font-size: 0.77rem;
     font-weight: 500;
-
     white-space: nowrap;
   }
-
-
-  /* =======================================================
-     VETERINÁRIO
-     ======================================================= */
 
   .vet-info {
     display: flex;
     flex-direction: column;
-
     gap: 2px;
-
     min-width: 125px;
 
     strong {
-      color: #293528;
-
-      font-size: 0.75rem;
-      font-weight: 800;
-
+      color: #253024;
+      font-size: 0.77rem;
+      font-weight: 700;
       white-space: nowrap;
     }
 
     span {
-      color: #858980;
-
-      font-size: 0.66rem;
-
+      color: $texto-muted;
+      font-size: 0.68rem;
       white-space: nowrap;
     }
   }
 
-
-  /* =======================================================
-     TIPO DE ATENDIMENTO
-     ======================================================= */
-
   .type-badge {
     display: inline-flex;
     align-items: center;
-
-    min-height: 26px;
-
-    padding: 0 10px;
-
+    min-height: 24px;
+    padding: 5px 10px;
     box-sizing: border-box;
-
-    background: #f0f3e9;
-
-    color: #3f6134;
-
-    border-radius: 999px;
-
-    font-size: 0.67rem;
+    background: #edf2e8;
+    color: $verde-escuro;
+    border-radius: 15px;
+    font-size: 0.68rem;
     font-weight: 700;
-
     white-space: nowrap;
   }
-
-
-  /* =======================================================
-     PESO
-     ======================================================= */
 
   .peso-value {
     color: #444941;
-
-    font-size: 0.74rem;
+    font-size: 0.77rem;
     font-weight: 500;
-
     white-space: nowrap;
   }
-
-
-  /* =======================================================
-     MOTIVO
-     ======================================================= */
 
   .motivo-cell {
     display: block;
-
     max-width: 190px;
-
     overflow: hidden;
-
-    color: #555b53;
-
-    font-size: 0.73rem;
-
+    color: #646a62;
+    font-size: 0.76rem;
     white-space: nowrap;
-
     text-overflow: ellipsis;
   }
-
-
-  /* =======================================================
-     AÇÕES
-     ======================================================= */
 
   .actions-cell {
     display: flex;
     align-items: center;
-
+    justify-content: flex-start;
     gap: 8px;
-
     white-space: nowrap;
   }
-
 
   .actions-cell button {
     width: 32px;
     height: 32px;
-
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    padding: 0;
-
-    border: none;
-
     border-radius: 7px;
-
     cursor: pointer;
-
     font-family: inherit;
+    transition: transform 0.15s ease, opacity 0.15s ease, background 0.2s ease, border-color 0.2s ease;
 
-    font-size: 0.9rem;
-
-    transition:
-      background-color 0.2s ease,
-      transform 0.2s ease;
+    &:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
   }
-
 
   .btn-edit {
-    background: #557a46;
-
-    color: #ffffff;
+    border: 1px solid $verde;
+    background: $verde;
+    color: $branco;
 
     &:hover {
-      background: #3f6134;
-
-      transform: translateY(-1px);
+      background: $verde-hover;
+      border-color: $verde-hover;
     }
   }
-
 
   .btn-delete {
-    background: #fae8e6;
-
-    color: #c95b52;
+    border: 1px solid rgba(217, 77, 69, 0.25);
+    background: rgba(217, 77, 69, 0.08);
+    color: $vermelho;
 
     &:hover {
-      background: #f4d8d5;
-
-      color: #ae4941;
-
-      transform: translateY(-1px);
+      background: rgba(217, 77, 69, 0.15);
+      border-color: rgba(217, 77, 69, 0.35);
     }
   }
 
-
-  /* =======================================================
-     ESTADO VAZIO
-     ======================================================= */
-
   .empty-state {
-    padding: 50px 20px;
-
-    color: #999c94;
-
     text-align: center;
-
-    font-size: 0.82rem;
+    color: #999e97 !important;
+    padding: 35px !important;
+    font-size: 0.82rem !important;
   }
 }
+
 
 /* =========================================================
    RESPONSIVIDADE
    ========================================================= */
 
-
-/* ---------------------------------------------------------
-   Tablets
-   --------------------------------------------------------- */
-
-@media (max-width: 950px) {
-
+@media (max-width: 1100px) {
   .consultas-container {
-    padding: 30px 25px 50px;
-
+    padding: 24px 18px 35px;
 
     .hero-banner {
-      padding: 30px;
-
-      .hero-content {
-
-        .page-title {
-          font-size: 2.2rem;
-        }
-      }
-
+      padding: 28px 35px;
 
       .hero-image-wrapper {
-        width: 220px;
-        height: 210px;
+        width: 240px;
 
-
-        .pet-hero-img {
-          width: 175px;
-          height: 175px;
-        }
-
-
+        .pet-hero-img,
         .decor-shape {
-          width: 150px;
-          height: 150px;
-
-          right: 12px;
-          top: 30px;
+          width: 165px;
+          height: 165px;
         }
       }
-    }
-
-
-    .form-section,
-    .table-card {
-      padding: 24px;
     }
   }
 }
 
-
-/* ---------------------------------------------------------
-   Celulares
-   --------------------------------------------------------- */
-
-@media (max-width: 700px) {
-
+@media (max-width: 850px) {
   .consultas-container {
-    padding: 20px 15px 40px;
-
-
-    /* HERO */
 
     .hero-banner {
-      flex-direction: column;
-
-      min-height: auto;
-
-      padding: 30px 22px;
-
-      text-align: center;
-
-
-      .hero-content {
-        padding-right: 0;
-
-
-        .page-title {
-          font-size: 2rem;
-        }
-
-
-        .hero-subtitle {
-          font-size: 0.9rem;
-        }
-      }
-
+      min-height: 200px;
+      padding: 25px;
 
       .hero-image-wrapper {
-        width: 220px;
-        height: 190px;
+        width: 190px;
 
-        margin-top: 5px;
-
-
-        .pet-hero-img {
-          width: 155px;
-          height: 155px;
-        }
-
-
+        .pet-hero-img,
         .decor-shape {
-          width: 135px;
-          height: 135px;
-
-          right: 20px;
-          top: 28px;
+          width: 140px;
+          height: 140px;
         }
       }
     }
 
-
-    /* FORMULÁRIO */
-
-    .form-section {
-      padding: 22px 18px;
-
-      border-radius: 18px;
+    .page-title {
+      font-size: 2.2rem;
     }
 
-
-    .section-header {
-
-      h2 {
-        font-size: 1.25rem;
-      }
-
-
-      p {
-        font-size: 0.84rem;
-      }
+    .form-card .form-grid {
+      grid-template-columns: 1fr;
     }
-
-
-    .form-card {
-
-      .form-grid {
-        grid-template-columns: 1fr;
-
-        gap: 16px;
-      }
-
-
-      .input-group[style] {
-        grid-column: auto !important;
-      }
-    }
-
-
-    .form-actions {
-      flex-direction: column-reverse;
-
-      align-items: stretch;
-
-
-      button {
-        width: 100%;
-      }
-    }
-
-
-    /* TABELA */
-
-    .table-card {
-      padding: 18px;
-
-      border-radius: 18px;
-    }
-
-
-    .table-header {
-
-      h3 {
-        font-size: 1rem;
-      }
-    }
-
 
     .consultas-table {
       min-width: 850px;
     }
+
+    .table-card {
+      overflow-x: auto;
+    }
+  }
+}
+
+@media (max-width: 650px) {
+  .consultas-container {
+    padding: 15px 12px 25px;
+
+    .hero-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 25px;
+
+      .hero-image-wrapper {
+        align-self: center;
+        margin-top: 10px;
+      }
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+    }
+
+    .form-section {
+      padding: 17px;
+    }
+
+    .table-card {
+      padding: 17px 17px 0;
+    }
   }
 }
 
 
-/* ---------------------------------------------------------
-   Celulares pequenos
-   --------------------------------------------------------- */
+/* =========================================================
+   MODO ESCURO UNIFICADO — CONSULTAS
+   ========================================================= */
 
-@media (max-width: 420px) {
+html.dark-mode {
 
   .consultas-container {
+    background: $dark-bg;
+    color: $dark-text-main;
 
     .hero-banner {
+      background: linear-gradient(110deg, #1c231d 0%, #202720 55%, #1a211b 100%);
 
-      .hero-content {
+      .page-title {
+        color: #9fbd98;
+      }
 
-        .page-title {
-          font-size: 1.75rem;
+      .hero-subtitle {
+        color: $dark-text-secondary;
+      }
+
+      .pet-hero-img {
+        border-color: $dark-border;
+      }
+
+      .decor-shape {
+        background: #456d42;
+      }
+
+      .decor-cross {
+        color: #6f9665;
+      }
+    }
+
+    .form-section {
+      background: $dark-surface;
+      border-color: $dark-border;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .section-header {
+      h2 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: $dark-text-secondary;
+      }
+    }
+
+    .form-card .input-group {
+      label {
+        color: $dark-text-secondary;
+      }
+
+      .input-wrapper {
+        background: $dark-bg;
+        border-color: $dark-border;
+
+        &:hover {
+          border-color: #3d473d;
+        }
+
+        .input-icon {
+          color: #9fbd98;
+        }
+
+        input,
+        select,
+        textarea {
+          color: $dark-text-main;
+
+          &::placeholder {
+            color: $dark-text-muted;
+          }
+        }
+
+        select option {
+          background: $dark-surface;
+          color: $dark-text-main;
         }
       }
     }
 
+    .btn-secondary {
+      background: #242b24;
+      color: #a8c4a1;
+      border-color: #394339;
 
-    .form-section {
-      padding: 18px 15px;
+      &:hover {
+        background: #2c342c;
+        border-color: #4a564a;
+      }
     }
 
-
     .table-card {
-      padding: 15px;
+      background: $dark-surface;
+      border-color: $dark-border;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .table-header {
+      h3 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: $dark-text-secondary;
+      }
+    }
+
+    .consultas-table {
+      th, td {
+        border-bottom-color: $dark-border;
+      }
+
+      th {
+        background: $dark-bg;
+        color: $dark-text-secondary;
+      }
+
+      td {
+        background: $dark-surface;
+        color: $dark-text-main;
+      }
+
+      tbody tr:hover td {
+        background: $dark-surface-hover;
+      }
+    }
+
+    .date-content {
+      color: $dark-text-main;
+
+      small {
+        color: $dark-text-muted;
+      }
+    }
+
+    .pet-avatar {
+      background: #283128;
+      color: #9fbd98;
+    }
+
+    .pet-details {
+      strong {
+        color: $dark-text-main;
+      }
+
+      span {
+        color: $dark-text-muted;
+      }
+    }
+
+    .tutor-name {
+      color: $dark-text-main;
+    }
+
+    .vet-info {
+      strong {
+        color: $dark-text-main;
+      }
+
+      span {
+        color: $dark-text-muted;
+      }
+    }
+
+    .type-badge {
+      background: #242b24;
+      color: #9fbd98;
+    }
+
+    .peso-value {
+      color: $dark-text-secondary;
+    }
+
+    .motivo-cell {
+      color: $dark-text-muted;
+    }
+
+    .btn-delete {
+      background: #3b2928;
+      border-color: #5c3a38;
+      color: #d18b86;
+
+      &:hover {
+        background: #472e2d;
+        border-color: #6b433f;
+      }
+    }
+
+    .empty-state {
+      color: $dark-text-muted !important;
     }
   }
 }

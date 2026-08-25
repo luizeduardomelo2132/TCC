@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import './Perfil.scss';
+import { User, Mail, Phone, MapPin, Check, ShieldCheck, KeyRound, Lock } from 'lucide-react';
+
 export default function Perfil() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -10,6 +12,7 @@ export default function Perfil() {
   const [novaSenha, setNovaSenha] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const userRole = localStorage.getItem('@TCC:role') || 'tutor';
+
   useEffect(() => {
     const carregarPerfil = async () => {
       try {
@@ -26,6 +29,7 @@ export default function Perfil() {
     };
     carregarPerfil();
   }, []);
+
   const handleSalvarDados = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -39,6 +43,7 @@ export default function Perfil() {
       setIsLoading(false);
     }
   };
+
   const handleTrocarSenha = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!senhaAtual || !novaSenha) {
@@ -55,6 +60,7 @@ export default function Perfil() {
       alert('Erro ao trocar a senha. Verifique se a senha atual está correta.');
     }
   };
+
   return (
     <div className="perfil-container">
       <section className="perfil-hero">
@@ -86,35 +92,35 @@ export default function Perfil() {
               <div className="input-group">
                 <label>Nome Completo*</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">👤</span>
+                  <User className="input-icon" size={17} />
                   <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Digite seu nome completo" required />
                 </div>
               </div>
               <div className="input-group">
                 <label>E-mail*</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">✉️</span>
+                  <Mail className="input-icon" size={17} />
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seuemail@email.com" required />
                 </div>
               </div>
               <div className="input-group">
                 <label>Telefone</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">📞</span>
+                  <Phone className="input-icon" size={17} />
                   <input type="text" value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(00) 00000-0000" />
                 </div>
               </div>
               <div className="input-group">
                 <label>Endereço</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">📍</span>
+                  <MapPin className="input-icon" size={17} />
                   <input type="text" value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Rua, Número, Bairro" />
                 </div>
               </div>
             </div>
             <div className="form-actions">
               <button type="submit" className="btn-primary" disabled={isLoading}>
-                <span>✓</span>
+                <Check size={15} />
                 {isLoading ? 'Salvando...' : 'Salvar Alterações'}
               </button>
             </div>
@@ -126,30 +132,32 @@ export default function Perfil() {
               <h2>Segurança da Conta</h2>
               <p>Altere sua senha de acesso ao sistema.</p>
             </div>
-            <div className="header-icon">🔒</div>
+            <div className="header-icon">
+              <Lock size={17} />
+            </div>
           </div>
           <form onSubmit={handleTrocarSenha}>
             <div className="input-group">
               <label>Senha Atual*</label>
               <div className="input-wrapper">
-                <span className="input-icon">🔑</span>
+                <KeyRound className="input-icon" size={17} />
                 <input type="password" value={senhaAtual} onChange={(e) => setSenhaAtual(e.target.value)} placeholder="Digite sua senha atual" required />
               </div>
             </div>
             <div className="input-group">
               <label>Nova Senha*</label>
               <div className="input-wrapper">
-                <span className="input-icon">🔐</span>
+                <Lock className="input-icon" size={17} />
                 <input type="password" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)} placeholder="Digite uma nova senha" required />
               </div>
             </div>
             <div className="security-info">
-              <span>🛡️</span>
+              <ShieldCheck size={17} />
               <p>Utilize uma senha segura com pelo menos 6 caracteres, combinando letras e números.</p>
             </div>
             <div className="form-actions">
               <button type="submit" className="btn-primary">
-                <span>✓</span>
+                <Check size={15} />
                 Atualizar Senha
               </button>
             </div>

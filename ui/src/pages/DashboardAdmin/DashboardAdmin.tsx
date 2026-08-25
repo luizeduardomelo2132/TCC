@@ -11,6 +11,7 @@ interface ResumoDashboard {
 
 export default function DashboardAdmin() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   const [resumo, setResumo] = useState<ResumoDashboard>({
     totalPets: 0,
@@ -41,6 +42,8 @@ export default function DashboardAdmin() {
         });
       } catch (error) {
         console.error('Erro ao carregar dashboard', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -51,43 +54,51 @@ export default function DashboardAdmin() {
     (c) => c.status !== 'Concluída' && c.status !== 'Cancelada'
   ).length;
 
-  const imgHero =
-    'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=800';
+  // Lógica da Saudação Dinâmica (Agora aparece apenas uma vez)
+  const horaAtual = new Date().getHours();
+  let saudacao = 'Boa noite';
+  if (horaAtual < 12) saudacao = 'Bom dia';
+  else if (horaAtual < 18) saudacao = 'Boa tarde';
+
+  const imgHero = 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=800';
+
+  // Tela de Loading
+  if (loading) {
+    return (
+      <div className="dashboard-admin-container" style={{ alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <h2 style={{ color: '#4f7f4d' }}>Carregando dados da clínica...</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-admin-container">
-
       {/* ================= HERO ================= */}
       <section className="dashboard-hero">
-
         <div className="hero-decoration hero-circle"></div>
         <span className="hero-cross cross-one">+</span>
         <span className="hero-cross cross-two">+</span>
 
         <div className="hero-content">
-          <h1>Painel Administrativo</h1>
-
+          <h1>{saudacao}, Admin!</h1>
           <p>
             Acompanhe os principais indicadores da Clínica Maximus,
-            gerencie pacientes, tutores e consultas de forma rápida e
-            organizada.
+            gerencie pacientes, tutores e consultas de forma rápida e organizada.
           </p>
 
           <div className="hero-actions">
             <button
               className="hero-btn primary"
-              onClick={() => navigate('/pets')}
+              onClick={() => navigate('/consultas')} 
             >
-              <span>＋</span>
-              Novo Pet
+              <span>📅</span> Nova Consulta
             </button>
 
             <button
               className="hero-btn secondary"
-              onClick={() => navigate('/tutores')}
+              onClick={() => navigate('/pets')}
             >
-              <span>＋</span>
-              Novo Tutor
+              <span>＋</span> Novo Pet
             </button>
           </div>
         </div>
