@@ -1,410 +1,793 @@
-$green: #4f7f4f;
-$green-dark: #365f3a;
-$green-light: #edf4e8;
-$green-soft: #f3f7ef;
-$beige: #f7f0e4;
-$bg: #f8f8f5;
-$white: #ffffff;
-$text-main: #243024;
-$text-muted: #6f756d;
-$border: #e2e4dc;
-$warning: #d89a32;
-.dashboard-vet-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem 1.5rem 2rem;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: $text-main;
-  background: $bg;
-  min-height: 100%;
-  .hero-section {
-    min-height: 270px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: $beige;
-    border-radius: 20px;
-    padding: 2.5rem 3.2rem;
-    gap: 3rem;
-    overflow: hidden;
-    .hero-content {
-      flex: 1;
-      h1 {
-        margin: 0 0 1rem;
-        font-size: 2.5rem;
-        line-height: 1.15;
-        color: $green-dark;
-        font-weight: 800;
-      }
-      .hero-subtitle {
-        max-width: 650px;
-        margin: 0 0 1.5rem;
-        color: #555a52;
-        font-size: 1rem;
-        line-height: 1.65;
-      }
-      .hero-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        .btn-primary {
-          border: none;
-          background: $green;
-          color: white;
-          padding: 0.85rem 1.5rem;
-          border-radius: 50px;
-          font-size: 0.95rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          &:hover {
-            background: $green-dark;
-            transform: translateY(-1px);
-          }
-        }
-      }
-    }
-    .hero-image {
-      width: 270px;
-      height: 190px;
-      flex-shrink: 0;
-      border-radius: 50%;
-      padding: 7px;
-      background: white;
-      box-shadow: 0 8px 20px rgba(54, 95, 58, 0.12);
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-      }
-    }
-  }
-  .summary-section {
-    background: $white;
-    border: 1px solid $border;
-    border-radius: 18px;
-    padding: 1.5rem 1.5rem 1.7rem;
-    .section-header {
-      margin-bottom: 1.25rem;
-      h2 {
-        margin: 0 0 0.3rem;
-        color: $green-dark;
-        font-size: 1.35rem;
-        font-weight: 800;
-      }
-      p {
-        margin: 0;
-        color: $text-muted;
-        font-size: 0.9rem;
-      }
-    }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      .summary-card {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1.2rem;
-        background: $green-soft;
-        border: 1px solid #e1e9dc;
-        border-radius: 14px;
-        transition: transform 0.2s ease;
-        &:hover {
-          transform: translateY(-2px);
-        }
-        &.waiting {
-          background: #fffaf0;
-          border-color: #f0dfb8;
-        }
-        .summary-icon {
-          width: 52px;
-          height: 52px;
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 14px;
-          background: white;
-          font-size: 1.4rem;
-        }
-        .summary-info {
-          display: flex;
-          flex-direction: column;
-          gap: 0.1rem;
-          span {
-            color: $text-muted;
-            font-size: 0.82rem;
-            font-weight: 600;
-          }
-          strong {
-            color: $green-dark;
-            font-size: 1.8rem;
-            line-height: 1.2;
-          }
-          small {
-            color: $text-muted;
-            font-size: 0.75rem;
-          }
-        }
-      }
-    }
-  }
-  .agenda-section {
-    .clinical-panel {
-      background: $white;
-      border: 1px solid $border;
-      border-radius: 18px;
-      padding: 1.5rem;
-      .panel-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1.3rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid $border;
-        h2 {
-          margin: 0 0 0.3rem;
-          color: $green-dark;
-          font-size: 1.35rem;
-          font-weight: 800;
-        }
-        p {
-          margin: 0;
-          color: $text-muted;
-          font-size: 0.9rem;
-        }
-        .agenda-count {
-          background: $green-light;
-          color: $green-dark;
-          padding: 0.45rem 0.9rem;
-          border-radius: 50px;
-          font-size: 0.8rem;
-          font-weight: 700;
-        }
-      }
-      .patients-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
-        .empty-state {
-          padding: 2.5rem;
-          text-align: center;
-          color: $text-muted;
-        }
-        .patient-item {
-          display: flex;
-          align-items: center;
-          gap: 1.5rem;
-          padding: 1rem;
-          border: 1px solid $border;
-          border-radius: 12px;
-          background: white;
-          transition: all 0.2s ease;
-          &:hover {
-            border-color: #cdd8c8;
-            background: #fcfdfb;
-          }
-          &.is-waiting {
-            border-left: 4px solid $warning;
-            background: #fffdf7;
-          }
-          .time-block {
-            min-width: 100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.45rem;
-            padding-right: 1.3rem;
-            border-right: 1px solid $border;
-            .time {
-              color: $green-dark;
-              font-size: 1.25rem;
-              font-weight: 800;
-            }
-            .status-badge {
-              padding: 0.3rem 0.65rem;
-              border-radius: 50px;
-              font-size: 0.68rem;
-              font-weight: 700;
-              text-transform: uppercase;
-              &.agendada {
-                background: #eef0eb;
-                color: #66705f;
-              }
-              &.aguardando {
-                background: #fff0ce;
-                color: #a36d0d;
-              }
-              &.concluida {
-                background: #e3f3e6;
-                color: #347043;
-              }
-            }
-          }
-          .patient-info {
-            flex: 1;
-            .info-header {
-              display: flex;
-              align-items: center;
-              gap: 0.8rem;
-              margin-bottom: 0.6rem;
-              .pet-avatar {
-                width: 42px;
-                height: 42px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                background: $green-light;
-                font-size: 1.3rem;
-              }
-              h4 {
-                margin: 0;
-                color: $text-main;
-                font-size: 1rem;
-                font-weight: 800;
-              }
-              span {
-                color: $text-muted;
-                font-size: 0.8rem;
-              }
-            }
-            p {
-              margin: 0.2rem 0;
-              color: $text-muted;
-              font-size: 0.82rem;
-              strong {
-                color: $text-main;
-                font-weight: 700;
-              }
-            }
-          }
-          .action-buttons {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            .btn-primary,
-            .btn-secondary {
-              border: none;
-              border-radius: 8px;
-              padding: 0.7rem 1rem;
-              font-size: 0.82rem;
-              font-weight: 700;
-              cursor: pointer;
-              transition: all 0.2s ease;
-              white-space: nowrap;
-            }
-            .btn-primary {
-              background: $green;
-              color: white;
-              &:hover {
-                background: $green-dark;
-              }
-            }
-            .btn-secondary {
-              background: #f1f3ee;
-              color: $green-dark;
-              border: 1px solid #dfe4da;
-              &:hover {
-                background: #e7ebe3;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-@media (max-width: 1000px) {
-  .dashboard-vet-container {
-    .hero-section {
-      padding: 2rem;
-      .hero-image {
-        width: 220px;
-        height: 160px;
-      }
-    }
-    .summary-section {
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .agenda-section {
-      .clinical-panel {
-        .patients-list {
-          .patient-item {
-            flex-wrap: wrap;
-            .patient-info {
-              min-width: calc(100% - 130px);
-            }
-            .action-buttons {
-              width: 100%;
-              justify-content: flex-end;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-@media (max-width: 700px) {
-  .dashboard-vet-container {
-    padding: 1rem;
-    .hero-section {
-      flex-direction: column;
-      text-align: center;
-      padding: 1.8rem;
-      .hero-content {
-        .hero-subtitle {
-          font-size: 0.9rem;
-        }
-        .hero-actions {
-          justify-content: center;
-        }
-      }
-      .hero-image {
-        width: 150px;
-        height: 150px;
-      }
-    }
-    .agenda-section {
-      .clinical-panel {
-        padding: 1rem;
-        .panel-header {
-          align-items: flex-start;
-          flex-direction: column;
-          gap: 0.7rem;
-        }
-        .patients-list {
-          .patient-item {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 1rem;
-            .time-block {
-              flex-direction: row;
-              justify-content: space-between;
-              border-right: none;
-              border-bottom: 1px solid $border;
-              padding: 0 0 0.8rem;
-            }
-            .patient-info {
-              min-width: 0;
-            }
-            .action-buttons {
-              flex-direction: column;
-              width: 100%;
-              .btn-primary,
-              .btn-secondary {
-                width: 100%;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+/* =========================================================
+   DASHBOARD VETERINÁRIO
+   Padrão unificado com as demais páginas do sistema
+   ========================================================= */
+
+   $verde: #557a46;
+   $verde-escuro: #365d32;
+   $verde-hover: #4b6d3e;
+   
+   $bege: #f4eee5;
+   $bege-claro: #faf8f4;
+   
+   $branco: #ffffff;
+   
+   $texto: #293528;
+   $texto-secundario: #73776f;
+   $texto-muted: #8b8c87;
+   
+   $borda: #e4e3dc;
+   $borda-card: #e7e5df;
+   
+   $vermelho: #d94d45;
+   $aviso: #c9962f;
+   
+   $dark-bg: #111512;
+   $dark-surface: #191e1a;
+   $dark-surface-hover: #202720;
+   $dark-border: #303830;
+   
+   $dark-text-main: #f2f5f1;
+   $dark-text-secondary: #b2bbb2;
+   $dark-text-muted: #818a81;
+   
+   
+   /* =========================================================
+      CONTAINER PRINCIPAL
+      ========================================================= */
+   
+   .dashboard-vet-container {
+     width: 100%;
+     max-width: none;
+     min-height: calc(100vh - 80px);
+     padding: 28px 24px 40px;
+     box-sizing: border-box;
+     display: flex;
+     flex-direction: column;
+     gap: 20px;
+     background: #f5f6f4;
+     color: $texto;
+     font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+   }
+   
+   
+   /* =========================================================
+      HERO
+      ========================================================= */
+   
+   .dashboard-vet-container {
+   
+     .hero-section {
+       width: 100%;
+       min-height: 220px;
+       box-sizing: border-box;
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       position: relative;
+       overflow: hidden;
+       padding: 32px 52px;
+       border-radius: 20px;
+       background: $bege;
+       gap: 30px;
+   
+       &::before {
+         content: "";
+         position: absolute;
+         width: 240px;
+         height: 240px;
+         top: -115px;
+         right: 240px;
+         border-radius: 50%;
+         background: rgba(85, 122, 70, 0.08);
+         pointer-events: none;
+       }
+   
+       .hero-content {
+         position: relative;
+         z-index: 2;
+         flex: 1;
+         max-width: 700px;
+   
+         h1 {
+           margin: 0 0 12px;
+           color: $verde-escuro;
+           font-size: clamp(2.3rem, 3.2vw, 3.2rem);
+           font-weight: 800;
+           line-height: 1.05;
+           letter-spacing: -0.04em;
+         }
+   
+         .hero-subtitle {
+           max-width: 650px;
+           margin: 0 0 20px;
+           color: #53584f;
+           font-size: 1rem;
+           line-height: 1.65;
+           font-weight: 400;
+         }
+   
+         .hero-actions {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+   
+           .btn-primary {
+             height: 42px;
+             padding: 0 22px;
+             border: none;
+             border-radius: 8px;
+             background: $verde;
+             color: $branco;
+             font-family: inherit;
+             font-size: 0.84rem;
+             font-weight: 700;
+             cursor: pointer;
+             display: inline-flex;
+             align-items: center;
+             gap: 8px;
+             transition: background 0.2s ease, transform 0.2s ease;
+   
+             svg {
+               width: 16px;
+               height: 16px;
+             }
+   
+             &:hover {
+               background: $verde-hover;
+               transform: translateY(-1px);
+             }
+           }
+         }
+       }
+   
+       .hero-image {
+         position: relative;
+         z-index: 2;
+         width: 290px;
+         height: 220px;
+         flex-shrink: 0;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         margin-right: 20px;
+   
+         img {
+           width: 190px;
+           height: 190px;
+           object-fit: cover;
+           border-radius: 50%;
+           border: 7px solid $branco;
+           box-shadow: 0 12px 25px rgba(54, 93, 50, 0.16);
+         }
+       }
+     }
+   }
+   
+   
+   /* =========================================================
+      RESUMO DO PLANTÃO
+      ========================================================= */
+   
+   .dashboard-vet-container {
+   
+     .summary-section {
+       width: 100%;
+       box-sizing: border-box;
+       padding: 22px;
+       background: $branco;
+       border: 1px solid $borda-card;
+       border-radius: 20px;
+       box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
+   
+       .section-header {
+         margin-bottom: 18px;
+   
+         h2 {
+           margin: 0 0 5px;
+           color: $verde-escuro;
+           font-size: 1.3rem;
+           font-weight: 800;
+           letter-spacing: -0.02em;
+         }
+   
+         p {
+           margin: 0;
+           color: $texto-secundario;
+           font-size: 0.86rem;
+           line-height: 1.5;
+         }
+       }
+   
+       .summary-grid {
+         display: grid;
+         grid-template-columns: repeat(3, minmax(0, 1fr));
+         gap: 16px;
+   
+         .summary-card {
+           display: flex;
+           align-items: center;
+           gap: 14px;
+           padding: 18px;
+           background: $bege-claro;
+           border: 1px solid $borda-card;
+           border-radius: 14px;
+           transition: transform 0.2s ease;
+   
+           &:hover {
+             transform: translateY(-2px);
+           }
+   
+           &.waiting {
+             background: #fdf6e9;
+             border-color: #ecdcb4;
+   
+             .summary-icon {
+               color: $aviso;
+             }
+           }
+   
+           .summary-icon {
+             width: 48px;
+             height: 48px;
+             flex-shrink: 0;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             border-radius: 12px;
+             background: $branco;
+             color: $verde;
+   
+             svg {
+               width: 22px;
+               height: 22px;
+             }
+           }
+   
+           .summary-info {
+             display: flex;
+             flex-direction: column;
+             gap: 2px;
+   
+             span {
+               color: $texto-secundario;
+               font-size: 0.78rem;
+               font-weight: 600;
+             }
+   
+             strong {
+               color: $verde-escuro;
+               font-size: 1.7rem;
+               line-height: 1.2;
+               font-weight: 800;
+             }
+   
+             small {
+               color: $texto-muted;
+               font-size: 0.72rem;
+             }
+           }
+         }
+       }
+     }
+   }
+   
+   
+   /* =========================================================
+      FILA DE ATENDIMENTO
+      ========================================================= */
+   
+   .dashboard-vet-container {
+   
+     .agenda-section {
+   
+       .clinical-panel {
+         width: 100%;
+         box-sizing: border-box;
+         padding: 22px;
+         background: $branco;
+         border: 1px solid $borda-card;
+         border-radius: 20px;
+         box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
+   
+         .panel-header {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           margin-bottom: 16px;
+           padding-bottom: 14px;
+           border-bottom: 1px solid $borda-card;
+   
+           h2 {
+             margin: 0 0 5px;
+             color: $verde-escuro;
+             font-size: 1.3rem;
+             font-weight: 800;
+             letter-spacing: -0.02em;
+           }
+   
+           p {
+             margin: 0;
+             color: $texto-secundario;
+             font-size: 0.86rem;
+           }
+   
+           .agenda-count {
+             flex-shrink: 0;
+             padding: 7px 13px;
+             background: #edf2e8;
+             color: $verde-escuro;
+             border-radius: 20px;
+             font-size: 0.72rem;
+             font-weight: 700;
+             white-space: nowrap;
+           }
+         }
+   
+         .patients-list {
+           display: flex;
+           flex-direction: column;
+           gap: 10px;
+   
+           .empty-state {
+             padding: 40px;
+             text-align: center;
+             color: #999e97;
+             font-size: 0.86rem;
+           }
+   
+           .patient-item {
+             display: flex;
+             align-items: center;
+             gap: 20px;
+             padding: 16px;
+             border: 1px solid $borda-card;
+             border-radius: 14px;
+             background: $branco;
+             transition: border-color 0.2s ease, background 0.2s ease;
+   
+             &:hover {
+               border-color: #d4d8ce;
+               background: #fafbf8;
+             }
+   
+             &.is-waiting {
+               border-left: 4px solid $aviso;
+               background: #fffdf6;
+             }
+   
+             .time-block {
+               min-width: 100px;
+               display: flex;
+               flex-direction: column;
+               align-items: center;
+               gap: 7px;
+               padding-right: 18px;
+               border-right: 1px solid $borda-card;
+   
+               .time {
+                 color: $verde-escuro;
+                 font-size: 1.2rem;
+                 font-weight: 800;
+               }
+   
+               .status-badge {
+                 padding: 4px 10px;
+                 border-radius: 20px;
+                 font-size: 0.65rem;
+                 font-weight: 700;
+                 text-transform: uppercase;
+                 letter-spacing: 0.02em;
+   
+                 &.agendada {
+                   background: #edeee9;
+                   color: #676c65;
+                 }
+   
+                 &.aguardando {
+                   background: #fbecc8;
+                   color: #96690f;
+                 }
+   
+                 &.concluida {
+                   background: #e0efe2;
+                   color: $verde-escuro;
+                 }
+               }
+             }
+   
+             .patient-info {
+               flex: 1;
+   
+               .info-header {
+                 display: flex;
+                 align-items: center;
+                 gap: 10px;
+                 margin-bottom: 8px;
+   
+                 .pet-avatar {
+                   width: 40px;
+                   height: 40px;
+                   flex-shrink: 0;
+                   display: flex;
+                   align-items: center;
+                   justify-content: center;
+                   border-radius: 50%;
+                   background: #edf2e8;
+                   color: $verde;
+   
+                   svg {
+                     width: 19px;
+                     height: 19px;
+                   }
+                 }
+   
+                 h4 {
+                   margin: 0;
+                   color: #253024;
+                   font-size: 0.95rem;
+                   font-weight: 800;
+                 }
+   
+                 span {
+                   color: $texto-muted;
+                   font-size: 0.76rem;
+                 }
+               }
+   
+               p {
+                 margin: 3px 0;
+                 color: $texto-secundario;
+                 font-size: 0.8rem;
+   
+                 strong {
+                   color: $texto;
+                   font-weight: 700;
+                 }
+               }
+             }
+   
+             .action-buttons {
+               display: flex;
+               align-items: center;
+               gap: 8px;
+   
+               .btn-primary,
+               .btn-secondary {
+                 height: 38px;
+                 padding: 0 16px;
+                 border-radius: 8px;
+                 font-family: inherit;
+                 font-size: 0.8rem;
+                 font-weight: 700;
+                 cursor: pointer;
+                 white-space: nowrap;
+                 transition: background 0.2s ease;
+               }
+   
+               .btn-primary {
+                 border: none;
+                 background: $verde;
+                 color: $branco;
+   
+                 &:hover {
+                   background: $verde-hover;
+                 }
+               }
+   
+               .btn-secondary {
+                 border: 1px solid $borda;
+                 background: $bege-claro;
+                 color: $verde-escuro;
+   
+                 &:hover {
+                   background: #eef2e9;
+                   border-color: #d2d8cc;
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+   
+   
+   /* =========================================================
+      RESPONSIVIDADE
+      ========================================================= */
+   
+   @media (max-width: 1000px) {
+     .dashboard-vet-container {
+   
+       .hero-section {
+         padding: 28px 35px;
+   
+         .hero-image {
+           width: 220px;
+   
+           img {
+             width: 160px;
+             height: 160px;
+           }
+         }
+       }
+   
+       .summary-section .summary-grid {
+         grid-template-columns: 1fr;
+       }
+   
+       .agenda-section .clinical-panel .patients-list .patient-item {
+         flex-wrap: wrap;
+   
+         .patient-info {
+           min-width: calc(100% - 130px);
+         }
+   
+         .action-buttons {
+           width: 100%;
+           justify-content: flex-end;
+         }
+       }
+     }
+   }
+   
+   @media (max-width: 700px) {
+     .dashboard-vet-container {
+       padding: 15px 12px 25px;
+   
+       .hero-section {
+         flex-direction: column;
+         text-align: center;
+         padding: 25px;
+   
+         .hero-content {
+           .hero-subtitle {
+             font-size: 0.9rem;
+           }
+   
+           .hero-actions {
+             justify-content: center;
+           }
+         }
+   
+         .hero-image {
+           width: 160px;
+           height: 160px;
+           margin-top: 10px;
+   
+           img {
+             width: 140px;
+             height: 140px;
+           }
+         }
+       }
+   
+       .agenda-section .clinical-panel {
+         padding: 17px;
+   
+         .panel-header {
+           align-items: flex-start;
+           flex-direction: column;
+           gap: 8px;
+         }
+   
+         .patients-list .patient-item {
+           flex-direction: column;
+           align-items: stretch;
+           gap: 14px;
+   
+           .time-block {
+             flex-direction: row;
+             justify-content: space-between;
+             border-right: none;
+             border-bottom: 1px solid $borda-card;
+             padding: 0 0 12px;
+           }
+   
+           .patient-info {
+             min-width: 0;
+           }
+   
+           .action-buttons {
+             flex-direction: column;
+             width: 100%;
+   
+             .btn-primary,
+             .btn-secondary {
+               width: 100%;
+             }
+           }
+         }
+       }
+     }
+   }
+   
+   
+   /* =========================================================
+      MODO ESCURO UNIFICADO — DASHBOARD VETERINÁRIO
+      ========================================================= */
+   
+   html.dark-mode {
+   
+     .dashboard-vet-container {
+       background: $dark-bg;
+       color: $dark-text-main;
+   
+       .hero-section {
+         background: linear-gradient(110deg, #1c231d 0%, #202720 55%, #1a211b 100%);
+   
+         .hero-content {
+           h1 {
+             color: #9fbd98;
+           }
+   
+           .hero-subtitle {
+             color: $dark-text-secondary;
+           }
+         }
+   
+         .hero-image img {
+           border-color: $dark-border;
+         }
+       }
+   
+       .summary-section {
+         background: $dark-surface;
+         border-color: $dark-border;
+         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+   
+         .section-header {
+           h2 {
+             color: #9fbd98;
+           }
+   
+           p {
+             color: $dark-text-secondary;
+           }
+         }
+   
+         .summary-grid .summary-card {
+           background: $dark-surface-hover;
+           border-color: $dark-border;
+   
+           &.waiting {
+             background: #2b2417;
+             border-color: #4a3e22;
+   
+             .summary-icon {
+               color: #d9a94a;
+             }
+           }
+   
+           .summary-icon {
+             background: $dark-bg;
+             color: #9fbd98;
+           }
+   
+           .summary-info {
+             span {
+               color: $dark-text-secondary;
+             }
+   
+             strong {
+               color: #9fbd98;
+             }
+   
+             small {
+               color: $dark-text-muted;
+             }
+           }
+         }
+       }
+   
+       .agenda-section .clinical-panel {
+         background: $dark-surface;
+         border-color: $dark-border;
+         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+   
+         .panel-header {
+           border-bottom-color: $dark-border;
+   
+           h2 {
+             color: #9fbd98;
+           }
+   
+           p {
+             color: $dark-text-secondary;
+           }
+   
+           .agenda-count {
+             background: #242b24;
+             color: #9fbd98;
+           }
+         }
+   
+         .patients-list {
+   
+           .empty-state {
+             color: $dark-text-muted;
+           }
+   
+           .patient-item {
+             background: $dark-surface;
+             border-color: $dark-border;
+   
+             &:hover {
+               border-color: #3d473d;
+               background: $dark-surface-hover;
+             }
+   
+             &.is-waiting {
+               background: #211d14;
+               border-left-color: #d9a94a;
+             }
+   
+             .time-block {
+               border-right-color: $dark-border;
+   
+               .time {
+                 color: #9fbd98;
+               }
+   
+               .status-badge {
+                 &.agendada {
+                   background: #242b24;
+                   color: $dark-text-secondary;
+                 }
+   
+                 &.aguardando {
+                   background: #3a2f16;
+                   color: #d9a94a;
+                 }
+   
+                 &.concluida {
+                   background: #1f2e21;
+                   color: #9fbd98;
+                 }
+               }
+             }
+   
+             .patient-info {
+   
+               .info-header {
+                 .pet-avatar {
+                   background: #283128;
+                   color: #9fbd98;
+                 }
+   
+                 h4 {
+                   color: $dark-text-main;
+                 }
+   
+                 span {
+                   color: $dark-text-muted;
+                 }
+               }
+   
+               p {
+                 color: $dark-text-secondary;
+   
+                 strong {
+                   color: $dark-text-main;
+                 }
+               }
+             }
+   
+             .action-buttons {
+               .btn-secondary {
+                 background: #242b24;
+                 color: #a8c4a1;
+                 border-color: #394339;
+   
+                 &:hover {
+                   background: #2c342c;
+                   border-color: #4a564a;
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+   }

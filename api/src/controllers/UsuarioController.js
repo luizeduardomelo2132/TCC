@@ -64,6 +64,34 @@ export const atualizarUsuario = async (req, res) => {
   }
 };
 
+// ==========================================
+// LISTAR VETERINÁRIOS
+// ==========================================
+
+export const listarVeterinarios = async (req, res) => {
+  try {
+    const veterinarios = await Usuario.find({
+      role: 'veterinario'
+    })
+      .select('nome email telefone especialidade')
+      .sort({ nome: 1 });
+
+    return res.status(200).json(veterinarios);
+
+  } catch (error) {
+
+    console.error(
+      'Erro ao listar veterinários:',
+      error
+    );
+
+    return res.status(500).json({
+      erro: 'Falha ao listar veterinários',
+      detalhes: error.message
+    });
+  }
+};
+
 // Deletar Veterinário
 export const deletarVeterinario = async (req, res) => {
   try {

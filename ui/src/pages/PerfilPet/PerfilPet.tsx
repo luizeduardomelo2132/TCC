@@ -18,7 +18,7 @@ export default function PerfilPet() {
         setPet(resPet.data);
         const resConsultas = await api.get(`/consultas?pet=${id}`);
         setConsultas(resConsultas.data);
-        const resProntuarios = await api.get(`/prontuarios?pet=${id}`);
+        const resProntuarios = await api.get(`/prontuarios/pet/${id}`);
         setProntuarios(resProntuarios.data);
       } catch (error) {
         console.error('Erro ao buscar perfil do pet:', error);

@@ -268,3 +268,81 @@ html.dark-mode .logout-link:hover {
     height: 21px;
   }
 }
+
+.pets-menu {
+  width: 100%;
+}
+
+.pets-toggle {
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  position: relative;
+}
+
+.pets-toggle:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pets-toggle .pets-arrow {
+  margin-left: auto;
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.pets-toggle .pets-arrow.open {
+  transform: rotate(90deg);
+}
+
+.active-parent {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.pets-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 2px 0 8px 0;
+  padding-left: 18px;
+}
+
+.pet-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 7px;
+  color: #aeb7b0;
+  text-decoration: none;
+  font-size: 13px;
+  transition: 0.2s ease;
+}
+
+.pet-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pet-link.active {
+  color: #ffffff;
+  background: rgba(71, 123, 67, 0.25);
+}
+
+.pet-icon {
+  width: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.no-pets {
+  padding: 8px 12px;
+  color: #737c75;
+  font-size: 12px;
+}

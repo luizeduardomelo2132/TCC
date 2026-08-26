@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import './Login.scss';
+import { Sun, Moon } from 'lucide-react';
+
+const THEME_STORAGE_KEY = '@TCC:theme';
 
 export default function Login() {
   const [modoLogin, setModoLogin] = useState(true);
@@ -12,7 +15,25 @@ export default function Login() {
   const [role, setRole] = useState('tutor');
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [lembrar, setLembrar] = useState(false);
+  const [temaEscuro, setTemaEscuro] = useState(false);
   const navigate = useNavigate();
+
+  // Aplica o tema salvo (ou já ativo na tag <html>) assim que a página abre.
+  // Como o Login não tem topbar, ele precisa checar/alternar o dark mode
+  // sozinho, usando a mesma classe "dark-mode" que as outras telas usam.
+  useEffect(() => {
+    const salvo = localStorage.getItem(THEME_STORAGE_KEY);
+    const ativo = salvo ? salvo === 'dark' : document.documentElement.classList.contains('dark-mode');
+    setTemaEscuro(ativo);
+    document.documentElement.classList.toggle('dark-mode', ativo);
+  }, []);
+
+  const alternarTema = () => {
+    const novoValor = !temaEscuro;
+    setTemaEscuro(novoValor);
+    document.documentElement.classList.toggle('dark-mode', novoValor);
+    localStorage.setItem(THEME_STORAGE_KEY, novoValor ? 'dark' : 'light');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,10 +45,12 @@ export default function Login() {
           senha
         });
 
+        const usuarioId = response.data.usuario._id; 
         const usuarioRole = response.data.usuario.role;
         const usuarioNome = response.data.usuario.nome;
 
         localStorage.setItem('@TCC:token', response.data.token);
+        localStorage.setItem('@TCC:id', usuarioId);
         localStorage.setItem('@TCC:role', usuarioRole);
         localStorage.setItem('@TCC:nome', usuarioNome);
 
@@ -60,6 +83,16 @@ export default function Login() {
 
   return (
     <div className="login-container">
+      <button
+        type="button"
+        className="theme-toggle"
+        onClick={alternarTema}
+        aria-label={temaEscuro ? 'Ativar modo claro' : 'Ativar modo escuro'}
+        title={temaEscuro ? 'Ativar modo claro' : 'Ativar modo escuro'}
+      >
+        {temaEscuro ? <Sun /> : <Moon />}
+      </button>
+
       <div className="login-page">
         <section className="login-left">
           <div className="decor-circle decor-circle-top"></div>

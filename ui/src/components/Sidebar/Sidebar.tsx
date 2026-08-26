@@ -9,30 +9,64 @@ import {
   Stethoscope,
   PawPrint
 } from 'lucide-react';
-
+import { useEffect, useState } from 'react';
+import api from '../../services/api';
 import './Sidebar.scss';
+
+interface Pet {
+  _id: string;
+  nome: string;
+  especie?: string;
+  tutorId?: string;
+  tutor?: {
+    _id: string;
+    nome: string;
+  };
+}
 
 export default function Sidebar() {
   const navigate = useNavigate();
 
   const userRole = localStorage.getItem('@TCC:role') || 'tutor';
 
-  // 1. Lógica simples para retornar a rota específica de cada dashboard
+
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [petsOpen, setPetsOpen] = useState(true);
+
+  useEffect(() => {
+    const buscarMeusPets = async () => {
+      if (userRole !== 'tutor') {
+        return;
+      }
+
+      try {
+        const response = await api.get('/pets');
+        setPets(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar meus pets:', error);
+        setPets([]);
+      }
+    };
+
+    buscarMeusPets();
+  }, [userRole]);
+
   const getDashboardRoute = () => {
     switch (userRole) {
       case 'admin':
-        return '/dashboard-admin'; // Altere para a sua rota real do admin
+        return '/dashboard-admin';
       case 'veterinario':
-        return '/dashboard-vet'; // Altere para a sua rota real do veterinário
+        return '/dashboard-vet';
       case 'tutor':
       default:
-        return '/dashboard-tutor'; // Altere para a sua rota real do tutor
+        return '/dashboard-tutor';
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('@TCC:token');
     localStorage.removeItem('@TCC:role');
+    localStorage.removeItem('@TCC:id');
 
     navigate('/login');
     window.location.reload();
@@ -41,7 +75,6 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
 
-      {/* LOGO */}
       <div className="sidebar-brand">
         <div className="brand-icon">
           <PawPrint size={23} strokeWidth={1.8} />
@@ -54,10 +87,8 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* MENU */}
       <nav className="nav-menu">
 
-        {/* 2. Chamamos a função no 'to' para enviar o usuário ao lugar certo */}
         <NavLink
           to={getDashboardRoute()}
           end
@@ -69,7 +100,7 @@ export default function Sidebar() {
           <span>Início</span>
         </NavLink>
 
-        {(userRole === 'admin' || userRole === 'veterinario') && (
+        {userRole !== 'tutor' && (
           <>
             <NavLink
               to="/tutores"
@@ -103,6 +134,51 @@ export default function Sidebar() {
           <span>Consultas</span>
         </NavLink>
 
+        {userRole === 'tutor' && (
+          <div className="pets-menu">
+
+            <button
+              type="button"
+              className={`nav-link pets-toggle ${petsOpen ? 'active-parent' : ''}`}
+              onClick={() => setPetsOpen(!petsOpen)}
+            >
+              <Dog />
+              <span>Meus Pets</span>
+              <span className={`pets-arrow ${petsOpen ? 'open' : ''}`}>
+                ›
+              </span>
+            </button>
+
+            {petsOpen && (
+              <div className="pets-submenu">
+
+                {pets.length === 0 ? (
+                  <span className="no-pets">
+                    Nenhum pet cadastrado
+                  </span>
+                ) : (
+                  pets.map((pet) => (
+                    <NavLink
+                      key={pet._id}
+                      to={`/perfil-pet/${pet._id}`}
+                      className={({ isActive }) =>
+                        `pet-link ${isActive ? 'active' : ''}`
+                      }
+                    >
+                      <span className="pet-icon">
+                        {pet.especie?.toLowerCase() === 'gato' ? '🐱' : '🐶'}
+                      </span>
+                      <span>{pet.nome}</span>
+                    </NavLink>
+                  ))
+                )}
+
+              </div>
+            )}
+
+          </div>
+        )}
+
         {userRole === 'veterinario' && (
           <NavLink
             to="/prontuarios"
@@ -115,19 +191,20 @@ export default function Sidebar() {
           </NavLink>
         )}
 
-        <NavLink
-          to="/veterinarios"
-          className={({ isActive }) =>
-            `nav-link ${isActive ? 'active' : ''}`
-          }
-        >
-          <Stethoscope />
-          <span>Veterinários</span>
-        </NavLink>
+        {userRole !== 'tutor' && (
+          <NavLink
+            to="/veterinarios"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? 'active' : ''}`
+            }
+          >
+            <Stethoscope />
+            <span>Veterinários</span>
+          </NavLink>
+        )}
 
       </nav>
 
-      {/* SAIR */}
       <div className="nav-footer">
         <button
           onClick={handleLogout}

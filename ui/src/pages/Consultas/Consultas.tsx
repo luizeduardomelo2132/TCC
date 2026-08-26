@@ -58,7 +58,7 @@ export default function Consultas() {
       const [resConsultas, resPets, resUsuarios] = await Promise.all([
         api.get('/consultas'),
         api.get('/pets'),
-        api.get('/usuarios')
+        api.get('/usuarios/veterinarios')
       ]);
 
       setConsultas(resConsultas.data);
