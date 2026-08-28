@@ -1,560 +1,183 @@
-import Consulta from '../models/Consulta.js';
-import Pet from '../models/Pet.js';
-import Usuario from '../models/Usuario.js';
+import Prontuario from '../models/Prontuario.js';
 
-// ==========================================
-// 1. CRIAR CONSULTA / SOLICITAÇÃO
-// ==========================================
-
-export const criarConsulta = async (req, res) => {
+export const criarProntuario = async (req, res) => {
   try {
     const {
-      petId,
-      veterinarioId,
-      dataConsulta,
-      observacoes,
-      motivo,
-      pesoAtual,
-      tipo_de_atendimento,
-      status
+      consultaId,
+      diagnostico,
+      prescricao,
+      examesSolicitados,
+      observacoes
     } = req.body;
 
-    if (!petId) {
-      return res.status(400).json({
-        message: 'O pet é obrigatório.'
-      });
-    }
-
-    if (!motivo) {
-      return res.status(400).json({
-        message: 'O motivo da consulta é obrigatório.'
-      });
-    }
-
-    if (!dataConsulta) {
-      return res.status(400).json({
-        message: 'A data e horário da consulta são obrigatórios.'
-      });
-    }
-
-    // ==========================================
-    // VERIFICAR PET
-    // ==========================================
-
-    const pet = await Pet.findById(petId);
-
-    if (!pet) {
-      return res.status(404).json({
-        message: 'Pet não encontrado.'
-      });
-    }
-
-    // ==========================================
-    // SEGURANÇA DO TUTOR
-    // ==========================================
-
-    if (req.usuarioRole === 'tutor') {
-      const tutorDoPet =
-        pet.tutorId?.toString() === req.usuarioId.toString() ||
-        pet.tutor?.toString() === req.usuarioId.toString();
-
-      if (!tutorDoPet) {
-        return res.status(403).json({
-          message: 'Você só pode agendar consultas para seus próprios pets.'
-        });
-      }
-    }
-
-    // ==========================================
-    // VERIFICAR VETERINÁRIO (Caso Informado)
-    // ==========================================
-
-    let vetValido = null;
-    if (veterinarioId) {
-      vetValido = await Usuario.findOne({
-        _id: veterinarioId,
-        role: 'veterinario'
-      });
-
-      if (!vetValido) {
-        return res.status(400).json({
-          message: 'Veterinário não encontrado.'
-        });
-      }
-    }
-
-    // ==========================================
-    // VERIFICAR DATA
-    // ==========================================
-
-    const novaData = new Date(dataConsulta);
-
-    if (isNaN(novaData.getTime())) {
-      return res.status(400).json({
-        message: 'Data da consulta inválida.'
-      });
-    }
-
-    if (novaData < new Date()) {
-      return res.status(400).json({
-        message: 'Não é possível agendar consultas para datas que já passaram.'
-      });
-    }
-
-    // ==========================================
-    // VERIFICAR CONFLITO DE HORÁRIO (Se houver Vet)
-    // Consideramos cada consulta com duração de 30 minutos.
-    // ==========================================
-
-    if (veterinarioId) {
-      const consultasExistentes = await Consulta.find({
-        veterinarioId,
-        status: { $nin: ['Cancelada', 'cancelada'] }
-      }).select('dataConsulta');
-
-      const conflito = consultasExistentes.some((consulta) => {
-        if (!consulta.dataConsulta) return false;
-
-        const dataExistente = new Date(consulta.dataConsulta);
-        const diferenca = Math.abs(novaData.getTime() - dataExistente.getTime());
-
-        return diferenca < 30 * 60 * 1000;
-      });
-
-      if (conflito) {
-        return res.status(400).json({
-          message: 'Este veterinário já possui uma consulta agendada neste horário.'
-        });
-      }
-    }
-
-    // ==========================================
-    // STATUS INICIAL
-    // Tutor envia como 'Pendente'. Admin/Vet pode escolher.
-    // ==========================================
-
-    let statusFinal = 'Pendente';
-    if (req.usuarioRole !== 'tutor' && status) {
-      statusFinal = status;
-    }
-
-    // ==========================================
-    // CRIAR CONSULTA
-    // ==========================================
-
-    const novaConsulta = new Consulta({
-      petId,
-      veterinarioId: veterinarioId || null,
-      dataConsulta: novaData,
+    const novoProntuario = new Prontuario({
+      consultaId,
+      diagnostico,
+      prescricao,
+      examesSolicitados,
       observacoes,
-      motivo,
-      pesoAtual,
-      tipo_de_atendimento: tipo_de_atendimento || 'Consulta Normal',
-      status: statusFinal
     });
 
-    const consultaSalva = await novaConsulta.save();
+    const prontuarioSalvo = await novoProntuario.save();
 
-    // ==========================================
-    // RETORNAR CONSULTA COMPLETA COM TUTOR
-    // ==========================================
-
-    const consultaFormatada = await Consulta.findById(consultaSalva._id)
-      .populate({
-        path: 'petId',
-        select: 'nome especie raca idade peso tutorId tutor',
-        populate: {
-          path: 'tutorId',
-          select: 'nome email telefone'
-        }
-      })
-      .populate('veterinarioId', 'nome email especialidade');
-
-    return res.status(201).json(consultaFormatada);
-
+    res.status(201).json(prontuarioSalvo);
   } catch (error) {
-    console.error('Erro ao criar consulta:', error);
-    return res.status(400).json({
-      message: error.message
-    });
+    res.status(400).json({ message: error.message });
   }
 };
 
-
-// ==========================================
-// 2. LISTAR CONSULTAS
-// ==========================================
-
-export const listarConsultas = async (req, res) => {
+export const listarProntuarios = async (req, res) => {
   try {
-    let filtro = {};
+    const petIdQuery = req.query.pet || req.query.petId;
 
-    // TUTOR: Vê apenas as consultas dos seus pets
-    if (req.usuarioRole === 'tutor') {
-      const meusPets = await Pet.find({
-        $or: [
-          { tutorId: req.usuarioId },
-          { tutor: req.usuarioId }
-        ]
-      }).select('_id');
-
-      const meusPetsIds = meusPets.map((pet) => pet._id);
-
-      filtro = {
-        petId: { $in: meusPetsIds }
-      };
-    }
-
-    // VETERINÁRIO: Vê consultas atribuídas a ele
-    else if (req.usuarioRole === 'veterinario') {
-      filtro = {
-        veterinarioId: req.usuarioId
-      };
-    }
-
-    // ADMIN: Vê todas as consultas sem filtro
-
-    const consultas = await Consulta.find(filtro)
+    const prontuarios = await Prontuario.find()
       .populate({
-        path: 'petId',
-        select: 'nome especie raca idade peso tutorId tutor',
+        path: 'consultaId',
         populate: {
-          path: 'tutorId',
-          select: 'nome email telefone'
-        }
-      })
-      .populate('veterinarioId', 'nome email especialidade')
-      .sort({ dataConsulta: 1 });
+          path: 'petId',
+          populate: {
+            path: 'tutorId',
+            select: 'nome email telefone'
+          }
+        },
+      });
 
-    return res.status(200).json(consultas);
+    let resultado = prontuarios;
 
+    // Filtra por PET se o id for passado via Query Parameter (?pet=... ou ?petId=...)
+    if (petIdQuery) {
+      resultado = resultado.filter((prontuario) => {
+        const pet = prontuario.consultaId?.petId;
+        return pet && pet._id?.toString() === petIdQuery.toString();
+      });
+    }
+
+    // Se quem está acessando for Tutor, garante que ele só veja prontuários dos seus pets
+    if (req.usuarioRole === 'tutor') {
+      resultado = resultado.filter((prontuario) => {
+        const pet = prontuario.consultaId?.petId;
+        if (!pet) return false;
+
+        const tutorId =
+          pet.tutorId?._id?.toString() ||
+          pet.tutorId?.toString() ||
+          pet.tutor?.toString();
+
+        return tutorId === req.usuarioId?.toString();
+      });
+    }
+
+    res.status(200).json(resultado);
   } catch (error) {
-    console.error('Erro interno em listarConsultas:', error);
-    return res.status(500).json({
-      message: error.message
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
-
-// ==========================================
-// 3. BUSCAR CONSULTA POR ID
-// ==========================================
-
-export const buscarConsultaPorId = async (req, res) => {
+export const listarProntuariosPorPet = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { petId } = req.params;
 
-    const consulta = await Consulta.findById(id)
+    const prontuarios = await Prontuario.find()
       .populate({
-        path: 'petId',
-        select: 'nome especie raca idade peso tutorId tutor',
+        path: 'consultaId',
         populate: {
-          path: 'tutorId',
-          select: 'nome email telefone'
+          path: 'petId',
+          populate: {
+            path: 'tutorId',
+            select: 'nome email telefone'
+          }
         }
-      })
-      .populate('veterinarioId', 'nome email especialidade');
-
-    if (!consulta) {
-      return res.status(404).json({
-        message: 'Consulta não encontrada.'
       });
-    }
 
-    // SEGURANÇA DO TUTOR
-    if (req.usuarioRole === 'tutor') {
-      const pet = await Pet.findOne({
-        _id: consulta.petId?._id || consulta.petId,
-        $or: [
-          { tutorId: req.usuarioId },
-          { tutor: req.usuarioId }
-        ]
-      });
+    const prontuariosDoPet = prontuarios.filter((prontuario) => {
+      const pet = prontuario.consultaId?.petId;
 
       if (!pet) {
-        return res.status(403).json({
-          message: 'Você não tem permissão para visualizar esta consulta.'
-        });
+        return false;
       }
-    }
 
-    // SEGURANÇA DO VETERINÁRIO
-    if (req.usuarioRole === 'veterinario') {
-      if (
-        consulta.veterinarioId?._id?.toString() !== req.usuarioId.toString()
-      ) {
-        return res.status(403).json({
-          message: 'Você não tem permissão para visualizar esta consulta.'
-        });
+      const petCorreto = pet._id?.toString() === petId.toString();
+
+      // Validação de tutor
+      if (req.usuarioRole === 'tutor') {
+        const tutorId =
+          pet.tutorId?._id?.toString() ||
+          pet.tutorId?.toString() ||
+          pet.tutor?.toString();
+
+        const petDoTutor = tutorId === req.usuarioId?.toString();
+        return petCorreto && petDoTutor;
       }
-    }
 
-    return res.status(200).json(consulta);
+      // Veterinário e Admin visualizam sem restrição de propriedade
+      return petCorreto;
+    });
 
+    res.status(200).json(prontuariosDoPet);
   } catch (error) {
-    console.error('Erro ao buscar consulta:', error);
-    return res.status(500).json({
+    console.error('Erro ao buscar prontuários do pet:', error);
+
+    res.status(500).json({
       message: error.message
     });
   }
 };
 
-
-// ==========================================
-// 4. ATUALIZAR CONSULTA
-// ==========================================
-
-export const atualizarConsulta = async (req, res) => {
+export const buscarProntuarioPorConsulta = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const consultaExistente = await Consulta.findById(id);
-
-    if (!consultaExistente) {
-      return res.status(404).json({
-        message: 'Consulta não encontrada.'
-      });
-    }
-
-    // SEGURANÇA DO TUTOR
-    if (req.usuarioRole === 'tutor') {
-      const petDoTutor = await Pet.findOne({
-        _id: consultaExistente.petId,
-        $or: [
-          { tutorId: req.usuarioId },
-          { tutor: req.usuarioId }
-        ]
-      });
-
-      if (!petDoTutor) {
-        return res.status(403).json({
-          message: 'Você não tem permissão para alterar esta consulta.'
-        });
-      }
-
-      // Tutor só pode cancelar
-      if (req.body.status && !['Cancelada', 'cancelada'].includes(req.body.status)) {
-        return res.status(403).json({
-          message: 'O tutor só pode alterar o status para cancelado.'
-        });
-      }
-
-      const camposProibidos = [
-        'motivo',
-        'pesoAtual',
-        'dataConsulta',
-        'observacoes',
-        'petId',
-        'veterinarioId',
-        'tipo_de_atendimento'
-      ];
-
-      const tentouAlterarCampo = camposProibidos.some(
-        (campo) => req.body[campo] !== undefined
-      );
-
-      if (tentouAlterarCampo) {
-        return res.status(403).json({
-          message: 'O tutor não pode editar os dados da consulta. Apenas cancelar.'
-        });
-      }
-    }
-
-    // SEGURANÇA DO VETERINÁRIO
-    if (req.usuarioRole === 'veterinario') {
-      if (
-        consultaExistente.veterinarioId &&
-        consultaExistente.veterinarioId.toString() !== req.usuarioId.toString()
-      ) {
-        return res.status(403).json({
-          message: 'Você não pode alterar esta consulta.'
-        });
-      }
-    }
-
-    // EXTRAÇÃO DE DADOS PERMITIDOS
-    const {
-      status,
-      observacoes,
-      motivo,
-      pesoAtual,
-      tipo_de_atendimento,
-      dataConsulta,
-      veterinarioId,
-      petId
-    } = req.body;
-
-    const dadosAtualizacao = {};
-
-    if (status !== undefined) dadosAtualizacao.status = status;
-    if (observacoes !== undefined) dadosAtualizacao.observacoes = observacoes;
-    if (motivo !== undefined) dadosAtualizacao.motivo = motivo;
-    if (pesoAtual !== undefined) dadosAtualizacao.pesoAtual = pesoAtual;
-    if (tipo_de_atendimento !== undefined) dadosAtualizacao.tipo_de_atendimento = tipo_de_atendimento;
-
-    // ALTERAÇÃO DE DATA
-    if (dataConsulta !== undefined) {
-      const novaData = new Date(dataConsulta);
-
-      if (isNaN(novaData.getTime())) {
-        return res.status(400).json({
-          message: 'Data da consulta inválida.'
-        });
-      }
-
-      if (novaData < new Date()) {
-        return res.status(400).json({
-          message: 'Não é possível alterar a consulta para uma data que já passou.'
-        });
-      }
-
-      // Verificar conflito de horário caso haja veterinário definido
-      const vetIdParaChecar = veterinarioId || consultaExistente.veterinarioId;
-
-      if (vetIdParaChecar) {
-        const consultasExistentes = await Consulta.find({
-          _id: { $ne: id },
-          veterinarioId: vetIdParaChecar,
-          status: { $nin: ['Cancelada', 'cancelada'] }
-        }).select('dataConsulta');
-
-        const conflito = consultasExistentes.some((consulta) => {
-          if (!consulta.dataConsulta) return false;
-
-          const dataExistente = new Date(consulta.dataConsulta);
-          const diferenca = Math.abs(novaData.getTime() - dataExistente.getTime());
-
-          return diferenca < 30 * 60 * 1000;
-        });
-
-        if (conflito) {
-          return res.status(400).json({
-            message: 'Este veterinário já possui uma consulta agendada neste horário.'
-          });
-        }
-      }
-
-      dadosAtualizacao.dataConsulta = novaData;
-    }
-
-    // PERMISSÕES ADMIN E VETERINÁRIO
-    if (req.usuarioRole === 'admin' || req.usuarioRole === 'veterinario') {
-      if (petId !== undefined) {
-        dadosAtualizacao.petId = petId;
-      }
-
-      if (veterinarioId !== undefined) {
-        if (veterinarioId) {
-          const veterinario = await Usuario.findOne({
-            _id: veterinarioId,
-            role: 'veterinario'
-          });
-
-          if (!veterinario) {
-            return res.status(400).json({
-              message: 'Veterinário não encontrado.'
-            });
-          }
-          dadosAtualizacao.veterinarioId = veterinarioId;
-        } else {
-          dadosAtualizacao.veterinarioId = null;
-        }
-      }
-    }
-
-    const consultaAtualizada = await Consulta.findByIdAndUpdate(
-      id,
-      dadosAtualizacao,
-      {
-        new: true,
-        runValidators: true
-      }
-    )
+    const prontuario = await Prontuario.findOne({
+      consultaId: req.params.consultaId
+    })
       .populate({
-        path: 'petId',
-        select: 'nome especie raca idade peso tutorId tutor',
+        path: 'consultaId',
         populate: {
-          path: 'tutorId',
-          select: 'nome email telefone'
-        }
-      })
-      .populate('veterinarioId', 'nome email especialidade');
+          path: 'petId'
+        },
+      });
 
-    return res.status(200).json(consultaAtualizada);
-
+    res.status(200).json(prontuario);
   } catch (error) {
-    console.error('Erro ao atualizar consulta:', error);
-    return res.status(400).json({
-      message: error.message
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
-
-// ==========================================
-// 5. DELETAR / CANCELAR CONSULTA
-// ==========================================
-
-export const deletarConsulta = async (req, res) => {
+export const atualizarProntuario = async (req, res) => {
   try {
-    const { id } = req.params;
+    const prontuarioAtualizado = await Prontuario.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
 
-    const consulta = await Consulta.findById(id);
-
-    if (!consulta) {
+    if (!prontuarioAtualizado) {
       return res.status(404).json({
-        message: 'Consulta não encontrada.'
+        message: 'Prontuário não encontrado'
       });
     }
 
-    // TUTOR: apenas altera status para 'Cancelada'
-    if (req.usuarioRole === 'tutor') {
-      const petDoTutor = await Pet.findOne({
-        _id: consulta.petId,
-        $or: [
-          { tutorId: req.usuarioId },
-          { tutor: req.usuarioId }
-        ]
-      });
-
-      if (!petDoTutor) {
-        return res.status(403).json({
-          message: 'Você não tem permissão para cancelar esta consulta.'
-        });
-      }
-
-      consulta.status = 'Cancelada';
-      await consulta.save();
-
-      return res.status(200).json({
-        message: 'Consulta cancelada com sucesso.',
-        consulta
-      });
-    }
-
-    // VETERINÁRIO
-    if (req.usuarioRole === 'veterinario') {
-      if (
-        consulta.veterinarioId &&
-        consulta.veterinarioId.toString() !== req.usuarioId.toString()
-      ) {
-        return res.status(403).json({
-          message: 'Você não pode excluir esta consulta.'
-        });
-      }
-    }
-
-    // ADMIN OU VET RESPONSÁVEL: exclui fisicamente do banco
-    await Consulta.findByIdAndDelete(id);
-
-    return res.status(200).json({
-      message: 'Consulta deletada com sucesso.'
-    });
-
+    res.status(200).json(prontuarioAtualizado);
   } catch (error) {
-    console.error('Erro ao deletar consulta:', error);
-    return res.status(500).json({
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const deletarProntuario = async (req, res) => {
+  try {
+    const prontuarioDeletado = await Prontuario.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!prontuarioDeletado) {
+      return res.status(404).json({
+        message: 'Prontuário não encontrado'
+      });
+    }
+
+    res.status(200).json({
+      message: 'Prontuário removido com sucesso'
+    });
+  } catch (error) {
+    res.status(500).json({
       message: error.message
     });
   }

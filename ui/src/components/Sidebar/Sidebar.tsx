@@ -31,7 +31,6 @@ export default function Sidebar() {
 
   const userRole = localStorage.getItem('@TCC:role') || 'tutor';
 
-
   const [pets, setPets] = useState<Pet[]>([]);
   const [petsOpen, setPetsOpen] = useState(true);
 
@@ -65,8 +64,6 @@ export default function Sidebar() {
     }
   };
 
-  // Tutor vê o formulário simplificado de solicitação de atendimento;
-  // admin/veterinário continuam com a tela completa de agendamento.
   const getConsultasRoute = () => {
     return userRole === 'tutor' ? '/solicitar-consulta' : '/consultas';
   };
@@ -97,6 +94,7 @@ export default function Sidebar() {
 
       <nav className="nav-menu">
 
+        {/* Início (Acessível a todos) */}
         <NavLink
           to={getDashboardRoute()}
           end
@@ -108,30 +106,33 @@ export default function Sidebar() {
           <span>Início</span>
         </NavLink>
 
-        {userRole !== 'tutor' && (
-          <>
-            <NavLink
-              to="/tutores"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? 'active' : ''}`
-              }
-            >
-              <Users />
-              <span>Tutores</span>
-            </NavLink>
-
-            <NavLink
-              to="/pets"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? 'active' : ''}`
-              }
-            >
-              <Dog />
-              <span>Pets</span>
-            </NavLink>
-          </>
+        {/* Tutores (Apenas Administrador) */}
+        {userRole === 'admin' && (
+          <NavLink
+            to="/tutores"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? 'active' : ''}`
+            }
+          >
+            <Users />
+            <span>Tutores</span>
+          </NavLink>
         )}
 
+        {/* Pets / Pacientes (Admin e Veterinário) */}
+        {(userRole === 'admin' || userRole === 'veterinario') && (
+          <NavLink
+            to="/pets"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? 'active' : ''}`
+            }
+          >
+            <Dog />
+            <span>{userRole === 'veterinario' ? 'Meus Pacientes' : 'Pets'}</span>
+          </NavLink>
+        )}
+
+        {/* Consultas (Acessível a todos via rota específica) */}
         <NavLink
           to={getConsultasRoute()}
           className={({ isActive }) =>
@@ -142,6 +143,7 @@ export default function Sidebar() {
           <span>Consultas</span>
         </NavLink>
 
+        {/* Meus Pets - Submenu (Apenas Tutor) */}
         {userRole === 'tutor' && (
           <div className="pets-menu">
 
@@ -185,6 +187,7 @@ export default function Sidebar() {
           </div>
         )}
 
+        {/* Prontuários (Veterinário) */}
         {userRole === 'veterinario' && (
           <NavLink
             to="/prontuarios"
@@ -197,7 +200,8 @@ export default function Sidebar() {
           </NavLink>
         )}
 
-        {userRole !== 'tutor' && (
+        {/* Veterinários (Apenas Administrador) */}
+        {userRole === 'admin' && (
           <NavLink
             to="/veterinarios"
             className={({ isActive }) =>

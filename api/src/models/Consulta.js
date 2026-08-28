@@ -26,6 +26,12 @@ const consultaSchema = new mongoose.Schema({
     required: false
   },
 
+  tipo_de_atendimento: {
+    type: String,
+    required: false,
+    default: 'Consulta Normal'
+  },
+
   petId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Pet',
@@ -35,16 +41,28 @@ const consultaSchema = new mongoose.Schema({
   veterinarioId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Usuario',
-    required: true
+    required: false // Torna opcional para a solicitação inicial do tutor
   },
 
   status: {
     type: String,
-    enum: ['agendada', 'em_andamento', 'concluida', 'cancelada'],
-    default: 'agendada'
+    enum: [
+      'Pendente',
+      'pendente',
+      'agendada',
+      'Agendada',
+      'Confirmada',
+      'confirmada',
+      'em_andamento',
+      'concluida',
+      'Concluída',
+      'cancelada',
+      'Cancelada'
+    ],
+    default: 'Pendente'
   }
 }, {
   timestamps: true
 });
 
-export default mongoose.model('Consulta', consultaSchema);
+export default mongoose.models.Consulta || mongoose.model('Consulta', consultaSchema);

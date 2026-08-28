@@ -1,24 +1,53 @@
 import express from 'express';
-
-import * as ConsultaController from '../controllers/ConsultaController.js';
-
-import {
-  verificarToken,
-  apenasCargos
-} from '../middlewares/auth.js';
+import * as ProntuarioController from '../controllers/ProntuarioController.js';
+import { verificarToken, apenasCargos } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-const cargosPermitidos = apenasCargos([
-  'admin',
-  'veterinario',
-  'tutor'
-]);
+// Permite 'tutor', 'Tutor', 'admin', 'Admin', 'veterinario', 'Veterinario'
+const cargosLeitura = ['veterinario', 'Veterinario', 'admin', 'Admin', 'tutor', 'Tutor'];
+const cargosEscrita = ['veterinario', 'Veterinario', 'admin', 'Admin'];
 
-router.post( '/', verificarToken, cargosPermitidos, ConsultaController.criarConsulta);
-router.get( '/', verificarToken, cargosPermitidos, ConsultaController.listarConsultas);
-router.get( '/:id', verificarToken, cargosPermitidos, ConsultaController.buscarConsultaPorId);
-router.put( '/:id', verificarToken, apenasCargos(['admin', 'veterinario']), ConsultaController.atualizarConsulta);
-router.delete( '/:id', verificarToken, apenasCargos(['admin', 'veterinario']), ConsultaController.deletarConsulta);
+router.post(
+  '/',
+  verificarToken,
+  apenasCargos(cargosEscrita),
+  ProntuarioController.criarProntuario
+);
+
+router.get(
+  '/',
+  verificarToken,
+  apenasCargos(cargosLeitura),
+  ProntuarioController.listarProntuarios
+);
+
+router.get(
+  '/pet/:petId',
+  verificarToken,
+  apenasCargos(cargosLeitura),
+  ProntuarioController.listarProntuariosPorPet
+);
+
+router.get(
+  '/consulta/:consultaId',
+  verificarToken,
+  apenasCargos(cargosLeitura),
+  ProntuarioController.buscarProntuarioPorConsulta
+);
+
+router.put(
+  '/:id',
+  verificarToken,
+  apenasCargos(cargosEscrita),
+  ProntuarioController.atualizarProntuario
+);
+
+router.delete(
+  '/:id',
+  verificarToken,
+  apenasCargos(cargosEscrita),
+  ProntuarioController.deletarProntuario
+);
 
 export default router;

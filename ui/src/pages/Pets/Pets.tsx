@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { CalendarDays, Cat, Dog, Edit3, PawPrint, Trash2, UserRound, Weight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { CalendarDays, Cat, Dog, Edit3, PawPrint, Trash2, UserRound, ClipboardList } from 'lucide-react';
 import api from '../../services/api';
 import './Pets.scss';
 
@@ -7,6 +8,7 @@ interface Tutor {
   _id: string;
   nome: string;
 }
+
 interface Pet {
   _id?: string;
   nome: string;
@@ -15,7 +17,12 @@ interface Pet {
   idade: number | string;
   tutorId: Tutor | string;
 }
+
 export default function Pets() {
+  const navigate = useNavigate();
+  const userRole = localStorage.getItem('@TCC:role') || 'tutor';
+  const isVet = userRole === 'veterinario';
+
   const [pets, setPets] = useState<Pet[]>([]);
   const [tutores, setTutores] = useState<Tutor[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -23,16 +30,23 @@ export default function Pets() {
 
   const carregarDados = async () => {
     try {
-      const [resPets, resTutores] = await Promise.all([api.get('/pets'), api.get('/tutores')]);
+      const resPets = await api.get('/pets');
       setPets(resPets.data);
-      setTutores(resTutores.data);
+
+      // Carrega lista de tutores apenas se não for veterinário (evita erro 403)
+      if (!isVet) {
+        const resTutores = await api.get('/tutores');
+        setTutores(resTutores.data);
+      }
     } catch (error) {
       console.error('Erro ao carregar dados de Pets/Tutores:', error);
     }
   };
+
   useEffect(() => {
     carregarDados();
   }, []);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -44,10 +58,18 @@ export default function Pets() {
       console.error('Erro ao salvar pet:', error);
     }
   };
+
   const handleEdit = (pet: Pet) => {
     setEditingId(pet._id || null);
-    setFormData({ nome: pet.nome, especie: pet.especie, raca: pet.raca, idade: pet.idade, tutorId: typeof pet.tutorId === 'object' ? pet.tutorId._id : pet.tutorId });
+    setFormData({
+      nome: pet.nome,
+      especie: pet.especie,
+      raca: pet.raca,
+      idade: pet.idade,
+      tutorId: typeof pet.tutorId === 'object' ? pet.tutorId._id : pet.tutorId
+    });
   };
+
   const handleDelete = async (id: string) => {
     if (confirm('Tem certeza que deseja excluir este paciente (pet)?')) {
       try {
@@ -58,22 +80,30 @@ export default function Pets() {
       }
     }
   };
+
   const limparFormulario = () => {
     setEditingId(null);
     setFormData({ nome: '', especie: '', raca: '', idade: '', tutorId: '' });
   };
+
   const getPetIcon = (especie: string) => {
     const especieNormalizada = especie.toLowerCase();
     if (especieNormalizada.includes('gato') || especieNormalizada.includes('felino')) return <Cat size={18} />;
     if (especieNormalizada.includes('cão') || especieNormalizada.includes('cao') || especieNormalizada.includes('cachorro')) return <Dog size={18} />;
     return <PawPrint size={18} />;
   };
+
   return (
     <div className="pets-container">
+      {/* BANNER DE CABEÇALHO */}
       <section className="hero-banner">
         <div className="hero-content">
-          <h1 className="page-title">Gestão de Pacientes</h1>
-          <p className="hero-subtitle">Cadastre novos animais, vincule aos seus tutores responsáveis e acompanhe os dados dos pacientes da clínica.</p>
+          <h1 className="page-title">{isVet ? 'Meus Pacientes' : 'Gestão de Pacientes'}</h1>
+          <p className="hero-subtitle">
+            {isVet
+              ? 'Acompanhe a lista de animais sob seus cuidados clínicos e acesse rapidamente o histórico e prontuários.'
+              : 'Cadastre novos animais, vincule aos seus tutores responsáveis e acompanhe os dados dos pacientes da clínica.'}
+          </p>
         </div>
         <div className="hero-image-wrapper">
           <div className="hero-circle"></div>
@@ -82,67 +112,71 @@ export default function Pets() {
           <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600" alt="Pet Paciente" className="pet-hero-img" />
         </div>
       </section>
-      <section className="form-section">
-        <div className="section-header">
-          <h2>{editingId ? 'Editar Paciente' : 'Cadastrar Novo Paciente'}</h2>
-          <p>Informe os dados do animal e vincule o tutor responsável.</p>
-        </div>
-        <form className="form-card" onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="input-group">
-              <label>Nome do Pet*</label>
-              <div className="input-wrapper">
-                <PawPrint className="input-icon" size={17} />
-                <input type="text" required placeholder="Ex: Thor, Meg, Mel" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
-              </div>
-            </div>
-            <div className="input-group">
-              <label>Tutor Responsável*</label>
-              <div className="input-wrapper">
-                <UserRound className="input-icon" size={17} />
-                <select required value={typeof formData.tutorId === 'object' ? formData.tutorId._id : formData.tutorId} onChange={(e) => setFormData({ ...formData, tutorId: e.target.value })}>
-                  <option value="">Selecione um Tutor...</option>
-                  {tutores.map((tutor) => <option key={tutor._id} value={tutor._id}>{tutor.nome}</option>)}
-                </select>
-              </div>
-            </div>
-            <div className="input-group">
-              <label>Espécie*</label>
-              <div className="input-wrapper">
-                <PawPrint className="input-icon" size={17} />
-                <input type="text" required placeholder="Ex: Cão, Gato, Felino..." value={formData.especie} onChange={(e) => setFormData({ ...formData, especie: e.target.value })} />
-              </div>
-            </div>
-            <div className="input-group">
-              <label>Raça*</label>
-              <div className="input-wrapper">
-                <Dog className="input-icon" size={17} />
-                <input type="text" required placeholder="Ex: Poodle, SRD, Persa" value={formData.raca} onChange={(e) => setFormData({ ...formData, raca: e.target.value })} />
-              </div>
-            </div>
-            <div className="input-group">
-              <label>Idade (anos)*</label>
-              <div className="input-wrapper">
-                <CalendarDays className="input-icon" size={17} />
-                <input type="number" min="0" required placeholder="Ex: 3" value={formData.idade} onChange={(e) => setFormData({ ...formData, idade: e.target.value })} />
-              </div>
-            </div>
-          </div>
 
-          <div className="form-actions">
-            {editingId && <button type="button" className="btn-secondary" onClick={limparFormulario}>Limpar</button>}
-            <button type="submit" className="btn-primary">{editingId ? 'Atualizar Paciente' : 'Salvar Paciente'}</button>
+      {/* SEÇÃO DE FORMULÁRIO (Exibido apenas para Admin e outros perfis que não sejam Veterinário) */}
+      {!isVet && (
+        <section className="form-section">
+          <div className="section-header">
+            <h2>{editingId ? 'Editar Paciente' : 'Cadastrar Novo Paciente'}</h2>
+            <p>Informe os dados do animal e vincule o tutor responsável.</p>
           </div>
-        
-        
-        </form>
-      </section>
+          <form className="form-card" onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <div className="input-group">
+                <label>Nome do Pet*</label>
+                <div className="input-wrapper">
+                  <PawPrint className="input-icon" size={17} />
+                  <input type="text" required placeholder="Ex: Thor, Meg, Mel" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
+                </div>
+              </div>
+              <div className="input-group">
+                <label>Tutor Responsável*</label>
+                <div className="input-wrapper">
+                  <UserRound className="input-icon" size={17} />
+                  <select required value={typeof formData.tutorId === 'object' ? formData.tutorId._id : formData.tutorId} onChange={(e) => setFormData({ ...formData, tutorId: e.target.value })}>
+                    <option value="">Selecione um Tutor...</option>
+                    {tutores.map((tutor) => <option key={tutor._id} value={tutor._id}>{tutor.nome}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="input-group">
+                <label>Espécie*</label>
+                <div className="input-wrapper">
+                  <PawPrint className="input-icon" size={17} />
+                  <input type="text" required placeholder="Ex: Cão, Gato, Felino..." value={formData.especie} onChange={(e) => setFormData({ ...formData, especie: e.target.value })} />
+                </div>
+              </div>
+              <div className="input-group">
+                <label>Raça*</label>
+                <div className="input-wrapper">
+                  <Dog className="input-icon" size={17} />
+                  <input type="text" required placeholder="Ex: Poodle, SRD, Persa" value={formData.raca} onChange={(e) => setFormData({ ...formData, raca: e.target.value })} />
+                </div>
+              </div>
+              <div className="input-group">
+                <label>Idade (anos)*</label>
+                <div className="input-wrapper">
+                  <CalendarDays className="input-icon" size={17} />
+                  <input type="number" min="0" required placeholder="Ex: 3" value={formData.idade} onChange={(e) => setFormData({ ...formData, idade: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-actions">
+              {editingId && <button type="button" className="btn-secondary" onClick={limparFormulario}>Limpar</button>}
+              <button type="submit" className="btn-primary">{editingId ? 'Atualizar Paciente' : 'Salvar Paciente'}</button>
+            </div>
+          </form>
+        </section>
+      )}
+
+      {/* TABELA DE PACIENTES */}
       <section className="table-section">
         <div className="table-card">
           <div className="table-header">
             <div>
-              <h3>Pacientes Cadastrados</h3>
-              <p>Visualize, edite ou acesse o perfil dos pacientes cadastrados.</p>
+              <h3>{isVet ? 'Pacientes Atendidos' : 'Pacientes Cadastrados'}</h3>
+              <p>{isVet ? 'Acesse o prontuário ou perfil de seus pacientes.' : 'Visualize, edite ou acesse o perfil dos pacientes cadastrados.'}</p>
             </div>
             <span className="total-badge">{pets.length} pacientes</span>
           </div>
@@ -165,7 +199,6 @@ export default function Pets() {
                         <div className="pet-avatar">{getPetIcon(pet.especie)}</div>
                         <div>
                           <strong>{pet.nome}</strong>
-                         
                         </div>
                       </div>
                     </td>
@@ -188,14 +221,56 @@ export default function Pets() {
                       </div>
                     </td>
                     <td className="actions-cell">
-                      <button className="btn-edit" title="Editar" onClick={() => handleEdit(pet)}><Edit3 size={16} /></button>
-                      <button className="btn-delete" title="Excluir" onClick={() => handleDelete(pet._id!)}><Trash2 size={16} /></button>
-                      <button className="btn-ver-ficha" onClick={() => { window.location.href = `/perfil-pet/${pet._id}`; }}>Ver Perfil</button>
+                      {isVet ? (
+                        <>
+                          {/* Botões exclusivos do Veterinário */}
+                          <button
+                            className="btn-prontuario"
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              backgroundColor: '#2e7d32',
+                              color: '#fff',
+                              border: 'none',
+                              padding: '6px 12px',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontWeight: 500,
+                              fontSize: '13px'
+                            }}
+                            title="Ver Prontuário"
+                            onClick={() => navigate(`/prontuarios?petId=${pet._id}`)}
+                          >
+                            <ClipboardList size={15} /> Prontuário
+                          </button>
+                          <button className="btn-ver-ficha" onClick={() => navigate(`/perfil-pet/${pet._id}`)}>
+                            Ver Perfil
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          {/* Botões do Administrador / Geral */}
+                          <button className="btn-edit" title="Editar" onClick={() => handleEdit(pet)}>
+                            <Edit3 size={16} />
+                          </button>
+                          <button className="btn-delete" title="Excluir" onClick={() => handleDelete(pet._id!)}>
+                            <Trash2 size={16} />
+                          </button>
+                          <button className="btn-ver-ficha" onClick={() => navigate(`/perfil-pet/${pet._id}`)}>
+                            Ver Perfil
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}
                 {pets.length === 0 && (
-                  <tr><td colSpan={5} className="empty-state">Nenhum paciente cadastrado até o momento.</td></tr>
+                  <tr>
+                    <td colSpan={5} className="empty-state">
+                      {isVet ? 'Você ainda não possui pacientes vinculados a consultas.' : 'Nenhum paciente cadastrado até o momento.'}
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

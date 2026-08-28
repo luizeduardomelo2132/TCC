@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import './Consultas.scss';
 import {
@@ -40,6 +41,10 @@ interface Consulta {
 }
 
 export default function Consultas() {
+  const navigate = useNavigate();
+  const userRole = localStorage.getItem('@TCC:role') || 'tutor';
+  const isVet = userRole === 'veterinario';
+
   const [consultas, setConsultas] = useState<Consulta[]>([]);
   const [pets, setPets] = useState<Pet[]>([]);
   const [veterinarios, setVeterinarios] = useState<Usuario[]>([]);
@@ -57,19 +62,22 @@ export default function Consultas() {
 
   const carregarDados = async () => {
     try {
-      const [resConsultas, resPets, resUsuarios] = await Promise.all([
-        api.get('/consultas'),
-        api.get('/pets'),
-        api.get('/usuarios/veterinarios')
-      ]);
-
+      const resConsultas = await api.get('/consultas');
       setConsultas(resConsultas.data);
-      setPets(resPets.data);
 
-      const apenasVets = resUsuarios.data.filter((u: Usuario) => u.role === 'veterinario');
-      setVeterinarios(apenasVets);
+      // Carrega dados de formulário apenas se não for veterinário
+      if (!isVet) {
+        const [resPets, resUsuarios] = await Promise.all([
+          api.get('/pets'),
+          api.get('/usuarios/veterinarios')
+        ]);
+
+        setPets(resPets.data);
+        const apenasVets = resUsuarios.data.filter((u: Usuario) => u.role === 'veterinario');
+        setVeterinarios(apenasVets);
+      }
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error('Erro ao carregar dados de consultas:', error);
     }
   };
 
@@ -153,11 +161,14 @@ export default function Consultas() {
 
   return (
     <div className="consultas-container">
+      {/* BANNER DE CABEÇALHO */}
       <section className="hero-banner">
         <div className="hero-content">
-          <h1 className="page-title">Agendamento de Consultas</h1>
+          <h1 className="page-title">{isVet ? 'Minha Agenda de Consultas' : 'Agendamento de Consultas'}</h1>
           <p className="hero-subtitle">
-            Gerencie as solicitações enviadas pelos tutores, atribua veterinários e altere o status dos atendimentos.
+            {isVet
+              ? 'Acompanhe seus atendimentos agendados, consulte o histórico dos pacientes e acesse seus prontuários.'
+              : 'Gerencie as solicitações enviadas pelos tutores, atribua veterinários e altere o status dos atendimentos.'}
           </p>
         </div>
 
@@ -173,152 +184,154 @@ export default function Consultas() {
         </div>
       </section>
 
-      {/* CARD DO FORMULÁRIO */}
-      <section className="form-section">
-        <div className="section-header">
-          <h2>{editingId ? 'Editar / Aprovar Consulta' : 'Agendar Novo Atendimento'}</h2>
-          <p>Selecione o paciente, atribua o profissional e altere o status conforme necessário.</p>
-        </div>
-
-        <form className="form-card" onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="input-group">
-              <label>Paciente (Pet)*</label>
-              <div className="input-wrapper">
-                <PawPrint className="input-icon" size={17} />
-                <select
-                  required
-                  value={typeof formData.petId === 'object' ? formData.petId._id : formData.petId}
-                  onChange={(e) => setFormData({ ...formData, petId: e.target.value })}
-                >
-                  <option value="">Selecione um Pet...</option>
-                  {pets.map((pet) => (
-                    <option key={pet._id} value={pet._id}>
-                      {pet.nome} ({pet.especie})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <label>Veterinário Responsável*</label>
-              <div className="input-wrapper">
-                <Stethoscope className="input-icon" size={17} />
-                <select
-                  required
-                  value={typeof formData.veterinarioId === 'object' && formData.veterinarioId !== null ? formData.veterinarioId._id : formData.veterinarioId}
-                  onChange={(e) => setFormData({ ...formData, veterinarioId: e.target.value })}
-                >
-                  <option value="">Selecione um Veterinário...</option>
-                  {veterinarios.map((vet) => (
-                    <option key={vet._id} value={vet._id}>
-                      Dr(a). {vet.nome} {vet.especialidade ? `(${vet.especialidade})` : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <label>Tipo de Atendimento*</label>
-              <div className="input-wrapper">
-                <ClipboardList className="input-icon" size={17} />
-                <select
-                  required
-                  value={formData.tipo_de_atendimento}
-                  onChange={(e) => setFormData({ ...formData, tipo_de_atendimento: e.target.value })}
-                >
-                  <option value="">Selecione o tipo de atendimento...</option>
-                  <option value="Consulta Normal">Consulta Normal / Rotina</option>
-                  <option value="Exames de Imagem">Exames de Imagem (Raio-X, Ultrassom)</option>
-                  <option value="Exames Laboratoriais">Exames Laboratoriais (Sangue, Urina, etc.)</option>
-                  <option value="Vacinação">Vacinação / Imunização</option>
-                  <option value="Procedimento Cirúrgico">Procedimento Cirúrgico</option>
-                  <option value="Retorno">Retorno</option>
-                  <option value="Outros">Outros</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <label>Data e Hora da Consulta*</label>
-              <div className="input-wrapper">
-                <CalendarClock className="input-icon" size={17} />
-                <input
-                  type="datetime-local"
-                  required
-                  value={formData.dataConsulta}
-                  onChange={(e) => setFormData({ ...formData, dataConsulta: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div className="input-group">
-              <label>Status da Consulta*</label>
-              <div className="input-wrapper">
-                <CheckCircle2 className="input-icon" size={17} />
-                <select
-                  required
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                >
-                  <option value="Pendente">Pendente (Aguardando Aprovação)</option>
-                  <option value="Confirmada">Confirmada</option>
-                  <option value="Concluída">Concluída</option>
-                  <option value="Cancelada">Cancelada</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <label>Peso Atual (kg)</label>
-              <div className="input-wrapper">
-                <Scale className="input-icon" size={17} />
-                <input
-                  type="number"
-                  step="0.1"
-                  placeholder="Ex: 5.4"
-                  value={formData.pesoAtual}
-                  onChange={(e) => setFormData({ ...formData, pesoAtual: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div className="input-group" style={{ gridColumn: '1 / -1' }}>
-              <label>Motivo da Consulta*</label>
-              <div className="input-wrapper textarea-wrapper">
-                <FileText className="input-icon" size={17} />
-                <textarea
-                  required
-                  placeholder="Ex: Vacinação de rotina, exames gerais, sintomas oculares..."
-                  value={formData.motivo}
-                  onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
-                />
-              </div>
-            </div>
+      {/* CARD DO FORMULÁRIO (Exibido apenas se NÃO for veterinário) */}
+      {!isVet && (
+        <section className="form-section">
+          <div className="section-header">
+            <h2>{editingId ? 'Editar / Aprovar Consulta' : 'Agendar Novo Atendimento'}</h2>
+            <p>Selecione o paciente, atribua o profissional e altere o status conforme necessário.</p>
           </div>
 
-          <div className="form-actions">
-            {editingId && (
-              <button type="button" className="btn-secondary" onClick={limparFormulario}>
-                Cancelar Edição
+          <form className="form-card" onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <div className="input-group">
+                <label>Paciente (Pet)*</label>
+                <div className="input-wrapper">
+                  <PawPrint className="input-icon" size={17} />
+                  <select
+                    required
+                    value={typeof formData.petId === 'object' ? formData.petId._id : formData.petId}
+                    onChange={(e) => setFormData({ ...formData, petId: e.target.value })}
+                  >
+                    <option value="">Selecione um Pet...</option>
+                    {pets.map((pet) => (
+                      <option key={pet._id} value={pet._id}>
+                        {pet.nome} ({pet.especie})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Veterinário Responsável*</label>
+                <div className="input-wrapper">
+                  <Stethoscope className="input-icon" size={17} />
+                  <select
+                    required
+                    value={typeof formData.veterinarioId === 'object' && formData.veterinarioId !== null ? formData.veterinarioId._id : formData.veterinarioId}
+                    onChange={(e) => setFormData({ ...formData, veterinarioId: e.target.value })}
+                  >
+                    <option value="">Selecione um Veterinário...</option>
+                    {veterinarios.map((vet) => (
+                      <option key={vet._id} value={vet._id}>
+                        Dr(a). {vet.nome} {vet.especialidade ? `(${vet.especialidade})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Tipo de Atendimento*</label>
+                <div className="input-wrapper">
+                  <ClipboardList className="input-icon" size={17} />
+                  <select
+                    required
+                    value={formData.tipo_de_atendimento}
+                    onChange={(e) => setFormData({ ...formData, tipo_de_atendimento: e.target.value })}
+                  >
+                    <option value="">Selecione o tipo de atendimento...</option>
+                    <option value="Consulta Normal">Consulta Normal / Rotina</option>
+                    <option value="Exames de Imagem">Exames de Imagem (Raio-X, Ultrassom)</option>
+                    <option value="Exames Laboratoriais">Exames Laboratoriais (Sangue, Urina, etc.)</option>
+                    <option value="Vacinação">Vacinação / Imunização</option>
+                    <option value="Procedimento Cirúrgico">Procedimento Cirúrgico</option>
+                    <option value="Retorno">Retorno</option>
+                    <option value="Outros">Outros</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Data e Hora da Consulta*</label>
+                <div className="input-wrapper">
+                  <CalendarClock className="input-icon" size={17} />
+                  <input
+                    type="datetime-local"
+                    required
+                    value={formData.dataConsulta}
+                    onChange={(e) => setFormData({ ...formData, dataConsulta: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Status da Consulta*</label>
+                <div className="input-wrapper">
+                  <CheckCircle2 className="input-icon" size={17} />
+                  <select
+                    required
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  >
+                    <option value="Pendente">Pendente (Aguardando Aprovação)</option>
+                    <option value="Confirmada">Confirmada</option>
+                    <option value="Concluída">Concluída</option>
+                    <option value="Cancelada">Cancelada</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Peso Atual (kg)</label>
+                <div className="input-wrapper">
+                  <Scale className="input-icon" size={17} />
+                  <input
+                    type="number"
+                    step="0.1"
+                    placeholder="Ex: 5.4"
+                    value={formData.pesoAtual}
+                    onChange={(e) => setFormData({ ...formData, pesoAtual: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+                <label>Motivo da Consulta*</label>
+                <div className="input-wrapper textarea-wrapper">
+                  <FileText className="input-icon" size={17} />
+                  <textarea
+                    required
+                    placeholder="Ex: Vacinação de rotina, exames gerais, sintomas oculares..."
+                    value={formData.motivo}
+                    onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-actions">
+              {editingId && (
+                <button type="button" className="btn-secondary" onClick={limparFormulario}>
+                  Cancelar Edição
+                </button>
+              )}
+              <button type="submit" className="btn-primary">
+                {editingId ? 'Atualizar / Confirmar Consulta' : 'Agendar Consulta'}
               </button>
-            )}
-            <button type="submit" className="btn-primary">
-              {editingId ? 'Atualizar / Confirmar Consulta' : 'Agendar Consulta'}
-            </button>
-          </div>
-        </form>
-      </section>
+            </div>
+          </form>
+        </section>
+      )}
 
       {/* TABELA DE CONSULTAS */}
       <section className="table-section">
         <div className="table-card">
           <div className="table-header">
             <div>
-              <h3>Consultas e Solicitações</h3>
-              <p>Gerencie as solicitações enviadas e altere atribuições de veterinários.</p>
+              <h3>{isVet ? 'Minha Fila de Atendimento' : 'Consultas e Solicitações'}</h3>
+              <p>{isVet ? 'Visualize os horários marcados para você e acesse a ficha do paciente.' : 'Gerencie as solicitações enviadas e altere atribuições de veterinários.'}</p>
             </div>
           </div>
 
@@ -401,23 +414,53 @@ export default function Consultas() {
 
                       <td>
                         <div className="actions-cell">
-                          <button
-                            type="button"
-                            className="btn-edit"
-                            title="Editar / Aprovar Consulta"
-                            onClick={() => handleEdit(c)}
-                          >
-                            <Pencil size={15} />
-                          </button>
+                          {isVet ? (
+                            /* Botões de Ação para Veterinário */
+                            <button
+                              type="button"
+                              className="btn-prontuario"
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                backgroundColor: '#2e7d32',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '6px 12px',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontWeight: 500,
+                                fontSize: '13px'
+                              }}
+                              title="Ver Prontuário"
+                              onClick={() => {
+                                if (pet?._id) navigate(`/prontuarios?petId=${pet._id}`);
+                              }}
+                            >
+                              <ClipboardList size={15} /> Prontuário
+                            </button>
+                          ) : (
+                            /* Botões de Ação para Admin/Recepção */
+                            <>
+                              <button
+                                type="button"
+                                className="btn-edit"
+                                title="Editar / Aprovar Consulta"
+                                onClick={() => handleEdit(c)}
+                              >
+                                <Pencil size={15} />
+                              </button>
 
-                          <button
-                            type="button"
-                            className="btn-delete"
-                            title="Excluir consulta"
-                            onClick={() => handleDelete(c._id!)}
-                          >
-                            <Trash2 size={15} />
-                          </button>
+                              <button
+                                type="button"
+                                className="btn-delete"
+                                title="Excluir consulta"
+                                onClick={() => handleDelete(c._id!)}
+                              >
+                                <Trash2 size={15} />
+                              </button>
+                            </>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -427,7 +470,7 @@ export default function Consultas() {
                 {consultas.length === 0 && (
                   <tr>
                     <td colSpan={8} className="empty-state">
-                      Nenhuma consulta cadastrada no momento.
+                      {isVet ? 'Nenhuma consulta agendada para você no momento.' : 'Nenhuma consulta cadastrada no momento.'}
                     </td>
                   </tr>
                 )}

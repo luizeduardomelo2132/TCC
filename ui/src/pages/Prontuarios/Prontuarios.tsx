@@ -2,17 +2,32 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import './Prontuarios.scss';
+import {
+  ClipboardList,
+  Stethoscope,
+  Pill,
+  FlaskConical,
+  MessageSquare,
+  Cat,
+  Dog,
+  Pencil,
+  Trash2,
+  Eye
+} from 'lucide-react';
+
 interface Pet {
   _id: string;
   nome: string;
   especie: string;
 }
+
 interface Consulta {
   _id: string;
   dataConsulta: string;
   motivo: string;
   petId: Pet;
 }
+
 interface Prontuario {
   _id?: string;
   consultaId: Consulta | string;
@@ -21,11 +36,14 @@ interface Prontuario {
   examesSolicitados?: string;
   observacoes?: string;
 }
+
 export default function Prontuarios() {
   const navigate = useNavigate();
+
   const [prontuarios, setProntuarios] = useState<Prontuario[]>([]);
   const [consultas, setConsultas] = useState<Consulta[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<Prontuario>({
     consultaId: '',
     diagnostico: '',
@@ -33,20 +51,27 @@ export default function Prontuarios() {
     examesSolicitados: '',
     observacoes: '',
   });
+
   const carregarDados = async () => {
     try {
-      const [resProntuarios, resConsultas] = await Promise.all([api.get('/prontuarios'), api.get('/consultas')]);
+      const [resProntuarios, resConsultas] = await Promise.all([
+        api.get('/prontuarios'),
+        api.get('/consultas')
+      ]);
       setProntuarios(resProntuarios.data);
       setConsultas(resConsultas.data);
     } catch (error) {
       console.error('Erro ao carregar prontuários/consultas:', error);
     }
   };
+
   useEffect(() => {
     carregarDados();
   }, []);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
     const payload = {
       consultaId: typeof formData.consultaId === 'object' ? formData.consultaId._id : formData.consultaId,
       diagnostico: formData.diagnostico,
@@ -54,6 +79,7 @@ export default function Prontuarios() {
       examesSolicitados: formData.examesSolicitados,
       observacoes: formData.observacoes,
     };
+
     try {
       if (editingId) {
         await api.put(`/prontuarios/${editingId}`, payload);
@@ -70,8 +96,10 @@ export default function Prontuarios() {
       alert(`Erro ao salvar: ${msg}`);
     }
   };
+
   const handleEdit = (prontuario: Prontuario) => {
     setEditingId(prontuario._id || null);
+
     setFormData({
       consultaId: typeof prontuario.consultaId === 'object' ? prontuario.consultaId._id : prontuario.consultaId,
       diagnostico: prontuario.diagnostico,
@@ -79,8 +107,10 @@ export default function Prontuarios() {
       examesSolicitados: prontuario.examesSolicitados || '',
       observacoes: prontuario.observacoes || '',
     });
+
     window.scrollTo({ top: 300, behavior: 'smooth' });
   };
+
   const handleDelete = async (id: string) => {
     if (confirm('Tem certeza que deseja excluir este prontuário?')) {
       try {
@@ -91,6 +121,7 @@ export default function Prontuarios() {
       }
     }
   };
+
   const limparFormulario = () => {
     setEditingId(null);
     setFormData({
@@ -101,32 +132,48 @@ export default function Prontuarios() {
       observacoes: '',
     });
   };
+
   return (
     <div className="prontuarios-container">
+      {/* BANNER DE CABEÇALHO */}
       <section className="hero-banner">
         <div className="hero-content">
           <h1 className="page-title">Histórico Médico & Prontuários</h1>
-          <p className="hero-subtitle">Registre diagnósticos, prescreva medicações, solicite exames e acompanhe todo o histórico de saúde dos seus pacientes.</p>
+          <p className="hero-subtitle">
+            Registre diagnósticos, prescreva medicações, solicite exames e acompanhe todo o histórico de saúde dos seus pacientes.
+          </p>
         </div>
+
         <div className="hero-image-wrapper">
           <div className="decor-shape"></div>
           <div className="decor-cross cross-1">+</div>
           <div className="decor-cross cross-2">+</div>
-          <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=600" alt="Exame veterinário" className="pet-hero-img" />
+          <img
+            src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=600"
+            alt="Exame veterinário"
+            className="pet-hero-img"
+          />
         </div>
       </section>
+
+      {/* CARD DO FORMULÁRIO */}
       <section className="form-section">
         <div className="section-header">
           <h2>{editingId ? 'Editar Prontuário' : 'Novo Prontuário Médico'}</h2>
           <p>Preencha os dados clínicos da consulta selecionada.</p>
         </div>
+
         <form className="form-card" onSubmit={handleSubmit}>
           <div className="form-grid">
             <div className="input-group">
               <label>Consulta*</label>
               <div className="input-wrapper">
-                <span className="input-icon">📋</span>
-                <select required value={typeof formData.consultaId === 'object' ? formData.consultaId._id : formData.consultaId} onChange={(e) => setFormData({ ...formData, consultaId: e.target.value })}>
+                <ClipboardList className="input-icon" size={17} />
+                <select
+                  required
+                  value={typeof formData.consultaId === 'object' ? formData.consultaId._id : formData.consultaId}
+                  onChange={(e) => setFormData({ ...formData, consultaId: e.target.value })}
+                >
                   <option value="">Selecione uma consulta...</option>
                   {consultas.map((consulta) => (
                     <option key={consulta._id} value={consulta._id}>
@@ -136,42 +183,71 @@ export default function Prontuarios() {
                 </select>
               </div>
             </div>
+
             <div className="input-group">
               <label>Diagnóstico*</label>
               <div className="input-wrapper textarea-wrapper">
-                <span className="input-icon">🩺</span>
-                <textarea required placeholder="Descreva o diagnóstico do paciente..." value={formData.diagnostico} onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })} />
+                <Stethoscope className="input-icon" size={17} />
+                <textarea
+                  required
+                  placeholder="Descreva o diagnóstico do paciente..."
+                  value={formData.diagnostico}
+                  onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })}
+                />
               </div>
             </div>
+
             <div className="input-group">
               <label>Prescrição / Medicamentos</label>
               <div className="input-wrapper textarea-wrapper">
-                <span className="input-icon">💊</span>
-                <textarea placeholder="Instruções de medicação, dosagens e horários..." value={formData.prescricao} onChange={(e) => setFormData({ ...formData, prescricao: e.target.value })} />
+                <Pill className="input-icon" size={17} />
+                <textarea
+                  placeholder="Instruções de medicação, dosagens e horários..."
+                  value={formData.prescricao}
+                  onChange={(e) => setFormData({ ...formData, prescricao: e.target.value })}
+                />
               </div>
             </div>
+
             <div className="input-group">
               <label>Exames Solicitados</label>
               <div className="input-wrapper textarea-wrapper">
-                <span className="input-icon">🔬</span>
-                <textarea placeholder="Exames de sangue, radiografias, ultrassom..." value={formData.examesSolicitados} onChange={(e) => setFormData({ ...formData, examesSolicitados: e.target.value })} />
+                <FlaskConical className="input-icon" size={17} />
+                <textarea
+                  placeholder="Exames de sangue, radiografias, ultrassom..."
+                  value={formData.examesSolicitados}
+                  onChange={(e) => setFormData({ ...formData, examesSolicitados: e.target.value })}
+                />
               </div>
             </div>
-            <div className="input-group full-width">
+
+            <div className="input-group" style={{ gridColumn: '1 / -1' }}>
               <label>Observações Gerais</label>
               <div className="input-wrapper textarea-wrapper">
-                <span className="input-icon">💬</span>
-                <textarea placeholder="Anotações adicionais sobre o paciente..." value={formData.observacoes} onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })} />
+                <MessageSquare className="input-icon" size={17} />
+                <textarea
+                  placeholder="Anotações adicionais sobre o paciente..."
+                  value={formData.observacoes}
+                  onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
+                />
               </div>
             </div>
           </div>
+
           <div className="form-actions">
-            {editingId && <button type="button" className="btn-secondary" onClick={limparFormulario}>Limpar</button>}
-            <button type="button" className="btn-secondary" onClick={limparFormulario}>Limpar</button>
-            <button type="submit" className="btn-primary">{editingId ? 'Atualizar Prontuário' : 'Salvar Prontuário'}</button>
+            {editingId && (
+              <button type="button" className="btn-secondary" onClick={limparFormulario}>
+                Cancelar Edição
+              </button>
+            )}
+            <button type="submit" className="btn-primary">
+              {editingId ? 'Atualizar Prontuário' : 'Salvar Prontuário'}
+            </button>
           </div>
         </form>
       </section>
+
+      {/* TABELA DE PRONTUÁRIOS */}
       <section className="table-section">
         <div className="table-card">
           <div className="table-header">
@@ -180,7 +256,8 @@ export default function Prontuarios() {
               <p>Visualize, edite ou consulte o histórico médico dos pacientes.</p>
             </div>
           </div>
-          <div className="table-responsive">
+
+          <div className="table-wrapper">
             <table className="prontuarios-table">
               <thead>
                 <tr>
@@ -191,41 +268,80 @@ export default function Prontuarios() {
                   <th>AÇÕES</th>
                 </tr>
               </thead>
+
               <tbody>
                 {prontuarios.map((prontuario) => {
                   const consulta = typeof prontuario.consultaId === 'object' ? prontuario.consultaId : null;
                   const pet = consulta?.petId;
+                  const data = consulta?.dataConsulta ? new Date(consulta.dataConsulta) : null;
+                  const isGato = pet?.especie?.toLowerCase() === 'gato';
+
                   return (
                     <tr key={prontuario._id}>
                       <td className="date-cell">
                         <div className="date-content">
-                          <span className="calendar-icon">▣</span>
-                          <div>
-                            <strong>{consulta?.dataConsulta ? new Date(consulta.dataConsulta).toLocaleDateString('pt-BR') : '-'}</strong>
-                            <small>{consulta?.dataConsulta ? new Date(consulta.dataConsulta).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : ''}</small>
+                          <span>{data ? data.toLocaleDateString('pt-BR') : '-'}</span>
+                          <small>{data ? data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : ''}</small>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="pet-info">
+                          <div className="pet-avatar">{isGato ? <Cat /> : <Dog />}</div>
+                          <div className="pet-details">
+                            <strong>{pet?.nome || 'Pet não encontrado'}</strong>
+                            <span>{pet?.especie || 'Pet'}</span>
                           </div>
                         </div>
                       </td>
-                      <td className="pet-name-td">
-                        <span className="pet-avatar">{pet?.especie?.toLowerCase() === 'gato' ? '🐱' : '🐶'}</span>
-                        <div>
-                          <strong>{pet?.nome || '-'}</strong>
-                          <small>{pet?.especie || 'Pet'}</small>
-                        </div>
+
+                      <td>
+                        <span className="motivo-cell">{prontuario.diagnostico || '-'}</span>
                       </td>
-                      <td className="text-preview">{prontuario.diagnostico || '-'}</td>
-                      <td className="text-preview">{prontuario.prescricao || '-'}</td>
-                      <td className="actions-cell">
-                        <button className="btn-edit" onClick={() => handleEdit(prontuario)} title="Editar">✎</button>
-                        <button className="btn-delete" onClick={() => handleDelete(prontuario._id!)} title="Excluir">♜</button>
-                        <button className="btn-ver-ficha" onClick={() => pet?._id ? navigate(`/perfil-pet/${pet._id}`) : alert('Paciente não encontrado neste prontuário.')} title="Ver perfil">Ver Perfil</button>
+
+                      <td>
+                        <span className="motivo-cell">{prontuario.prescricao || '-'}</span>
+                      </td>
+
+                      <td>
+                        <div className="actions-cell">
+                          <button
+                            type="button"
+                            className="btn-edit"
+                            title="Editar Prontuário"
+                            onClick={() => handleEdit(prontuario)}
+                          >
+                            <Pencil size={15} />
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn-delete"
+                            title="Excluir prontuário"
+                            onClick={() => handleDelete(prontuario._id!)}
+                          >
+                            <Trash2 size={15} />
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn-ver-perfil"
+                            title="Ver perfil do paciente"
+                            onClick={() => (pet?._id ? navigate(`/perfil-pet/${pet._id}`) : alert('Paciente não encontrado neste prontuário.'))}
+                          >
+                            <Eye size={15} /> Ver Perfil
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
                 })}
+
                 {prontuarios.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="empty-state">Nenhum prontuário registrado até o momento.</td>
+                    <td colSpan={5} className="empty-state">
+                      Nenhum prontuário registrado até o momento.
+                    </td>
                   </tr>
                 )}
               </tbody>
