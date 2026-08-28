@@ -1,0 +1,848 @@
+/* =========================================================
+   SOLICITAR CONSULTA (TUTOR)
+   Padrão unificado com as demais páginas do sistema
+   ========================================================= */
+
+$verde: #557a46;
+$verde-escuro: #365d32;
+$verde-hover: #4b6d3e;
+
+$bege: #f4eee5;
+$bege-claro: #faf8f4;
+
+$branco: #ffffff;
+
+$texto: #293528;
+$texto-secundario: #73776f;
+$texto-muted: #8b8c87;
+
+$borda: #e4e3dc;
+$borda-card: #e7e5df;
+
+$dark-bg: #111512;
+$dark-surface: #191e1a;
+$dark-surface-hover: #202720;
+$dark-border: #303830;
+
+$dark-text-main: #f2f5f1;
+$dark-text-secondary: #b2bbb2;
+$dark-text-muted: #818a81;
+
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+   ========================================================= */
+
+.solicitar-consulta-container {
+  width: 100%;
+  max-width: none;
+  min-height: calc(100vh - 80px);
+  padding: 28px 24px 40px;
+  box-sizing: border-box;
+  background: #f5f6f4;
+  color: $texto;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.solicitar-consulta-container {
+
+  .hero-banner {
+    width: 100%;
+    min-height: 220px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    padding: 32px 52px;
+    border-radius: 20px;
+    background: $bege;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      top: -115px;
+      right: 240px;
+      border-radius: 50%;
+      background: rgba(85, 122, 70, 0.08);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      max-width: 760px;
+
+      .page-title {
+        margin: 0 0 12px;
+        color: $verde-escuro;
+        font-size: clamp(2.3rem, 3.2vw, 3.2rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-subtitle {
+        max-width: 700px;
+        margin: 0;
+        color: #53584f;
+        font-size: 1rem;
+        line-height: 1.65;
+        font-weight: 400;
+      }
+    }
+
+    .hero-image-wrapper {
+      position: relative;
+      width: 290px;
+      height: 220px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+
+      .pet-hero-img {
+        position: relative;
+        z-index: 3;
+        width: 190px;
+        height: 190px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 7px solid $branco;
+        box-shadow: 0 12px 25px rgba(54, 93, 50, 0.16);
+      }
+
+      .decor-shape {
+        position: absolute;
+        z-index: 1;
+        width: 190px;
+        height: 190px;
+        right: 24px;
+        border-radius: 50%;
+        background: $verde;
+        transform: translate(10px, 8px);
+      }
+
+      .decor-cross {
+        position: absolute;
+        z-index: 4;
+        color: $verde;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1;
+
+        &.cross-1 {
+          top: 12px;
+          right: 4px;
+        }
+
+        &.cross-2 {
+          bottom: 5px;
+          left: 12px;
+        }
+      }
+    }
+  }
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.solicitar-consulta-container {
+
+  .form-section {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    padding: 22px;
+    background: $branco;
+    border: 1px solid $borda-card;
+    border-radius: 20px;
+    box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
+    color: $texto;
+  }
+
+  .section-header {
+    margin-bottom: 18px;
+
+    h2 {
+      margin: 0 0 5px;
+      color: $verde-escuro;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: $texto-secundario;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+  }
+
+  .form-card {
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 22px;
+      row-gap: 13px;
+      margin-bottom: 16px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      label {
+        color: #172217;
+        font-size: 0.76rem;
+        font-weight: 700;
+      }
+
+      .input-wrapper {
+        width: 100%;
+        min-height: 42px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        padding: 0 13px;
+        background: #ffffff;
+        border: 1px solid #e2e1dc;
+        border-radius: 9px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          border-color: #d4d8ce;
+        }
+
+        &:focus-within {
+          border-color: $verde;
+          box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.10);
+        }
+
+        &.textarea-wrapper {
+          align-items: flex-start;
+          padding-top: 12px;
+        }
+
+        .input-icon {
+          width: 24px;
+          flex-shrink: 0;
+          margin-right: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $verde;
+        }
+
+        input,
+        select,
+        textarea {
+          width: 100%;
+          height: 42px;
+          padding: 0;
+          border: none;
+          outline: none;
+          background: transparent;
+          color: $texto;
+          font-family: inherit;
+          font-size: 0.84rem;
+          box-sizing: border-box;
+
+          &::placeholder {
+            color: #858980;
+          }
+
+          /* remove o fundo claro que o navegador aplica em
+             campos de autofill */
+          &:-webkit-autofill,
+          &:-webkit-autofill:hover,
+          &:-webkit-autofill:focus {
+            -webkit-text-fill-color: $texto;
+            -webkit-box-shadow: 0 0 0 1000px $branco inset;
+            box-shadow: 0 0 0 1000px $branco inset;
+            transition: background-color 9999s ease-in-out 0s;
+          }
+        }
+
+        select {
+          cursor: pointer;
+        }
+
+        textarea {
+          height: auto;
+          min-height: 88px;
+          padding: 12px 0;
+          resize: vertical;
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+}
+
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+.solicitar-consulta-container {
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    height: 42px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 8px;
+    background: $verde;
+    color: $branco;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      background: $verde-hover;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+
+/* =========================================================
+   TABELA
+   ========================================================= */
+
+.solicitar-consulta-container {
+
+  .table-section {
+    width: 100%;
+  }
+
+  .table-card {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px 20px 0;
+    background: $branco;
+    border: 1px solid $borda-card;
+    border-radius: 20px;
+    box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
+    overflow: hidden;
+  }
+
+  .table-header {
+    margin-bottom: 13px;
+
+    h3 {
+      margin: 0 0 5px;
+      color: $verde-escuro;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: $texto-secundario;
+      font-size: 0.84rem;
+    }
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .solicitacoes-table {
+    width: 100%;
+    min-width: 780px;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    overflow: hidden;
+
+    th,
+    td {
+      box-sizing: border-box;
+      border-bottom: 1px solid #eeeee9;
+      vertical-align: middle;
+    }
+
+    th {
+      height: 36px;
+      padding: 0 10px;
+      background: #f1f3e9;
+      color: #33442f;
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    th:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    th:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+
+    td {
+      padding: 8px 10px;
+      color: #3d423c;
+      font-size: 0.78rem;
+    }
+
+    tbody tr {
+      transition: background 0.15s ease;
+
+      &:hover td {
+        background: #fafbf8;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .date-cell {
+    width: 120px;
+  }
+
+  .date-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: $texto;
+
+    span {
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    small {
+      color: $texto-muted;
+      font-size: 0.68rem;
+      font-weight: 500;
+    }
+  }
+
+  .pet-info {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 150px;
+    white-space: nowrap;
+  }
+
+  .pet-avatar {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #edf2e8;
+    color: $verde;
+
+    svg {
+      width: 17px;
+      height: 17px;
+    }
+  }
+
+  .pet-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      color: #253024;
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    span {
+      color: $texto-muted;
+      font-size: 0.7rem;
+    }
+  }
+
+  .type-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    background: #edf2e8;
+    color: $verde-escuro;
+    border-radius: 15px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .vet-cell {
+    color: $texto-secundario;
+    font-size: 0.77rem;
+    font-style: italic;
+    white-space: nowrap;
+
+    &:not(:has(+ *)) {
+      font-style: normal;
+    }
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+
+    &.agendada {
+      background: #e0efe2;
+      color: $verde-escuro;
+    }
+
+    &.aguardando,
+    &.pendente {
+      background: #fbecc8;
+      color: #96690f;
+    }
+
+    &.concluida,
+    &.concluída {
+      background: #e0efe2;
+      color: $verde-escuro;
+    }
+
+    &.cancelada {
+      background: #fbe4e2;
+      color: #b3352d;
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    color: #999e97 !important;
+    padding: 35px !important;
+    font-size: 0.82rem !important;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .solicitar-consulta-container {
+    padding: 24px 18px 35px;
+
+    .hero-banner {
+      padding: 28px 35px;
+
+      .hero-image-wrapper {
+        width: 240px;
+
+        .pet-hero-img,
+        .decor-shape {
+          width: 165px;
+          height: 165px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 850px) {
+  .solicitar-consulta-container {
+
+    .hero-banner {
+      min-height: 200px;
+      padding: 25px;
+
+      .hero-image-wrapper {
+        width: 190px;
+
+        .pet-hero-img,
+        .decor-shape {
+          width: 140px;
+          height: 140px;
+        }
+      }
+    }
+
+    .page-title {
+      font-size: 2.2rem;
+    }
+
+    .form-card .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .table-card {
+      overflow-x: auto;
+    }
+  }
+}
+
+@media (max-width: 650px) {
+  .solicitar-consulta-container {
+    padding: 15px 12px 25px;
+
+    .hero-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 25px;
+
+      .hero-image-wrapper {
+        align-self: center;
+        margin-top: 10px;
+      }
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+    }
+
+    .form-section {
+      padding: 17px;
+
+      .form-actions {
+        justify-content: stretch;
+
+        .btn-primary {
+          width: 100%;
+        }
+      }
+    }
+
+    .table-card {
+      padding: 17px 17px 0;
+    }
+  }
+}
+
+
+/* =========================================================
+   MODO ESCURO UNIFICADO — SOLICITAR CONSULTA
+   ========================================================= */
+
+html.dark-mode {
+
+  .solicitar-consulta-container {
+    background: $dark-bg;
+    color: $dark-text-main;
+
+    .hero-banner {
+      background: linear-gradient(110deg, #1c231d 0%, #202720 55%, #1a211b 100%);
+
+      .page-title {
+        color: #9fbd98;
+      }
+
+      .hero-subtitle {
+        color: $dark-text-secondary;
+      }
+
+      .pet-hero-img {
+        border-color: $dark-border;
+      }
+
+      .decor-shape {
+        background: #456d42;
+      }
+
+      .decor-cross {
+        color: #6f9665;
+      }
+    }
+
+    .form-section {
+      background: $dark-surface;
+      border-color: $dark-border;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .section-header {
+      h2 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: $dark-text-secondary;
+      }
+    }
+
+    .form-card .input-group {
+      label {
+        color: $dark-text-secondary;
+      }
+
+      .input-wrapper {
+        background: $dark-bg;
+        border-color: $dark-border;
+
+        &:hover {
+          border-color: #3d473d;
+        }
+
+        .input-icon {
+          color: #9fbd98;
+        }
+
+        input,
+        select,
+        textarea {
+          color: $dark-text-main;
+
+          &::placeholder {
+            color: $dark-text-muted;
+          }
+
+          &:-webkit-autofill,
+          &:-webkit-autofill:hover,
+          &:-webkit-autofill:focus {
+            -webkit-text-fill-color: $dark-text-main;
+            -webkit-box-shadow: 0 0 0 1000px $dark-bg inset;
+            box-shadow: 0 0 0 1000px $dark-bg inset;
+          }
+        }
+
+        select option {
+          background: $dark-surface;
+          color: $dark-text-main;
+        }
+      }
+    }
+
+    .table-card {
+      background: $dark-surface;
+      border-color: $dark-border;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .table-header {
+      h3 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: $dark-text-secondary;
+      }
+    }
+
+    .solicitacoes-table {
+      th, td {
+        border-bottom-color: $dark-border;
+      }
+
+      th {
+        background: $dark-bg;
+        color: $dark-text-secondary;
+      }
+
+      td {
+        background: $dark-surface;
+        color: $dark-text-main;
+      }
+
+      tbody tr:hover td {
+        background: $dark-surface-hover;
+      }
+    }
+
+    .date-content {
+      color: $dark-text-main;
+
+      small {
+        color: $dark-text-muted;
+      }
+    }
+
+    .pet-avatar {
+      background: #283128;
+      color: #9fbd98;
+    }
+
+    .pet-details {
+      strong {
+        color: $dark-text-main;
+      }
+
+      span {
+        color: $dark-text-muted;
+      }
+    }
+
+    .type-badge {
+      background: #242b24;
+      color: #9fbd98;
+    }
+
+    .vet-cell {
+      color: $dark-text-muted;
+    }
+
+    .status-badge {
+
+      &.agendada,
+      &.concluida,
+      &.concluída {
+        background: #1f2e21;
+        color: #9fbd98;
+      }
+
+      &.aguardando,
+      &.pendente {
+        background: #3a2f16;
+        color: #d9a94a;
+      }
+
+      &.cancelada {
+        background: #3b2928;
+        color: #d18b86;
+      }
+    }
+
+    .empty-state {
+      color: $dark-text-muted !important;
+    }
+  }
+}

@@ -1,0 +1,285 @@
+import { useEffect, useState, type FormEvent } from 'react';
+import api from '../../services/api';
+import './SolicitarConsulta.scss';
+import { PawPrint, ClipboardList, CalendarClock, Scale, FileText, Cat, Dog } from 'lucide-react';
+
+interface Pet {
+  _id: string;
+  nome: string;
+  especie: string;
+}
+
+interface Veterinario {
+  nome: string;
+  especialidade?: string;
+}
+
+interface Solicitacao {
+  _id: string;
+  dataConsulta: string;
+  motivo: string;
+  tipo_de_atendimento: string;
+  pesoAtual?: number | string;
+  status?: string;
+  petId: Pet | string;
+  veterinarioId?: Veterinario | string | null;
+}
+
+export default function SolicitarConsulta() {
+  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([]);
+  const [pets, setPets] = useState<Pet[]>([]);
+
+  const [formData, setFormData] = useState({
+    dataConsulta: '',
+    motivo: '',
+    tipo_de_atendimento: '',
+    pesoAtual: '',
+    petId: '',
+  });
+
+  const carregarDados = async () => {
+    try {
+      const [resSolicitacoes, resPets] = await Promise.all([
+        api.get('/consultas'),
+        api.get('/pets'),
+      ]);
+      setSolicitacoes(resSolicitacoes.data);
+      setPets(resPets.data);
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+    }
+  };
+
+  useEffect(() => {
+    carregarDados();
+  }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const payload = {
+      petId: formData.petId,
+      dataConsulta: new Date(formData.dataConsulta).toISOString(),
+      motivo: formData.motivo,
+      tipo_de_atendimento: formData.tipo_de_atendimento,
+      pesoAtual: formData.pesoAtual ? Number(formData.pesoAtual) : undefined,
+    };
+
+    try {
+      await api.post('/consultas', payload);
+      alert('Solicitação enviada com sucesso! A clínica irá atribuir um veterinário e confirmar seu atendimento.');
+      setFormData({
+        dataConsulta: '',
+        motivo: '',
+        tipo_de_atendimento: '',
+        pesoAtual: '',
+        petId: '',
+      });
+      carregarDados();
+    } catch (error: any) {
+      console.error('Erro ao solicitar consulta:', error);
+      const msg = error.response?.data?.message || 'Erro de conexão com o servidor.';
+      alert(`Erro ao solicitar: ${msg}`);
+    }
+  };
+
+  return (
+    <div className="solicitar-consulta-container">
+      <section className="hero-banner">
+        <div className="hero-content">
+          <h1 className="page-title">Solicitar Atendimento</h1>
+          <p className="hero-subtitle">
+            Escolha o pet, a data e o motivo do atendimento. A clínica confirma o agendamento e atribui o veterinário responsável.
+          </p>
+        </div>
+
+        <div className="hero-image-wrapper">
+          <div className="decor-shape"></div>
+          <div className="decor-cross cross-1">+</div>
+          <div className="decor-cross cross-2">+</div>
+          <img
+            src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&q=80&w=600"
+            alt="Atendimento Veterinário"
+            className="pet-hero-img"
+          />
+        </div>
+      </section>
+
+      <section className="form-section">
+        <div className="section-header">
+          <h2>Nova Solicitação de Atendimento</h2>
+          <p>Preencha os detalhes abaixo. Assim que confirmarmos, um veterinário será atribuído ao seu pet.</p>
+        </div>
+
+        <form className="form-card" onSubmit={handleSubmit}>
+          <div className="form-grid">
+            <div className="input-group">
+              <label>Paciente (Pet)*</label>
+              <div className="input-wrapper">
+                <PawPrint className="input-icon" size={17} />
+                <select
+                  required
+                  value={formData.petId}
+                  onChange={(e) => setFormData({ ...formData, petId: e.target.value })}
+                >
+                  <option value="">Selecione um Pet...</option>
+                  {pets.map((pet) => (
+                    <option key={pet._id} value={pet._id}>
+                      {pet.nome} ({pet.especie})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Tipo de Atendimento*</label>
+              <div className="input-wrapper">
+                <ClipboardList className="input-icon" size={17} />
+                <select
+                  required
+                  value={formData.tipo_de_atendimento}
+                  onChange={(e) => setFormData({ ...formData, tipo_de_atendimento: e.target.value })}
+                >
+                  <option value="">Selecione o tipo de atendimento...</option>
+                  <option value="Consulta Normal">Consulta Normal / Rotina</option>
+                  <option value="Exames de Imagem">Exames de Imagem (Raio-X, Ultrassom)</option>
+                  <option value="Exames Laboratoriais">Exames Laboratoriais (Sangue, Urina, etc.)</option>
+                  <option value="Vacinação">Vacinação / Imunização</option>
+                  <option value="Procedimento Cirúrgico">Procedimento Cirúrgico</option>
+                  <option value="Retorno">Retorno</option>
+                  <option value="Outros">Outros</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Data e Hora Desejada*</label>
+              <div className="input-wrapper">
+                <CalendarClock className="input-icon" size={17} />
+                <input
+                  type="datetime-local"
+                  required
+                  value={formData.dataConsulta}
+                  onChange={(e) => setFormData({ ...formData, dataConsulta: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Peso Atual (kg)</label>
+              <div className="input-wrapper">
+                <Scale className="input-icon" size={17} />
+                <input
+                  type="number"
+                  step="0.1"
+                  placeholder="Ex: 5.4"
+                  value={formData.pesoAtual}
+                  onChange={(e) => setFormData({ ...formData, pesoAtual: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+              <label>Motivo da Consulta*</label>
+              <div className="input-wrapper textarea-wrapper">
+                <FileText className="input-icon" size={17} />
+                <textarea
+                  required
+                  placeholder="Ex: Vacinação de rotina, exames gerais, sintomas oculares..."
+                  value={formData.motivo}
+                  onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">
+              Enviar Solicitação
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section className="table-section">
+        <div className="table-card">
+          <div className="table-header">
+            <h3>Minhas Solicitações</h3>
+            <p>Acompanhe o status dos atendimentos que você solicitou.</p>
+          </div>
+
+          <div className="table-wrapper">
+            <table className="solicitacoes-table">
+              <thead>
+                <tr>
+                  <th>DATA E HORA</th>
+                  <th>PET</th>
+                  <th>TIPO DE ATENDIMENTO</th>
+                  <th>VETERINÁRIO</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {solicitacoes.map((s) => {
+                  const pet = typeof s.petId === 'object' && s.petId !== null ? s.petId : null;
+                  const veterinario =
+                    typeof s.veterinarioId === 'object' && s.veterinarioId !== null ? s.veterinarioId : null;
+                  const isGato = pet?.especie?.toLowerCase() === 'gato';
+                  const data = new Date(s.dataConsulta);
+                  const status = s.status || 'Agendada';
+
+                  return (
+                    <tr key={s._id}>
+                      <td className="date-cell">
+                        <div className="date-content">
+                          <span>{data.toLocaleDateString('pt-BR')}</span>
+                          <small>{data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</small>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="pet-info">
+                          <div className="pet-avatar">{isGato ? <Cat /> : <Dog />}</div>
+                          <div className="pet-details">
+                            <strong>{pet?.nome || 'Pet não encontrado'}</strong>
+                            <span>{pet?.especie || 'Pet'}</span>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>
+                        <span className="type-badge">{s.tipo_de_atendimento || 'Consulta'}</span>
+                      </td>
+
+                      <td>
+                        <span className="vet-cell">
+                          {veterinario ? `Dr(a). ${veterinario.nome}` : 'A definir pela clínica'}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span className={`status-badge ${status.toLowerCase().replace('í', 'i').replace(/\s/g, '-')}`}>
+                          {status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+
+                {solicitacoes.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="empty-state">
+                      Você ainda não fez nenhuma solicitação de atendimento.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

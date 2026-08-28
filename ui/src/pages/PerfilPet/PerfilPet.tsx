@@ -2,6 +2,17 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import './PerfilPet.scss';
+import {
+  ArrowLeft,
+  PawPrint,
+  Tag,
+  Scale,
+  User,
+  CalendarDays,
+  ClipboardList,
+  Cat,
+  Dog,
+} from 'lucide-react';
 
 export default function PerfilPet() {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +29,7 @@ export default function PerfilPet() {
         setPet(resPet.data);
         const resConsultas = await api.get(`/consultas?pet=${id}`);
         setConsultas(resConsultas.data);
-        const resProntuarios = await api.get(`/prontuarios/pet/${id}`);
+        const resProntuarios = await api.get(`/prontuarios?pet=${id}`);
         setProntuarios(resProntuarios.data);
       } catch (error) {
         console.error('Erro ao buscar perfil do pet:', error);
@@ -41,6 +52,8 @@ export default function PerfilPet() {
     return <div className="error-state">Paciente não encontrado.</div>;
   }
 
+  const isGato = pet.especie?.toLowerCase() === 'gato';
+
   return (
     <div className="perfil-pet-container">
       <section className="hero-banner">
@@ -62,36 +75,47 @@ export default function PerfilPet() {
             <h2>Informações do Paciente</h2>
             <p>Dados cadastrais e informações gerais do animal.</p>
           </div>
-          <button className="btn-voltar" onClick={() => navigate(-1)}>← Voltar</button>
+          <button className="btn-voltar" onClick={() => navigate(-1)}>
+            <ArrowLeft />
+            Voltar
+          </button>
         </div>
         <div className="pet-identity-card">
           <div className="pet-avatar">
-            {pet.especie?.toLowerCase() === 'gato' ? '🐱' : '🐶'}
+            {isGato ? <Cat /> : <Dog />}
           </div>
           <div className="pet-info-grid">
             <div className="info-block">
-              <span className="info-icon">🐾</span>
+              <span className="info-icon">
+                <PawPrint />
+              </span>
               <div>
                 <small>Nome do Paciente</small>
                 <strong>{pet.nome}</strong>
               </div>
             </div>
             <div className="info-block">
-              <span className="info-icon">📋</span>
+              <span className="info-icon">
+                <Tag />
+              </span>
               <div>
                 <small>Espécie / Raça</small>
                 <strong>{pet.especie} • {pet.raca || 'Não informada'}</strong>
               </div>
             </div>
             <div className="info-block">
-              <span className="info-icon">⚖️</span>
+              <span className="info-icon">
+                <Scale />
+              </span>
               <div>
                 <small>Idade / Peso</small>
                 <strong>{pet.idade || '--'} anos • {pet.peso || '--'} kg</strong>
               </div>
             </div>
             <div className="info-block">
-              <span className="info-icon">👤</span>
+              <span className="info-icon">
+                <User />
+              </span>
               <div>
                 <small>Tutor Responsável</small>
                 <strong>{pet.tutor?.nome || pet.tutorId?.nome || 'Não informado'}</strong>
@@ -113,14 +137,17 @@ export default function PerfilPet() {
           <div className="list-container">
             {consultas.length === 0 ? (
               <div className="empty-msg">
-                <span>📅</span>
+                <CalendarDays />
                 <p>Nenhuma consulta registrada.</p>
               </div>
             ) : (
               consultas.map((consulta, index) => (
                 <div className="history-card" key={consulta._id || index}>
                   <div className="card-top">
-                    <span className="date">📅 {formatarData(consulta.data || consulta.dataConsulta)}</span>
+                    <span className="date">
+                      <CalendarDays />
+                      {formatarData(consulta.data || consulta.dataConsulta)}
+                    </span>
                     <span className="status">{consulta.status || 'Agendada'}</span>
                   </div>
                   <h4>{consulta.motivo || 'Consulta veterinária'}</h4>
@@ -142,14 +169,17 @@ export default function PerfilPet() {
           <div className="list-container">
             {prontuarios.length === 0 ? (
               <div className="empty-msg">
-                <span>📋</span>
+                <ClipboardList />
                 <p>Nenhum prontuário registrado.</p>
               </div>
             ) : (
               prontuarios.map((prontuario, index) => (
                 <div className="history-card prontuario-card" key={prontuario._id || index}>
                   <div className="card-top">
-                    <span className="date">📄 {formatarData(prontuario.createdAt || prontuario.data)}</span>
+                    <span className="date">
+                      <ClipboardList />
+                      {formatarData(prontuario.createdAt || prontuario.data)}
+                    </span>
                   </div>
                   <div className="prontuario-content">
                     {prontuario.diagnostico && (

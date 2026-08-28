@@ -10,7 +10,8 @@ import PerfilPet from './pages/PerfilPet/PerfilPet';
 import DashboardAdmin from './pages/DashboardAdmin/DashboardAdmin';
 import DashboardTutor from './pages/DashboardTutor/DashboardTutor';
 import DashboardVet from './pages/DashboardVet/DashboardVet';
-import Perfil from './pages/Perfil/Perfil'; // <-- Importação da nova página
+import Perfil from './pages/Perfil/Perfil';
+import SolicitarConsulta from './pages/SolicitarConsulta/SolicitarConsulta';
 
 // Trava que impede acessar o sistema sem token
 const RotaProtegida = () => {
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="prontuarios" element={<Prontuarios />} />
             <Route path="veterinarios" element={<Veterinarios />} />
             <Route path="perfil-pet/:id" element={<PerfilPet />} />
+            <Route path="solicitar-consulta" element={<SolicitarConsulta />} />
             
             {/* NOVO: Rota do Perfil do Usuário Logado */}
             <Route path="perfil" element={<Perfil />} />

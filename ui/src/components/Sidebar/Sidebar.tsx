@@ -3,11 +3,13 @@ import {
   CalendarDays,
   Users,
   Dog,
+  Cat,
   LayoutDashboard,
   ClipboardList,
   LogOut,
   Stethoscope,
-  PawPrint
+  PawPrint,
+  ChevronRight
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
@@ -61,6 +63,12 @@ export default function Sidebar() {
       default:
         return '/dashboard-tutor';
     }
+  };
+
+  // Tutor vê o formulário simplificado de solicitação de atendimento;
+  // admin/veterinário continuam com a tela completa de agendamento.
+  const getConsultasRoute = () => {
+    return userRole === 'tutor' ? '/solicitar-consulta' : '/consultas';
   };
 
   const handleLogout = () => {
@@ -125,7 +133,7 @@ export default function Sidebar() {
         )}
 
         <NavLink
-          to="/consultas"
+          to={getConsultasRoute()}
           className={({ isActive }) =>
             `nav-link ${isActive ? 'active' : ''}`
           }
@@ -144,9 +152,7 @@ export default function Sidebar() {
             >
               <Dog />
               <span>Meus Pets</span>
-              <span className={`pets-arrow ${petsOpen ? 'open' : ''}`}>
-                ›
-              </span>
+              <ChevronRight className={`pets-arrow ${petsOpen ? 'open' : ''}`} size={15} />
             </button>
 
             {petsOpen && (
@@ -166,7 +172,7 @@ export default function Sidebar() {
                       }
                     >
                       <span className="pet-icon">
-                        {pet.especie?.toLowerCase() === 'gato' ? '🐱' : '🐶'}
+                        {pet.especie?.toLowerCase() === 'gato' ? <Cat size={14} /> : <Dog size={14} />}
                       </span>
                       <span>{pet.nome}</span>
                     </NavLink>

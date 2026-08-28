@@ -12,6 +12,7 @@ import {
   Dog,
   Pencil,
   Trash2,
+  CheckCircle2
 } from 'lucide-react';
 
 interface Pet {
@@ -20,7 +21,6 @@ interface Pet {
   especie: string;
 }
 
-// Interface para tipar os usuários (Veterinários)
 interface Usuario {
   _id: string;
   nome: string;
@@ -34,8 +34,9 @@ interface Consulta {
   motivo: string;
   tipo_de_atendimento: string;
   pesoAtual?: number | string;
+  status?: string;
   petId: Pet | string;
-  veterinarioId?: Usuario | string;
+  veterinarioId?: Usuario | string | null;
 }
 
 export default function Consultas() {
@@ -49,6 +50,7 @@ export default function Consultas() {
     motivo: '',
     tipo_de_atendimento: '',
     pesoAtual: '',
+    status: 'Pendente',
     petId: '',
     veterinarioId: '',
   });
@@ -80,11 +82,12 @@ export default function Consultas() {
 
     const payload = {
       petId: typeof formData.petId === 'object' ? formData.petId._id : formData.petId,
-      veterinarioId: typeof formData.veterinarioId === 'object' ? formData.veterinarioId._id : formData.veterinarioId,
+      veterinarioId: typeof formData.veterinarioId === 'object' && formData.veterinarioId ? formData.veterinarioId._id : (formData.veterinarioId || undefined),
       dataConsulta: new Date(formData.dataConsulta).toISOString(),
       motivo: formData.motivo,
       tipo_de_atendimento: formData.tipo_de_atendimento,
       pesoAtual: formData.pesoAtual ? Number(formData.pesoAtual) : undefined,
+      status: formData.status || 'Confirmada',
     };
 
     try {
@@ -116,6 +119,7 @@ export default function Consultas() {
       motivo: consulta.motivo,
       tipo_de_atendimento: consulta.tipo_de_atendimento || '',
       pesoAtual: consulta.pesoAtual || '',
+      status: consulta.status || 'Pendente',
       petId: typeof consulta.petId === 'object' ? consulta.petId._id : consulta.petId,
       veterinarioId: typeof consulta.veterinarioId === 'object' && consulta.veterinarioId !== null
         ? consulta.veterinarioId._id
@@ -141,6 +145,7 @@ export default function Consultas() {
       motivo: '',
       tipo_de_atendimento: '',
       pesoAtual: '',
+      status: 'Pendente',
       petId: '',
       veterinarioId: ''
     });
@@ -152,7 +157,7 @@ export default function Consultas() {
         <div className="hero-content">
           <h1 className="page-title">Agendamento de Consultas</h1>
           <p className="hero-subtitle">
-            Marque consultas, atribua o veterinário especialista responsável e acompanhe a evolução de peso e saúde dos pacientes.
+            Gerencie as solicitações enviadas pelos tutores, atribua veterinários e altere o status dos atendimentos.
           </p>
         </div>
 
@@ -171,8 +176,8 @@ export default function Consultas() {
       {/* CARD DO FORMULÁRIO */}
       <section className="form-section">
         <div className="section-header">
-          <h2>{editingId ? 'Editar Consulta' : 'Agendar Novo Atendimento'}</h2>
-          <p>Selecione o paciente, o profissional responsável e informe os detalhes da consulta.</p>
+          <h2>{editingId ? 'Editar / Aprovar Consulta' : 'Agendar Novo Atendimento'}</h2>
+          <p>Selecione o paciente, atribua o profissional e altere o status conforme necessário.</p>
         </div>
 
         <form className="form-card" onSubmit={handleSubmit}>
@@ -181,7 +186,6 @@ export default function Consultas() {
               <label>Paciente (Pet)*</label>
               <div className="input-wrapper">
                 <PawPrint className="input-icon" size={17} />
-
                 <select
                   required
                   value={typeof formData.petId === 'object' ? formData.petId._id : formData.petId}
@@ -203,7 +207,7 @@ export default function Consultas() {
                 <Stethoscope className="input-icon" size={17} />
                 <select
                   required
-                  value={typeof formData.veterinarioId === 'object' ? formData.veterinarioId._id : formData.veterinarioId}
+                  value={typeof formData.veterinarioId === 'object' && formData.veterinarioId !== null ? formData.veterinarioId._id : formData.veterinarioId}
                   onChange={(e) => setFormData({ ...formData, veterinarioId: e.target.value })}
                 >
                   <option value="">Selecione um Veterinário...</option>
@@ -216,7 +220,6 @@ export default function Consultas() {
               </div>
             </div>
 
-            {/* SELETOR: TIPO DE ATENDIMENTO */}
             <div className="input-group">
               <label>Tipo de Atendimento*</label>
               <div className="input-wrapper">
@@ -248,6 +251,23 @@ export default function Consultas() {
                   value={formData.dataConsulta}
                   onChange={(e) => setFormData({ ...formData, dataConsulta: e.target.value })}
                 />
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Status da Consulta*</label>
+              <div className="input-wrapper">
+                <CheckCircle2 className="input-icon" size={17} />
+                <select
+                  required
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                >
+                  <option value="Pendente">Pendente (Aguardando Aprovação)</option>
+                  <option value="Confirmada">Confirmada</option>
+                  <option value="Concluída">Concluída</option>
+                  <option value="Cancelada">Cancelada</option>
+                </select>
               </div>
             </div>
 
@@ -286,7 +306,7 @@ export default function Consultas() {
               </button>
             )}
             <button type="submit" className="btn-primary">
-              {editingId ? 'Atualizar Consulta' : 'Agendar Consulta'}
+              {editingId ? 'Atualizar / Confirmar Consulta' : 'Agendar Consulta'}
             </button>
           </div>
         </form>
@@ -295,158 +315,96 @@ export default function Consultas() {
       {/* TABELA DE CONSULTAS */}
       <section className="table-section">
         <div className="table-card">
-
           <div className="table-header">
             <div>
-              <h3>Consultas Agendadas</h3>
-              <p>Visualize, edite ou cancele as consultas cadastradas.</p>
+              <h3>Consultas e Solicitações</h3>
+              <p>Gerencie as solicitações enviadas e altere atribuições de veterinários.</p>
             </div>
           </div>
 
           <div className="table-wrapper">
             <table className="consultas-table">
-
               <thead>
                 <tr>
                   <th>DATA E HORA</th>
                   <th>PET</th>
                   <th>TUTOR</th>
                   <th>VETERINÁRIO</th>
-                  <th>TIPO DE ATENDIMENTO</th>
-                  <th>PESO (KG)</th>
+                  <th>TIPO</th>
+                  <th>STATUS</th>
                   <th>MOTIVO</th>
                   <th>AÇÕES</th>
                 </tr>
               </thead>
 
               <tbody>
-
                 {consultas.map((c) => {
-
-                  const pet =
-                    typeof c.petId === 'object' && c.petId !== null
-                      ? c.petId
-                      : null;
-
-                  const veterinario =
-                    typeof c.veterinarioId === 'object' &&
-                      c.veterinarioId !== null
-                      ? c.veterinarioId
-                      : null;
-
+                  const pet = typeof c.petId === 'object' && c.petId !== null ? c.petId : null;
+                  const veterinario = typeof c.veterinarioId === 'object' && c.veterinarioId !== null ? c.veterinarioId : null;
                   const data = new Date(c.dataConsulta);
-
                   const isGato = pet?.especie?.toLowerCase() === 'gato';
+                  const status = c.status || 'Pendente';
 
                   return (
                     <tr key={c._id}>
-
-                      {/* DATA */}
                       <td className="date-cell">
                         <div className="date-content">
-                          <span>
-                            {data.toLocaleDateString('pt-BR')}
-                          </span>
-
-                          <small>
-                            {data.toLocaleTimeString('pt-BR', {
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </small>
+                          <span>{data.toLocaleDateString('pt-BR')}</span>
+                          <small>{data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</small>
                         </div>
                       </td>
 
-
-                      {/* PET */}
                       <td>
                         <div className="pet-info">
-
-                          <div className="pet-avatar">
-                            {isGato ? <Cat /> : <Dog />}
-                          </div>
-
+                          <div className="pet-avatar">{isGato ? <Cat /> : <Dog />}</div>
                           <div className="pet-details">
-                            <strong>
-                              {pet?.nome || 'Pet não encontrado'}
-                            </strong>
-
-                            <span>
-                              {pet?.especie || 'Pet'}
-                            </span>
+                            <strong>{pet?.nome || 'Pet não encontrado'}</strong>
+                            <span>{pet?.especie || 'Pet'}</span>
                           </div>
-
                         </div>
                       </td>
 
-
-                      {/* TUTOR */}
                       <td>
                         <span className="tutor-name">
-                          {pet &&
-                            'tutorId' in pet &&
-                            typeof (pet as any).tutorId === 'object' &&
-                            (pet as any).tutorId !== null
+                          {pet && 'tutorId' in pet && typeof (pet as any).tutorId === 'object' && (pet as any).tutorId !== null
                             ? (pet as any).tutorId.nome
                             : '-'}
                         </span>
                       </td>
 
-
-                      {/* VETERINÁRIO */}
                       <td>
                         <div className="vet-info">
-
-                          <strong>
-                            {veterinario
-                              ? `Dr. ${veterinario.nome}`
-                              : '-'}
-                          </strong>
-
-                          {veterinario?.especialidade && (
-                            <span>
-                              {veterinario.especialidade}
-                            </span>
+                          {veterinario ? (
+                            <>
+                              <strong>Dr(a). {veterinario.nome}</strong>
+                              {veterinario.especialidade && <span>{veterinario.especialidade}</span>}
+                            </>
+                          ) : (
+                            <span style={{ color: '#d97706', fontWeight: 600 }}>Pendente Atribuição</span>
                           )}
-
                         </div>
                       </td>
 
-
-                      {/* TIPO */}
                       <td>
-                        <span className="type-badge">
-                          {c.tipo_de_atendimento || 'Consulta'}
+                        <span className="type-badge">{c.tipo_de_atendimento || 'Consulta'}</span>
+                      </td>
+
+                      <td>
+                        <span className={`status-badge ${status.toLowerCase().replace('í', 'i').replace(/\s/g, '-')}`}>
+                          {status}
                         </span>
                       </td>
 
-
-                      {/* PESO */}
                       <td>
-                        <span className="peso-value">
-                          {c.pesoAtual
-                            ? `${c.pesoAtual}`
-                            : '-'}
-                        </span>
+                        <span className="motivo-cell">{c.motivo || '-'}</span>
                       </td>
 
-
-                      {/* MOTIVO */}
-                      <td>
-                        <span className="motivo-cell">
-                          {c.motivo || '-'}
-                        </span>
-                      </td>
-
-
-                      {/* AÇÕES */}
                       <td>
                         <div className="actions-cell">
-
                           <button
                             type="button"
                             className="btn-edit"
-                            title="Editar consulta"
+                            title="Editar / Aprovar Consulta"
                             onClick={() => handleEdit(c)}
                           >
                             <Pencil size={15} />
@@ -460,30 +418,22 @@ export default function Consultas() {
                           >
                             <Trash2 size={15} />
                           </button>
-
                         </div>
                       </td>
-
                     </tr>
                   );
                 })}
 
-
                 {consultas.length === 0 && (
                   <tr>
-                    <td
-                      colSpan={8}
-                      className="empty-state"
-                    >
-                      Nenhuma consulta registrada até o momento.
+                    <td colSpan={8} className="empty-state">
+                      Nenhuma consulta cadastrada no momento.
                     </td>
                   </tr>
                 )}
-
               </tbody>
             </table>
           </div>
-
         </div>
       </section>
     </div>

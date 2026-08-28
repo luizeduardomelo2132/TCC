@@ -1,7 +1,7 @@
 import Usuario from '../models/Usuario.js';
 import Pet from '../models/Pet.js';
 import Consulta from '../models/Consulta.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 // ==========================================
 // 1. GERENCIAMENTO GERAL / VETERINÁRIOS / ADMINS

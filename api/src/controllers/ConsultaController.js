@@ -3,7 +3,7 @@ import Pet from '../models/Pet.js';
 import Usuario from '../models/Usuario.js';
 
 // ==========================================
-// 1. CRIAR CONSULTA
+// 1. CRIAR CONSULTA / SOLICITAÇÃO
 // ==========================================
 
 export const criarConsulta = async (req, res) => {
@@ -14,18 +14,14 @@ export const criarConsulta = async (req, res) => {
       dataConsulta,
       observacoes,
       motivo,
-      pesoAtual
+      pesoAtual,
+      tipo_de_atendimento,
+      status
     } = req.body;
 
     if (!petId) {
       return res.status(400).json({
         message: 'O pet é obrigatório.'
-      });
-    }
-
-    if (!veterinarioId) {
-      return res.status(400).json({
-        message: 'O veterinário é obrigatório.'
       });
     }
 
@@ -70,18 +66,21 @@ export const criarConsulta = async (req, res) => {
     }
 
     // ==========================================
-    // VERIFICAR VETERINÁRIO
+    // VERIFICAR VETERINÁRIO (Caso Informado)
     // ==========================================
 
-    const veterinario = await Usuario.findOne({
-      _id: veterinarioId,
-      role: 'veterinario'
-    });
-
-    if (!veterinario) {
-      return res.status(400).json({
-        message: 'Veterinário não encontrado.'
+    let vetValido = null;
+    if (veterinarioId) {
+      vetValido = await Usuario.findOne({
+        _id: veterinarioId,
+        role: 'veterinario'
       });
+
+      if (!vetValido) {
+        return res.status(400).json({
+          message: 'Veterinário não encontrado.'
+        });
+      }
     }
 
     // ==========================================
@@ -103,43 +102,41 @@ export const criarConsulta = async (req, res) => {
     }
 
     // ==========================================
-    // VERIFICAR CONFLITO DE HORÁRIO
+    // VERIFICAR CONFLITO DE HORÁRIO (Se houver Vet)
     // Consideramos cada consulta com duração de 30 minutos.
     // ==========================================
 
-    const consultasExistentes = await Consulta.find({
-      veterinarioId,
-      status: { $ne: 'cancelada' }
-    }).select('dataConsulta');
+    if (veterinarioId) {
+      const consultasExistentes = await Consulta.find({
+        veterinarioId,
+        status: { $nin: ['Cancelada', 'cancelada'] }
+      }).select('dataConsulta');
 
-    const conflito = consultasExistentes.some((consulta) => {
-      if (!consulta.dataConsulta) {
-        return false;
-      }
+      const conflito = consultasExistentes.some((consulta) => {
+        if (!consulta.dataConsulta) return false;
 
-      const dataExistente = new Date(consulta.dataConsulta);
+        const dataExistente = new Date(consulta.dataConsulta);
+        const diferenca = Math.abs(novaData.getTime() - dataExistente.getTime());
 
-      const diferenca = Math.abs(
-        novaData.getTime() - dataExistente.getTime()
-      );
-
-      return diferenca < 30 * 60 * 1000;
-    });
-
-    if (conflito) {
-      return res.status(400).json({
-        message:
-          'Este veterinário já possui uma consulta agendada neste horário.'
+        return diferenca < 30 * 60 * 1000;
       });
+
+      if (conflito) {
+        return res.status(400).json({
+          message: 'Este veterinário já possui uma consulta agendada neste horário.'
+        });
+      }
     }
 
     // ==========================================
-    // STATUS
-    // Tutor nunca pode escolher um status diferente
-    // de "agendada" ao criar.
+    // STATUS INICIAL
+    // Tutor envia como 'Pendente'. Admin/Vet pode escolher.
     // ==========================================
 
-    const statusInicial = 'agendada';
+    let statusFinal = 'Pendente';
+    if (req.usuarioRole !== 'tutor' && status) {
+      statusFinal = status;
+    }
 
     // ==========================================
     // CRIAR CONSULTA
@@ -147,29 +144,36 @@ export const criarConsulta = async (req, res) => {
 
     const novaConsulta = new Consulta({
       petId,
-      veterinarioId,
+      veterinarioId: veterinarioId || null,
       dataConsulta: novaData,
       observacoes,
       motivo,
       pesoAtual,
-      status: statusInicial
+      tipo_de_atendimento: tipo_de_atendimento || 'Consulta Normal',
+      status: statusFinal
     });
 
     const consultaSalva = await novaConsulta.save();
 
     // ==========================================
-    // RETORNAR CONSULTA COMPLETA
+    // RETORNAR CONSULTA COMPLETA COM TUTOR
     // ==========================================
 
     const consultaFormatada = await Consulta.findById(consultaSalva._id)
-      .populate('petId', 'nome especie raca idade peso tutorId')
+      .populate({
+        path: 'petId',
+        select: 'nome especie raca idade peso tutorId tutor',
+        populate: {
+          path: 'tutorId',
+          select: 'nome email telefone'
+        }
+      })
       .populate('veterinarioId', 'nome email especialidade');
 
     return res.status(201).json(consultaFormatada);
 
   } catch (error) {
     console.error('Erro ao criar consulta:', error);
-
     return res.status(400).json({
       message: error.message
     });
@@ -185,12 +189,8 @@ export const listarConsultas = async (req, res) => {
   try {
     let filtro = {};
 
-    // ==========================================
-    // TUTOR
-    // ==========================================
-
+    // TUTOR: Vê apenas as consultas dos seus pets
     if (req.usuarioRole === 'tutor') {
-
       const meusPets = await Pet.find({
         $or: [
           { tutorId: req.usuarioId },
@@ -201,51 +201,35 @@ export const listarConsultas = async (req, res) => {
       const meusPetsIds = meusPets.map((pet) => pet._id);
 
       filtro = {
-        petId: {
-          $in: meusPetsIds
-        }
+        petId: { $in: meusPetsIds }
       };
     }
 
-    // ==========================================
-    // VETERINÁRIO
-    // ==========================================
-
+    // VETERINÁRIO: Vê consultas atribuídas a ele
     else if (req.usuarioRole === 'veterinario') {
-
       filtro = {
         veterinarioId: req.usuarioId
       };
     }
 
-    // ==========================================
-    // ADMIN
-    // ==========================================
-
-    // Admin não recebe filtro e vê todas.
+    // ADMIN: Vê todas as consultas sem filtro
 
     const consultas = await Consulta.find(filtro)
-      .populate(
-        'petId',
-        'nome especie raca idade peso tutorId'
-      )
-      .populate(
-        'veterinarioId',
-        'nome email especialidade'
-      )
-      .sort({
-        dataConsulta: 1
-      });
+      .populate({
+        path: 'petId',
+        select: 'nome especie raca idade peso tutorId tutor',
+        populate: {
+          path: 'tutorId',
+          select: 'nome email telefone'
+        }
+      })
+      .populate('veterinarioId', 'nome email especialidade')
+      .sort({ dataConsulta: 1 });
 
     return res.status(200).json(consultas);
 
   } catch (error) {
-
-    console.error(
-      'Erro interno em listarConsultas:',
-      error
-    );
-
+    console.error('Erro interno em listarConsultas:', error);
     return res.status(500).json({
       message: error.message
     });
@@ -259,18 +243,18 @@ export const listarConsultas = async (req, res) => {
 
 export const buscarConsultaPorId = async (req, res) => {
   try {
-
     const { id } = req.params;
 
     const consulta = await Consulta.findById(id)
-      .populate(
-        'petId',
-        'nome especie raca idade peso tutorId'
-      )
-      .populate(
-        'veterinarioId',
-        'nome email especialidade'
-      );
+      .populate({
+        path: 'petId',
+        select: 'nome especie raca idade peso tutorId tutor',
+        populate: {
+          path: 'tutorId',
+          select: 'nome email telefone'
+        }
+      })
+      .populate('veterinarioId', 'nome email especialidade');
 
     if (!consulta) {
       return res.status(404).json({
@@ -278,14 +262,10 @@ export const buscarConsultaPorId = async (req, res) => {
       });
     }
 
-    // ==========================================
     // SEGURANÇA DO TUTOR
-    // ==========================================
-
     if (req.usuarioRole === 'tutor') {
-
       const pet = await Pet.findOne({
-        _id: consulta.petId._id,
+        _id: consulta.petId?._id || consulta.petId,
         $or: [
           { tutorId: req.usuarioId },
           { tutor: req.usuarioId }
@@ -294,25 +274,18 @@ export const buscarConsultaPorId = async (req, res) => {
 
       if (!pet) {
         return res.status(403).json({
-          message:
-            'Você não tem permissão para visualizar esta consulta.'
+          message: 'Você não tem permissão para visualizar esta consulta.'
         });
       }
     }
 
-    // ==========================================
     // SEGURANÇA DO VETERINÁRIO
-    // ==========================================
-
     if (req.usuarioRole === 'veterinario') {
-
       if (
-        consulta.veterinarioId._id.toString() !==
-        req.usuarioId.toString()
+        consulta.veterinarioId?._id?.toString() !== req.usuarioId.toString()
       ) {
         return res.status(403).json({
-          message:
-            'Você não tem permissão para visualizar esta consulta.'
+          message: 'Você não tem permissão para visualizar esta consulta.'
         });
       }
     }
@@ -320,12 +293,7 @@ export const buscarConsultaPorId = async (req, res) => {
     return res.status(200).json(consulta);
 
   } catch (error) {
-
-    console.error(
-      'Erro ao buscar consulta:',
-      error
-    );
-
+    console.error('Erro ao buscar consulta:', error);
     return res.status(500).json({
       message: error.message
     });
@@ -339,11 +307,9 @@ export const buscarConsultaPorId = async (req, res) => {
 
 export const atualizarConsulta = async (req, res) => {
   try {
-
     const { id } = req.params;
 
-    const consultaExistente =
-      await Consulta.findById(id);
+    const consultaExistente = await Consulta.findById(id);
 
     if (!consultaExistente) {
       return res.status(404).json({
@@ -351,12 +317,8 @@ export const atualizarConsulta = async (req, res) => {
       });
     }
 
-    // ==========================================
-    // TUTOR
-    // ==========================================
-
+    // SEGURANÇA DO TUTOR
     if (req.usuarioRole === 'tutor') {
-
       const petDoTutor = await Pet.findOne({
         _id: consultaExistente.petId,
         $or: [
@@ -367,111 +329,73 @@ export const atualizarConsulta = async (req, res) => {
 
       if (!petDoTutor) {
         return res.status(403).json({
-          message:
-            'Você não tem permissão para alterar esta consulta.'
+          message: 'Você não tem permissão para alterar esta consulta.'
         });
       }
 
-      // Tutor só pode cancelar.
-      if (
-        req.body.status &&
-        req.body.status !== 'cancelada'
-      ) {
+      // Tutor só pode cancelar
+      if (req.body.status && !['Cancelada', 'cancelada'].includes(req.body.status)) {
         return res.status(403).json({
-          message:
-            'O tutor não pode alterar o status desta consulta.'
+          message: 'O tutor só pode alterar o status para cancelado.'
         });
       }
 
-      // Tutor não pode alterar pet ou veterinário.
-      if (
-        req.body.petId !== undefined ||
-        req.body.veterinarioId !== undefined
-      ) {
-        return res.status(403).json({
-          message:
-            'Você não pode alterar o pet ou veterinário da consulta.'
-        });
-      }
-
-      // Tutor também não pode alterar outros dados.
       const camposProibidos = [
         'motivo',
         'pesoAtual',
         'dataConsulta',
-        'dataHorario',
-        'observacoes'
+        'observacoes',
+        'petId',
+        'veterinarioId',
+        'tipo_de_atendimento'
       ];
 
-      const tentouAlterarCampo =
-        camposProibidos.some(
-          (campo) =>
-            req.body[campo] !== undefined
-        );
+      const tentouAlterarCampo = camposProibidos.some(
+        (campo) => req.body[campo] !== undefined
+      );
 
       if (tentouAlterarCampo) {
         return res.status(403).json({
-          message:
-            'O tutor não pode editar os dados da consulta. Apenas cancelar.'
+          message: 'O tutor não pode editar os dados da consulta. Apenas cancelar.'
         });
       }
     }
 
-    // ==========================================
-    // VETERINÁRIO
-    // ==========================================
-
+    // SEGURANÇA DO VETERINÁRIO
     if (req.usuarioRole === 'veterinario') {
-
       if (
-        consultaExistente.veterinarioId.toString() !==
-        req.usuarioId.toString()
+        consultaExistente.veterinarioId &&
+        consultaExistente.veterinarioId.toString() !== req.usuarioId.toString()
       ) {
         return res.status(403).json({
-          message:
-            'Você não pode alterar esta consulta.'
+          message: 'Você não pode alterar esta consulta.'
         });
       }
     }
 
-    // ==========================================
-    // DADOS PERMITIDOS
-    // ==========================================
-
+    // EXTRAÇÃO DE DADOS PERMITIDOS
     const {
       status,
       observacoes,
       motivo,
       pesoAtual,
-      dataConsulta
+      tipo_de_atendimento,
+      dataConsulta,
+      veterinarioId,
+      petId
     } = req.body;
 
     const dadosAtualizacao = {};
 
-    if (status !== undefined) {
-      dadosAtualizacao.status = status;
-    }
+    if (status !== undefined) dadosAtualizacao.status = status;
+    if (observacoes !== undefined) dadosAtualizacao.observacoes = observacoes;
+    if (motivo !== undefined) dadosAtualizacao.motivo = motivo;
+    if (pesoAtual !== undefined) dadosAtualizacao.pesoAtual = pesoAtual;
+    if (tipo_de_atendimento !== undefined) dadosAtualizacao.tipo_de_atendimento = tipo_de_atendimento;
 
-    if (observacoes !== undefined) {
-      dadosAtualizacao.observacoes = observacoes;
-    }
-
-    if (motivo !== undefined) {
-      dadosAtualizacao.motivo = motivo;
-    }
-
-    if (pesoAtual !== undefined) {
-      dadosAtualizacao.pesoAtual = pesoAtual;
-    }
-
-    // ==========================================
-    // ALTERAR DATA
-    // ==========================================
-
+    // ALTERAÇÃO DE DATA
     if (dataConsulta !== undefined) {
-
-      const novaData =
-        new Date(dataConsulta);
+      const novaData = new Date(dataConsulta);
 
       if (isNaN(novaData.getTime())) {
         return res.status(400).json({
@@ -481,116 +405,86 @@ export const atualizarConsulta = async (req, res) => {
 
       if (novaData < new Date()) {
         return res.status(400).json({
-          message:
-            'Não é possível alterar a consulta para uma data que já passou.'
+          message: 'Não é possível alterar a consulta para uma data que já passou.'
         });
       }
 
-      // Verificar conflito
-      const consultasExistentes =
-        await Consulta.find({
+      // Verificar conflito de horário caso haja veterinário definido
+      const vetIdParaChecar = veterinarioId || consultaExistente.veterinarioId;
+
+      if (vetIdParaChecar) {
+        const consultasExistentes = await Consulta.find({
           _id: { $ne: id },
-          veterinarioId:
-            consultaExistente.veterinarioId,
-          status: { $ne: 'cancelada' }
+          veterinarioId: vetIdParaChecar,
+          status: { $nin: ['Cancelada', 'cancelada'] }
         }).select('dataConsulta');
 
-      const conflito =
-        consultasExistentes.some((consulta) => {
+        const conflito = consultasExistentes.some((consulta) => {
+          if (!consulta.dataConsulta) return false;
 
-          if (!consulta.dataConsulta) {
-            return false;
-          }
+          const dataExistente = new Date(consulta.dataConsulta);
+          const diferenca = Math.abs(novaData.getTime() - dataExistente.getTime());
 
-          const dataExistente =
-            new Date(consulta.dataConsulta);
-
-          const diferenca =
-            Math.abs(
-              novaData.getTime() -
-              dataExistente.getTime()
-            );
-
-          return diferenca <
-            30 * 60 * 1000;
+          return diferenca < 30 * 60 * 1000;
         });
 
-      if (conflito) {
-        return res.status(400).json({
-          message:
-            'Este veterinário já possui uma consulta agendada neste horário.'
-        });
+        if (conflito) {
+          return res.status(400).json({
+            message: 'Este veterinário já possui uma consulta agendada neste horário.'
+          });
+        }
       }
 
-      dadosAtualizacao.dataConsulta =
-        novaData;
+      dadosAtualizacao.dataConsulta = novaData;
     }
 
-    // ==========================================
-    // ADMIN / VETERINÁRIO
-    // ==========================================
-
-    if (
-      req.usuarioRole === 'admin' ||
-      req.usuarioRole === 'veterinario'
-    ) {
-
-      if (req.body.petId !== undefined) {
-        dadosAtualizacao.petId =
-          req.body.petId;
+    // PERMISSÕES ADMIN E VETERINÁRIO
+    if (req.usuarioRole === 'admin' || req.usuarioRole === 'veterinario') {
+      if (petId !== undefined) {
+        dadosAtualizacao.petId = petId;
       }
 
-      if (
-        req.body.veterinarioId !== undefined
-      ) {
-
-        const veterinario =
-          await Usuario.findOne({
-            _id: req.body.veterinarioId,
+      if (veterinarioId !== undefined) {
+        if (veterinarioId) {
+          const veterinario = await Usuario.findOne({
+            _id: veterinarioId,
             role: 'veterinario'
           });
 
-        if (!veterinario) {
-          return res.status(400).json({
-            message:
-              'Veterinário não encontrado.'
-          });
+          if (!veterinario) {
+            return res.status(400).json({
+              message: 'Veterinário não encontrado.'
+            });
+          }
+          dadosAtualizacao.veterinarioId = veterinarioId;
+        } else {
+          dadosAtualizacao.veterinarioId = null;
         }
-
-        dadosAtualizacao.veterinarioId =
-          req.body.veterinarioId;
       }
     }
 
-    const consultaAtualizada =
-      await Consulta.findByIdAndUpdate(
-        id,
-        dadosAtualizacao,
-        {
-          new: true,
-          runValidators: true
+    const consultaAtualizada = await Consulta.findByIdAndUpdate(
+      id,
+      dadosAtualizacao,
+      {
+        new: true,
+        runValidators: true
+      }
+    )
+      .populate({
+        path: 'petId',
+        select: 'nome especie raca idade peso tutorId tutor',
+        populate: {
+          path: 'tutorId',
+          select: 'nome email telefone'
         }
-      )
-        .populate(
-          'petId',
-          'nome especie raca idade peso tutorId'
-        )
-        .populate(
-          'veterinarioId',
-          'nome email especialidade'
-        );
+      })
+      .populate('veterinarioId', 'nome email especialidade');
 
-    return res.status(200).json(
-      consultaAtualizada
-    );
+    return res.status(200).json(consultaAtualizada);
 
   } catch (error) {
-
-    console.error(
-      'Erro ao atualizar consulta:',
-      error
-    );
-
+    console.error('Erro ao atualizar consulta:', error);
     return res.status(400).json({
       message: error.message
     });
@@ -604,11 +498,9 @@ export const atualizarConsulta = async (req, res) => {
 
 export const deletarConsulta = async (req, res) => {
   try {
-
     const { id } = req.params;
 
-    const consulta =
-      await Consulta.findById(id);
+    const consulta = await Consulta.findById(id);
 
     if (!consulta) {
       return res.status(404).json({
@@ -616,72 +508,52 @@ export const deletarConsulta = async (req, res) => {
       });
     }
 
-    // ==========================================
-    // TUTOR
-    // ==========================================
-
+    // TUTOR: apenas altera status para 'Cancelada'
     if (req.usuarioRole === 'tutor') {
-
-      const petDoTutor =
-        await Pet.findOne({
-          _id: consulta.petId,
-          $or: [
-            { tutorId: req.usuarioId },
-            { tutor: req.usuarioId }
-          ]
-        });
+      const petDoTutor = await Pet.findOne({
+        _id: consulta.petId,
+        $or: [
+          { tutorId: req.usuarioId },
+          { tutor: req.usuarioId }
+        ]
+      });
 
       if (!petDoTutor) {
         return res.status(403).json({
-          message:
-            'Você não tem permissão para cancelar esta consulta.'
+          message: 'Você não tem permissão para cancelar esta consulta.'
         });
       }
 
-      // Não apaga do banco.
-      consulta.status =
-        'cancelada';
-
+      consulta.status = 'Cancelada';
       await consulta.save();
 
       return res.status(200).json({
-        message:
-          'Consulta cancelada com sucesso.',
+        message: 'Consulta cancelada com sucesso.',
         consulta
       });
     }
 
-    // ==========================================
-    // ADMIN / VETERINÁRIO
-    // ==========================================
-
+    // VETERINÁRIO
     if (req.usuarioRole === 'veterinario') {
-
       if (
-        consulta.veterinarioId.toString() !==
-        req.usuarioId.toString()
+        consulta.veterinarioId &&
+        consulta.veterinarioId.toString() !== req.usuarioId.toString()
       ) {
         return res.status(403).json({
-          message:
-            'Você não pode excluir esta consulta.'
+          message: 'Você não pode excluir esta consulta.'
         });
       }
     }
 
+    // ADMIN OU VET RESPONSÁVEL: exclui fisicamente do banco
     await Consulta.findByIdAndDelete(id);
 
     return res.status(200).json({
-      message:
-        'Consulta deletada com sucesso.'
+      message: 'Consulta deletada com sucesso.'
     });
 
   } catch (error) {
-
-    console.error(
-      'Erro ao deletar consulta:',
-      error
-    );
-
+    console.error('Erro ao deletar consulta:', error);
     return res.status(500).json({
       message: error.message
     });
