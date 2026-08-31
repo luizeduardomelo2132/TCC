@@ -73,8 +73,7 @@ export default function Consultas() {
         ]);
 
         setPets(resPets.data);
-        const apenasVets = resUsuarios.data.filter((u: Usuario) => u.role === 'veterinario');
-        setVeterinarios(apenasVets);
+        setVeterinarios(resUsuarios.data);
       }
     } catch (error) {
       console.error('Erro ao carregar dados de consultas:', error);

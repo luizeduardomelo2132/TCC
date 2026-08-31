@@ -71,7 +71,7 @@ export const atualizarUsuario = async (req, res) => {
 export const listarVeterinarios = async (req, res) => {
   try {
     const veterinarios = await Usuario.find({
-      role: 'veterinario'
+      role: { $regex: /^veterinario$/i }
     })
       .select('nome email telefone especialidade')
       .sort({ nome: 1 });
@@ -79,11 +79,7 @@ export const listarVeterinarios = async (req, res) => {
     return res.status(200).json(veterinarios);
 
   } catch (error) {
-
-    console.error(
-      'Erro ao listar veterinários:',
-      error
-    );
+    console.error('Erro ao listar veterinários:', error);
 
     return res.status(500).json({
       erro: 'Falha ao listar veterinários',

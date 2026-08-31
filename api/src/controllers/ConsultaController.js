@@ -1,184 +1,128 @@
-import Prontuario from '../models/Prontuario.js';
+// ConsultaController.js
+import Consulta from '../models/Consulta.js';
+import Pet from '../models/Pet.js';
 
-export const criarProntuario = async (req, res) => {
+export const criarConsulta = async (req, res) => {
   try {
     const {
-      consultaId,
-      diagnostico,
-      prescricao,
-      examesSolicitados,
-      observacoes
+      petId,
+      veterinarioId,
+      dataConsulta,
+      motivo,
+      tipo_de_atendimento,
+      pesoAtual,
+      status,
     } = req.body;
 
-    const novoProntuario = new Prontuario({
-      consultaId,
-      diagnostico,
-      prescricao,
-      examesSolicitados,
-      observacoes,
+    // Se quem está solicitando é tutor, a consulta nasce como Pendente
+    // e sem veterinário atribuído (a clínica atribui depois)
+    const statusInicial =
+      req.usuarioRole === 'tutor' ? 'Pendente' : status || 'Confirmada';
+
+    const novaConsulta = new Consulta({
+      petId,
+      veterinarioId: req.usuarioRole === 'tutor' ? undefined : veterinarioId,
+      dataConsulta,
+      motivo,
+      tipo_de_atendimento,
+      pesoAtual,
+      status: statusInicial,
     });
 
-    const prontuarioSalvo = await novoProntuario.save();
-
-    res.status(201).json(prontuarioSalvo);
+    const consultaSalva = await novaConsulta.save();
+    res.status(201).json(consultaSalva);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-export const listarProntuarios = async (req, res) => {
+export const listarConsultas = async (req, res) => {
   try {
     const petIdQuery = req.query.pet || req.query.petId;
 
-    const prontuarios = await Prontuario.find()
-      .populate({
-        path: 'consultaId',
-        populate: {
-          path: 'petId',
-          populate: {
-            path: 'tutorId',
-            select: 'nome email telefone'
-          }
-        },
-      });
+    let consultas = await Consulta.find()
+      .populate('petId')
+      .populate('veterinarioId', 'nome especialidade role');
 
-    let resultado = prontuarios;
-
-    // Filtra por PET se o id for passado via Query Parameter (?pet=... ou ?petId=...)
     if (petIdQuery) {
-      resultado = resultado.filter((prontuario) => {
-        const pet = prontuario.consultaId?.petId;
-        return pet && pet._id?.toString() === petIdQuery.toString();
-      });
+      consultas = consultas.filter(
+        (c) => c.petId?._id?.toString() === petIdQuery.toString()
+      );
     }
 
-    // Se quem está acessando for Tutor, garante que ele só veja prontuários dos seus pets
+    if (req.usuarioRole === 'veterinario') {
+      consultas = consultas.filter(
+        (c) => c.veterinarioId?._id?.toString() === req.usuarioId?.toString()
+      );
+    }
+
     if (req.usuarioRole === 'tutor') {
-      resultado = resultado.filter((prontuario) => {
-        const pet = prontuario.consultaId?.petId;
-        if (!pet) return false;
+      const petsDoTutor = await Pet.find({ tutorId: req.usuarioId }).select('_id');
+      const idsPetsDoTutor = petsDoTutor.map((p) => p._id.toString());
 
-        const tutorId =
-          pet.tutorId?._id?.toString() ||
-          pet.tutorId?.toString() ||
-          pet.tutor?.toString();
-
-        return tutorId === req.usuarioId?.toString();
-      });
+      consultas = consultas.filter((c) =>
+        idsPetsDoTutor.includes(c.petId?._id?.toString())
+      );
     }
 
-    res.status(200).json(resultado);
+    res.status(200).json(consultas);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const listarProntuariosPorPet = async (req, res) => {
+// Retorna apenas as consultas do veterinário logado, agendadas para o dia atual.
+// Usada pelo Dashboard do veterinário para evitar trazer o histórico inteiro.
+export const minhaAgendaHoje = async (req, res) => {
   try {
-    const { petId } = req.params;
+    const inicioDia = new Date();
+    inicioDia.setHours(0, 0, 0, 0);
 
-    const prontuarios = await Prontuario.find()
-      .populate({
-        path: 'consultaId',
-        populate: {
-          path: 'petId',
-          populate: {
-            path: 'tutorId',
-            select: 'nome email telefone'
-          }
-        }
-      });
+    const fimDia = new Date();
+    fimDia.setHours(23, 59, 59, 999);
 
-    const prontuariosDoPet = prontuarios.filter((prontuario) => {
-      const pet = prontuario.consultaId?.petId;
-
-      if (!pet) {
-        return false;
-      }
-
-      const petCorreto = pet._id?.toString() === petId.toString();
-
-      // Validação de tutor
-      if (req.usuarioRole === 'tutor') {
-        const tutorId =
-          pet.tutorId?._id?.toString() ||
-          pet.tutorId?.toString() ||
-          pet.tutor?.toString();
-
-        const petDoTutor = tutorId === req.usuarioId?.toString();
-        return petCorreto && petDoTutor;
-      }
-
-      // Veterinário e Admin visualizam sem restrição de propriedade
-      return petCorreto;
-    });
-
-    res.status(200).json(prontuariosDoPet);
-  } catch (error) {
-    console.error('Erro ao buscar prontuários do pet:', error);
-
-    res.status(500).json({
-      message: error.message
-    });
-  }
-};
-
-export const buscarProntuarioPorConsulta = async (req, res) => {
-  try {
-    const prontuario = await Prontuario.findOne({
-      consultaId: req.params.consultaId
+    const consultas = await Consulta.find({
+      veterinarioId: req.usuarioId,
+      dataConsulta: { $gte: inicioDia, $lte: fimDia },
     })
-      .populate({
-        path: 'consultaId',
-        populate: {
-          path: 'petId'
-        },
-      });
+      .populate('petId')
+      .populate('veterinarioId', 'nome especialidade role')
+      .sort({ dataConsulta: 1 });
 
-    res.status(200).json(prontuario);
+    res.status(200).json(consultas);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const atualizarProntuario = async (req, res) => {
+export const atualizarConsulta = async (req, res) => {
   try {
-    const prontuarioAtualizado = await Prontuario.findByIdAndUpdate(
+    const consultaAtualizada = await Consulta.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
 
-    if (!prontuarioAtualizado) {
-      return res.status(404).json({
-        message: 'Prontuário não encontrado'
-      });
+    if (!consultaAtualizada) {
+      return res.status(404).json({ message: 'Consulta não encontrada' });
     }
 
-    res.status(200).json(prontuarioAtualizado);
+    res.status(200).json(consultaAtualizada);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-export const deletarProntuario = async (req, res) => {
+export const deletarConsulta = async (req, res) => {
   try {
-    const prontuarioDeletado = await Prontuario.findByIdAndDelete(
-      req.params.id
-    );
+    const consultaDeletada = await Consulta.findByIdAndDelete(req.params.id);
 
-    if (!prontuarioDeletado) {
-      return res.status(404).json({
-        message: 'Prontuário não encontrado'
-      });
+    if (!consultaDeletada) {
+      return res.status(404).json({ message: 'Consulta não encontrada' });
     }
 
-    res.status(200).json({
-      message: 'Prontuário removido com sucesso'
-    });
+    res.status(200).json({ message: 'Consulta removida com sucesso' });
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
+    res.status(500).json({ message: error.message });
   }
 };

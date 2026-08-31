@@ -119,21 +119,6 @@ export default function TopBar() {
           )}
         </button>
 
-
-
-        {/* NOTIFICAÇÕES */}
-        <button
-          className="icon-btn notification-btn"
-          title="Notificações"
-        >
-          <Bell size={23} strokeWidth={1.8} />
-
-          <span className="notification-badge">
-            3
-          </span>
-        </button>
-
-
         {/* PERFIL */}
         <div
           className="profile-menu"
