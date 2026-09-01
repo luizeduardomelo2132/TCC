@@ -237,8 +237,8 @@ export const deleteTutor = async (req, res) => {
 // Buscar os dados do próprio usuário para preencher a tela de perfil
 export const obterMeuPerfil = async (req, res) => {
   try {
-    // O ID vem do token JWT, que o seu middleware de autenticação deve colocar no req
-    const usuario = await Usuario.findById(req.usuario.id).select('-senha');
+    // O ID vem do token JWT, setado pelo middleware verificarToken em req.usuarioId
+    const usuario = await Usuario.findById(req.usuarioId).select('-senha');
 
     if (!usuario) {
       return res.status(404).json({ erro: 'Usuário não encontrado' });
@@ -250,18 +250,22 @@ export const obterMeuPerfil = async (req, res) => {
   }
 };
 
+
 // Atualizar os próprios dados (Nome, Email, Telefone, Endereço)
 export const atualizarMeuPerfil = async (req, res) => {
   try {
     const { nome, email, telefone, endereco } = req.body;
 
-    // Usamos findByIdAndUpdate para coisas simples, tirando a senha do retorno
     // Note que não permitimos mudar a 'role' ou a 'especialidade' por aqui!
     const usuario = await Usuario.findByIdAndUpdate(
-      req.usuario.id,
+      req.usuarioId,
       { nome, email, telefone, endereco },
       { new: true }
     ).select('-senha');
+
+    if (!usuario) {
+      return res.status(404).json({ erro: 'Usuário não encontrado' });
+    }
 
     return res.status(200).json(usuario);
   } catch (error) {
@@ -274,20 +278,21 @@ export const trocarMinhaSenha = async (req, res) => {
   try {
     const { senhaAtual, novaSenha } = req.body;
 
-    // 1. Precisamos buscar o usuário SEM o ".select('-senha')" porque vamos comparar a senha
-    const usuario = await Usuario.findById(req.usuario.id);
+    // Precisamos buscar o usuário SEM o ".select('-senha')" porque vamos comparar a senha
+    const usuario = await Usuario.findById(req.usuarioId);
 
-    // 2. Compara a senha digitada com a que está salva no banco
+    if (!usuario) {
+      return res.status(404).json({ erro: 'Usuário não encontrado' });
+    }
+
     const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha);
     if (!senhaValida) {
       return res.status(401).json({ erro: 'A senha atual está incorreta.' });
     }
 
-    // 3. Define a nova senha
     usuario.senha = novaSenha;
 
-    // 4. Salva usando .save()! Isso é crucial para ativar o seu usuarioSchema.pre('save')
-    // que vai criptografar a nova senha antes de jogar no banco.
+    // .save() ativa o usuarioSchema.pre('save') que criptografa a nova senha
     await usuario.save();
 
     return res.status(200).json({ message: 'Senha atualizada com sucesso!' });

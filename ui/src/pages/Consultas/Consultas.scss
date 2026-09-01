@@ -65,8 +65,6 @@ $dark-text-muted: #818a81;
     overflow: hidden;
     margin-bottom: 20px;
     padding: 32px 52px;
-    border-radius: 20px;
-    background: $bege;
 
     &::before {
       content: "";
@@ -168,12 +166,7 @@ $dark-text-muted: #818a81;
   .form-section {
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 20px;
-    padding: 22px;
-    background: $branco;
-    border: 1px solid $borda-card;
-    border-radius: 20px;
-    box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
+    margin-bottom: 32px;
     color: $texto;
   }
 
@@ -355,12 +348,6 @@ $dark-text-muted: #818a81;
   .table-card {
     width: 100%;
     box-sizing: border-box;
-    padding: 20px 20px 0;
-    background: $branco;
-    border: 1px solid $borda-card;
-    border-radius: 20px;
-    box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
-    overflow: hidden;
   }
 
   .table-header {
@@ -611,6 +598,90 @@ $dark-text-muted: #818a81;
     }
   }
 
+  /* Botão de aceite rápido — verde-claro, sinaliza ação positiva pendente */
+  .btn-accept {
+    border: 1px solid rgba(85, 122, 70, 0.3);
+    background: rgba(85, 122, 70, 0.1);
+    color: $verde-escuro;
+
+    &:hover {
+      background: rgba(85, 122, 70, 0.18);
+      border-color: rgba(85, 122, 70, 0.45);
+    }
+  }
+
+  /* Seletor inline de veterinário (aceite rápido) */
+  .quick-assign {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .quick-assign-select {
+    height: 32px;
+    min-width: 150px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    border: 1px solid $verde;
+    border-radius: 7px;
+    background: $branco;
+    color: $texto;
+    font-family: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+    outline: none;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.12);
+    }
+  }
+
+  .quick-assign .btn-confirm {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    cursor: pointer;
+    border: 1px solid $verde;
+    background: $verde;
+    color: $branco;
+    transition: background 0.2s ease, transform 0.15s ease;
+
+    &:hover {
+      background: $verde-hover;
+      transform: translateY(-1px);
+    }
+  }
+
+  .quick-assign .btn-cancel {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    cursor: pointer;
+    border: 1px solid #deddd7;
+    background: $branco;
+    color: $texto-secundario;
+    transition: background 0.2s ease, transform 0.15s ease;
+
+    &:hover {
+      background: $bege-claro;
+      border-color: #ceccc4;
+      transform: translateY(-1px);
+    }
+  }
+
+  .no-actions {
+    color: $texto-muted;
+    font-size: 0.8rem;
+  }
+
   .empty-state {
     text-align: center;
     color: #999e97 !important;
@@ -710,6 +781,14 @@ $dark-text-muted: #818a81;
     .table-card {
       padding: 17px 17px 0;
     }
+
+    .quick-assign {
+      flex-wrap: wrap;
+    }
+
+    .quick-assign-select {
+      min-width: 120px;
+    }
   }
 }
 
@@ -725,8 +804,6 @@ html.dark-mode {
     color: $dark-text-main;
 
     .hero-banner {
-      background: linear-gradient(110deg, #1c231d 0%, #202720 55%, #1a211b 100%);
-
       .page-title {
         color: #9fbd98;
       }
@@ -746,12 +823,6 @@ html.dark-mode {
       .decor-cross {
         color: #6f9665;
       }
-    }
-
-    .form-section {
-      background: $dark-surface;
-      border-color: $dark-border;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
     }
 
     .section-header {
@@ -807,12 +878,6 @@ html.dark-mode {
         background: #2c342c;
         border-color: #4a564a;
       }
-    }
-
-    .table-card {
-      background: $dark-surface;
-      border-color: $dark-border;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
     }
 
     .table-header {
@@ -904,6 +969,42 @@ html.dark-mode {
         background: #472e2d;
         border-color: #6b433f;
       }
+    }
+
+    .btn-accept {
+      background: rgba(159, 189, 152, 0.14);
+      border-color: rgba(159, 189, 152, 0.35);
+      color: #9fbd98;
+
+      &:hover {
+        background: rgba(159, 189, 152, 0.22);
+        border-color: rgba(159, 189, 152, 0.5);
+      }
+    }
+
+    .quick-assign-select {
+      background: $dark-bg;
+      border-color: $dark-border;
+      color: $dark-text-main;
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(159, 189, 152, 0.14);
+      }
+    }
+
+    .quick-assign .btn-cancel {
+      background: #242b24;
+      border-color: #394339;
+      color: #a8c4a1;
+
+      &:hover {
+        background: #2c342c;
+        border-color: #4a564a;
+      }
+    }
+
+    .no-actions {
+      color: $dark-text-muted;
     }
 
     .empty-state {

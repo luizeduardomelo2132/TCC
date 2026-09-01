@@ -9,17 +9,13 @@ const router = express.Router();
 const cargosPermitidos = apenasCargos(['admin']);
 
 // ==========================================
-// MEU PERFIL
+// GESTÃO DE TUTORES (admin)
 // ==========================================
 
-router.get('/meu-perfil', verificarToken, UsuarioController.obterMeuPerfil);
-router.put('/atualizar-perfil', verificarToken, UsuarioController.atualizarMeuPerfil);
-router.put( '/trocar-senha', verificarToken, UsuarioController.trocarMinhaSenha);
-
-router.post( '/', verificarToken, cargosPermitidos, UsuarioController.criarTutor);
-router.get( '/', verificarToken, cargosPermitidos, UsuarioController.listarTutores);
-router.get( '/:id', verificarToken, cargosPermitidos, UsuarioController.obterTutor);
-router.put( '/:id', verificarToken, cargosPermitidos, UsuarioController.atualizarTutor);
-router.delete( '/:id', verificarToken, cargosPermitidos, UsuarioController.deleteTutor);
+router.post('/', verificarToken, cargosPermitidos, UsuarioController.criarTutor);
+router.get('/', verificarToken, cargosPermitidos, UsuarioController.listarTutores);
+router.get('/:id', verificarToken, cargosPermitidos, UsuarioController.obterTutor);
+router.put('/:id', verificarToken, cargosPermitidos, UsuarioController.atualizarTutor);
+router.delete('/:id', verificarToken, cargosPermitidos, UsuarioController.deleteTutor);
 
 export default router;

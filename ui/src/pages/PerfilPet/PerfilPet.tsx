@@ -75,10 +75,6 @@ export default function PerfilPet() {
             <h2>Informações do Paciente</h2>
             <p>Dados cadastrais e informações gerais do animal.</p>
           </div>
-          <button className="btn-voltar" onClick={() => navigate(-1)}>
-            <ArrowLeft />
-            Voltar
-          </button>
         </div>
         <div className="pet-identity-card">
           <div className="pet-avatar">

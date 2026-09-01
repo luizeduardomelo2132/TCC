@@ -15,58 +15,12 @@ $bege: #f4eee5;
   height: 82px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 0 30px;
   box-sizing: border-box;
   background: $branco;
   border-bottom: 1px solid #ecebe6;
   font-family: 'Poppins', sans-serif;
-}
-
-/* =========================================
-   PESQUISA
-========================================= */
-
-.search-container {
-  width: 520px;
-  height: 46px;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  border: 1px solid $borda;
-  border-radius: 11px;
-  background: white;
-  transition: all 0.2s ease;
-}
-
-.search-container .search-icon {
-  width: 19px;
-  height: 19px;
-  margin-right: 11px;
-  color: #858980;
-  flex-shrink: 0;
-  stroke-width: 1.8;
-}
-
-.search-container input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: $texto;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.84rem;
-  font-weight: 400;
-}
-
-.search-container input::placeholder {
-  color: #858980;
-  opacity: 1;
-}
-
-.search-container:focus-within {
-  border-color: $verde;
-  box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.08);
 }
 
 /* =========================================
@@ -299,28 +253,6 @@ html.dark-mode .topbar-container {
   border-bottom-color: #303830;
 }
 
-html.dark-mode .search-container {
-  background: #242a24;
-  border-color: #343b34;
-}
-
-html.dark-mode .search-container .search-icon {
-  color: #8b958b;
-}
-
-html.dark-mode .search-container input {
-  color: #f2f5f1;
-}
-
-html.dark-mode .search-container input::placeholder {
-  color: #7e887e;
-}
-
-html.dark-mode .search-container:focus-within {
-  border-color: #6f9665;
-  box-shadow: 0 0 0 3px rgba(111, 150, 101, 0.12);
-}
-
 html.dark-mode .quick-action-btn {
   background: #557a46;
   color: #ffffff;
@@ -396,20 +328,12 @@ html.dark-mode .dropdown-content .logout-btn:hover {
 ========================================= */
 
 @media (max-width: 1200px) {
-  .search-container {
-    width: 420px;
-  }
-
   .topbar-container {
     padding: 0 24px;
   }
 }
 
 @media (max-width: 950px) {
-  .search-container {
-    width: 320px;
-  }
-
   .profile-info {
     display: none;
   }
@@ -419,12 +343,6 @@ html.dark-mode .dropdown-content .logout-btn:hover {
   .topbar-container {
     height: 72px;
     padding: 0 15px;
-  }
-
-  .search-container {
-    flex: 1;
-    width: auto;
-    margin-right: 12px;
   }
 
   .topbar-actions {

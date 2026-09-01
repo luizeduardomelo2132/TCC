@@ -4,875 +4,848 @@
    Padrão unificado com Consultas, Tutores e Pets
    ========================================================= */
 
-   $verde: #557a46;
-   $verde-escuro: #365d32;
-   $verde-hover: #4b6d3e;
-   
-   $bege: #f4eee5;
-   $bege-claro: #faf8f4;
-   
-   $branco: #ffffff;
-   
-   $texto: #293528;
-   $texto-secundario: #73776f;
-   $texto-muted: #8b8c87;
-   
-   $borda: #e4e3dc;
-   $borda-card: #e7e5df;
-   
-   $vermelho: #d94d45;
-   
-   $dark-bg: #111512;
-   $dark-surface: #191e1a;
-   $dark-surface-hover: #202720;
-   $dark-border: #303830;
-   
-   $dark-text-main: #f2f5f1;
-   $dark-text-secondary: #b2bbb2;
-   $dark-text-muted: #818a81;
-   
-   
-   /* =========================================================
-      CONTAINER PRINCIPAL
-      ========================================================= */
-   
-   .prontuarios-container {
-     width: 100%;
-     max-width: none;
-     min-height: calc(100vh - 80px);
-     padding: 28px 24px 40px;
-     box-sizing: border-box;
-     background: #f5f6f4;
-     color: $texto;
-     font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-   }
-   
-   
-   /* =========================================================
-      HERO
-      ========================================================= */
-   
-   .prontuarios-container {
-   
-     .hero-banner {
-       width: 100%;
-       min-height: 220px;
-       box-sizing: border-box;
-       display: flex;
-       align-items: center;
-       justify-content: space-between;
-       position: relative;
-       overflow: hidden;
-       margin-bottom: 20px;
-       padding: 32px 52px;
-       border-radius: 20px;
-       background: $bege;
-   
-       &::before {
-         content: "";
-         position: absolute;
-         width: 240px;
-         height: 240px;
-         top: -115px;
-         right: 240px;
-         border-radius: 50%;
-         background: rgba(85, 122, 70, 0.08);
-       }
-   
-       .hero-content {
-         position: relative;
-         z-index: 2;
-         flex: 1;
-         max-width: 760px;
-   
-         .page-title {
-           margin: 0 0 12px;
-           color: $verde-escuro;
-           font-size: clamp(2.3rem, 3.2vw, 3.2rem);
-           font-weight: 800;
-           line-height: 1.05;
-           letter-spacing: -0.04em;
-         }
-   
-         .hero-subtitle {
-           max-width: 700px;
-           margin: 0;
-           color: #53584f;
-           font-size: 1rem;
-           line-height: 1.65;
-           font-weight: 400;
-         }
-       }
-   
-       .hero-image-wrapper {
-         position: relative;
-         width: 290px;
-         height: 220px;
-         flex-shrink: 0;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         margin-right: 20px;
-   
-         .pet-hero-img {
-           position: relative;
-           z-index: 3;
-           width: 190px;
-           height: 190px;
-           object-fit: cover;
-           border-radius: 50%;
-           border: 7px solid $branco;
-           box-shadow: 0 12px 25px rgba(54, 93, 50, 0.16);
-         }
-   
-         .decor-shape {
-           position: absolute;
-           z-index: 1;
-           width: 190px;
-           height: 190px;
-           right: 24px;
-           border-radius: 50%;
-           background: $verde;
-           transform: translate(10px, 8px);
-         }
-   
-         .decor-cross {
-           position: absolute;
-           z-index: 4;
-           color: $verde;
-           font-size: 26px;
-           font-weight: 700;
-           line-height: 1;
-   
-           &.cross-1 {
-             top: 12px;
-             right: 4px;
-           }
-   
-           &.cross-2 {
-             bottom: 5px;
-             left: 12px;
-           }
-         }
-       }
-     }
-   }
-   
-   
-   /* =========================================================
-      FORMULÁRIO
-      ========================================================= */
-   
-   .prontuarios-container {
-   
-     .form-section {
-       width: 100%;
-       box-sizing: border-box;
-       margin-bottom: 20px;
-       padding: 22px;
-       background: $branco;
-       border: 1px solid $borda-card;
-       border-radius: 20px;
-       box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
-       color: $texto;
-     }
-   
-     .section-header {
-       margin-bottom: 18px;
-   
-       h2 {
-         margin: 0 0 5px;
-         color: $verde-escuro;
-         font-size: 1.3rem;
-         font-weight: 800;
-         letter-spacing: -0.02em;
-       }
-   
-       p {
-         margin: 0;
-         color: $texto-secundario;
-         font-size: 0.86rem;
-         line-height: 1.5;
-       }
-     }
-   
-     .form-card {
-   
-       .form-grid {
-         display: grid;
-         grid-template-columns: repeat(2, minmax(0, 1fr));
-         column-gap: 22px;
-         row-gap: 13px;
-         margin-bottom: 16px;
-       }
-   
-       .input-group {
-         display: flex;
-         flex-direction: column;
-         gap: 6px;
-   
-         &.full-width {
-           grid-column: 1 / -1;
-         }
-   
-         label {
-           color: #172217;
-           font-size: 0.76rem;
-           font-weight: 700;
-         }
-   
-         .input-wrapper {
-           width: 100%;
-           min-height: 42px;
-           box-sizing: border-box;
-           display: flex;
-           align-items: center;
-           padding: 0 13px;
-           background: #ffffff;
-           border: 1px solid #e2e1dc;
-           border-radius: 9px;
-           transition: border-color 0.2s ease, box-shadow 0.2s ease;
-   
-           &:hover {
-             border-color: #d4d8ce;
-           }
-   
-           &:focus-within {
-             border-color: $verde;
-             box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.10);
-           }
-   
-           &.textarea-wrapper {
-             align-items: flex-start;
-             padding-top: 12px;
-           }
-   
-           .input-icon {
-             width: 24px;
-             flex-shrink: 0;
-             margin-right: 8px;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             color: $verde;
-           }
-   
-           input,
-           select,
-           textarea {
-             width: 100%;
-             height: 42px;
-             padding: 0;
-             border: none;
-             outline: none;
-             background: transparent;
-             color: $texto;
-             font-family: inherit;
-             font-size: 0.84rem;
-             box-sizing: border-box;
-   
-             &::placeholder {
-               color: #858980;
-             }
-           }
-   
-           select {
-             cursor: pointer;
-           }
-   
-           textarea {
-             height: auto;
-             min-height: 88px;
-             padding: 12px 0;
-             resize: vertical;
-             line-height: 1.5;
-           }
-         }
-       }
-     }
-   }
-   
-   
-   /* =========================================================
-      BOTÕES
-      ========================================================= */
-   
-   .prontuarios-container {
-   
-     .form-actions {
-       display: flex;
-       justify-content: flex-end;
-       align-items: center;
-       gap: 8px;
-     }
-   
-     .btn-primary {
-       height: 42px;
-       padding: 0 22px;
-       border: none;
-       border-radius: 8px;
-       background: $verde;
-       color: $branco;
-       font-family: inherit;
-       font-size: 0.82rem;
-       font-weight: 700;
-       cursor: pointer;
-       transition: background 0.2s ease, transform 0.2s ease;
-   
-       &:hover {
-         background: $verde-hover;
-         transform: translateY(-1px);
-       }
-     }
-   
-     .btn-secondary {
-       height: 42px;
-       padding: 0 20px;
-       border: 1px solid #deddd7;
-       border-radius: 8px;
-       background: $branco;
-       color: $texto;
-       font-family: inherit;
-       font-size: 0.82rem;
-       font-weight: 600;
-       cursor: pointer;
-       transition: 0.2s ease;
-   
-       &:hover {
-         background: $bege-claro;
-         border-color: #ceccc4;
-       }
-     }
-   }
-   
-   
-   /* =========================================================
-      TABELA
-      ========================================================= */
-   
-   .prontuarios-container {
-   
-     .table-section {
-       width: 100%;
-     }
-   
-     .table-card {
-       width: 100%;
-       box-sizing: border-box;
-       padding: 20px 20px 0;
-       background: $branco;
-       border: 1px solid $borda-card;
-       border-radius: 20px;
-       box-shadow: 0 5px 18px rgba(40, 50, 40, 0.04);
-       overflow: hidden;
-     }
-   
-     .table-header {
-       margin-bottom: 13px;
-   
-       h3 {
-         margin: 0 0 5px;
-         color: $verde-escuro;
-         font-size: 1.3rem;
-         font-weight: 800;
-         letter-spacing: -0.02em;
-       }
-   
-       p {
-         margin: 0;
-         color: $texto-secundario;
-         font-size: 0.84rem;
-       }
-     }
-   
-     .table-wrapper {
-       width: 100%;
-       overflow-x: auto;
-     }
-   
-     .prontuarios-table {
-       width: 100%;
-       min-width: 900px;
-       border-collapse: separate;
-       border-spacing: 0;
-       text-align: left;
-       overflow: hidden;
-   
-       th,
-       td {
-         box-sizing: border-box;
-         border-bottom: 1px solid #eeeee9;
-         vertical-align: middle;
-       }
-   
-       th {
-         height: 36px;
-         padding: 0 10px;
-         background: #f1f3e9;
-         color: #33442f;
-         font-size: 0.66rem;
-         font-weight: 800;
-         text-transform: uppercase;
-         letter-spacing: 0.02em;
-         white-space: nowrap;
-       }
-   
-       th:first-child {
-         border-radius: 8px 0 0 8px;
-       }
-   
-       th:last-child {
-         border-radius: 0 8px 8px 0;
-       }
-   
-       td {
-         padding: 8px 10px;
-         color: #3d423c;
-         font-size: 0.78rem;
-       }
-   
-       tbody tr {
-         transition: background 0.15s ease;
-   
-         &:hover td {
-           background: #fafbf8;
-         }
-   
-         &:last-child td {
-           border-bottom: none;
-         }
-       }
-     }
-   
-     .date-cell {
-       width: 125px;
-     }
-   
-     .date-content {
-       display: flex;
-       flex-direction: column;
-       gap: 2px;
-       color: $texto;
-   
-       span {
-         font-size: 0.78rem;
-         font-weight: 600;
-       }
-   
-       small {
-         color: $texto-muted;
-         font-size: 0.68rem;
-         font-weight: 500;
-       }
-     }
-   
-     .pet-info {
-       display: flex;
-       align-items: center;
-       gap: 9px;
-       min-width: 150px;
-       white-space: nowrap;
-     }
-   
-     .pet-avatar {
-       width: 34px;
-       height: 34px;
-       flex-shrink: 0;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       border-radius: 50%;
-       background: #edf2e8;
-       color: $verde;
-   
-       svg {
-         width: 17px;
-         height: 17px;
-       }
-     }
-   
-     .pet-details {
-       display: flex;
-       flex-direction: column;
-       gap: 2px;
-   
-       strong {
-         color: #253024;
-         font-size: 0.8rem;
-         font-weight: 700;
-         white-space: nowrap;
-       }
-   
-       span {
-         color: $texto-muted;
-         font-size: 0.7rem;
-       }
-     }
-   
-     .motivo-cell {
-       display: block;
-       max-width: 210px;
-       overflow: hidden;
-       color: #646a62;
-       font-size: 0.76rem;
-       white-space: nowrap;
-       text-overflow: ellipsis;
-     }
-   
-     .actions-cell {
-       display: flex;
-       align-items: center;
-       justify-content: flex-start;
-       gap: 8px;
-       white-space: nowrap;
-     }
-   
-     .actions-cell button {
-       padding: 0;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       border-radius: 7px;
-       cursor: pointer;
-       font-family: inherit;
-       transition: transform 0.15s ease, opacity 0.15s ease, background 0.2s ease, border-color 0.2s ease;
-   
-       &:hover {
-         transform: translateY(-1px);
-         opacity: 0.9;
-       }
-     }
-   
-     .btn-edit,
-     .btn-delete {
-       width: 32px;
-       height: 32px;
-     }
-   
-     .btn-edit {
-       border: 1px solid $verde;
-       background: $verde;
-       color: $branco;
-   
-       &:hover {
-         background: $verde-hover;
-         border-color: $verde-hover;
-       }
-     }
-   
-     .btn-delete {
-       border: 1px solid rgba(217, 77, 69, 0.25);
-       background: rgba(217, 77, 69, 0.08);
-       color: $vermelho;
-   
-       &:hover {
-         background: rgba(217, 77, 69, 0.15);
-         border-color: rgba(217, 77, 69, 0.35);
-       }
-     }
-   
-     .btn-ver-perfil {
-       height: 32px;
-       padding: 0 12px;
-       gap: 6px;
-       border: none;
-       background: $verde-escuro;
-       color: $branco;
-       font-weight: 500;
-       font-size: 0.72rem;
-   
-       &:hover {
-         background: $verde-hover;
-       }
-     }
-   
-     .empty-state {
-       text-align: center;
-       color: #999e97 !important;
-       padding: 35px !important;
-       font-size: 0.82rem !important;
-     }
-   }
-   
-   
-   /* =========================================================
-      RESPONSIVIDADE
-      ========================================================= */
-   
-   @media (max-width: 1100px) {
-     .prontuarios-container {
-       padding: 24px 18px 35px;
-   
-       .hero-banner {
-         padding: 28px 35px;
-   
-         .hero-image-wrapper {
-           width: 240px;
-   
-           .pet-hero-img,
-           .decor-shape {
-             width: 165px;
-             height: 165px;
-           }
-         }
-       }
-     }
-   }
-   
-   @media (max-width: 850px) {
-     .prontuarios-container {
-   
-       .hero-banner {
-         min-height: 200px;
-         padding: 25px;
-   
-         .hero-image-wrapper {
-           width: 190px;
-   
-           .pet-hero-img,
-           .decor-shape {
-             width: 140px;
-             height: 140px;
-           }
-         }
-       }
-   
-       .page-title {
-         font-size: 2.2rem;
-       }
-   
-       .form-card .form-grid {
-         grid-template-columns: 1fr;
-   
-         .input-group.full-width {
-           grid-column: auto;
-         }
-       }
-   
-       .prontuarios-table {
-         min-width: 780px;
-       }
-   
-       .table-card {
-         overflow-x: auto;
-       }
-     }
-   }
-   
-   @media (max-width: 650px) {
-     .prontuarios-container {
-       padding: 15px 12px 25px;
-   
-       .hero-banner {
-         flex-direction: column;
-         align-items: flex-start;
-         padding: 25px;
-   
-         .hero-image-wrapper {
-           align-self: center;
-           margin-top: 10px;
-         }
-       }
-   
-       .page-title {
-         font-size: 2rem;
-       }
-   
-       .hero-subtitle {
-         font-size: 0.9rem;
-       }
-   
-       .form-section {
-         padding: 17px;
-       }
-   
-       .table-card {
-         padding: 17px 17px 0;
-       }
-     }
-   }
-   
-   
-   /* =========================================================
-      MODO ESCURO UNIFICADO — PRONTUÁRIOS
-      ========================================================= */
-   
-   html.dark-mode {
-   
-     .prontuarios-container {
-       background: $dark-bg;
-       color: $dark-text-main;
-   
-       .hero-banner {
-         background: linear-gradient(110deg, #1c231d 0%, #202720 55%, #1a211b 100%);
-   
-         .page-title {
-           color: #9fbd98;
-         }
-   
-         .hero-subtitle {
-           color: $dark-text-secondary;
-         }
-   
-         .pet-hero-img {
-           border-color: $dark-border;
-         }
-   
-         .decor-shape {
-           background: #456d42;
-         }
-   
-         .decor-cross {
-           color: #6f9665;
-         }
-       }
-   
-       .form-section {
-         background: $dark-surface;
-         border-color: $dark-border;
-         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-       }
-   
-       .section-header {
-         h2 {
-           color: #9fbd98;
-         }
-   
-         p {
-           color: $dark-text-secondary;
-         }
-       }
-   
-       .form-card .input-group {
-         label {
-           color: $dark-text-secondary;
-         }
-   
-         .input-wrapper {
-           background: $dark-bg;
-           border-color: $dark-border;
-   
-           &:hover {
-             border-color: #3d473d;
-           }
-   
-           .input-icon {
-             color: #9fbd98;
-           }
-   
-           input,
-           select,
-           textarea {
-             color: $dark-text-main;
-   
-             &::placeholder {
-               color: $dark-text-muted;
-             }
-           }
-   
-           select option {
-             background: $dark-surface;
-             color: $dark-text-main;
-           }
-         }
-       }
-   
-       .btn-secondary {
-         background: #242b24;
-         color: #a8c4a1;
-         border-color: #394339;
-   
-         &:hover {
-           background: #2c342c;
-           border-color: #4a564a;
-         }
-       }
-   
-       .table-card {
-         background: $dark-surface;
-         border-color: $dark-border;
-         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-       }
-   
-       .table-header {
-         h3 {
-           color: #9fbd98;
-         }
-   
-         p {
-           color: $dark-text-secondary;
-         }
-       }
-   
-       .prontuarios-table {
-         th, td {
-           border-bottom-color: $dark-border;
-         }
-   
-         th {
-           background: $dark-bg;
-           color: $dark-text-secondary;
-         }
-   
-         td {
-           background: $dark-surface;
-           color: $dark-text-main;
-         }
-   
-         tbody tr:hover td {
-           background: $dark-surface-hover;
-         }
-       }
-   
-       .date-content {
-         color: $dark-text-main;
-   
-         small {
-           color: $dark-text-muted;
-         }
-       }
-   
-       .pet-avatar {
-         background: #283128;
-         color: #9fbd98;
-       }
-   
-       .pet-details {
-         strong {
-           color: $dark-text-main;
-         }
-   
-         span {
-           color: $dark-text-muted;
-         }
-       }
-   
-       .motivo-cell {
-         color: $dark-text-muted;
-       }
-   
-       .btn-delete {
-         background: #3b2928;
-         border-color: #5c3a38;
-         color: #d18b86;
-   
-         &:hover {
-           background: #472e2d;
-           border-color: #6b433f;
-         }
-       }
-   
-       .btn-ver-perfil {
-         background: #2c342c;
-         color: #a8c4a1;
-   
-         &:hover {
-           background: #354035;
-         }
-       }
-   
-       .empty-state {
-         color: $dark-text-muted !important;
-       }
-     }
-   }
+$verde: #557a46;
+$verde-escuro: #365d32;
+$verde-hover: #4b6d3e;
+
+$bege: #f4eee5;
+$bege-claro: #faf8f4;
+
+$branco: #ffffff;
+
+$texto: #293528;
+$texto-secundario: #73776f;
+$texto-muted: #8b8c87;
+
+$borda: #e4e3dc;
+$borda-card: #e7e5df;
+
+$vermelho: #d94d45;
+
+$dark-bg: #111512;
+$dark-surface: #191e1a;
+$dark-surface-hover: #202720;
+$dark-border: #303830;
+
+$dark-text-main: #f2f5f1;
+$dark-text-secondary: #b2bbb2;
+$dark-text-muted: #818a81;
+
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+   ========================================================= */
+
+.prontuarios-container {
+  width: 100%;
+  max-width: none;
+  min-height: calc(100vh - 80px);
+  padding: 28px 24px 40px;
+  box-sizing: border-box;
+  background: #f5f6f4;
+  color: $texto;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.prontuarios-container {
+
+  .hero-banner {
+    width: 100%;
+    min-height: 220px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    padding: 32px 52px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      top: -115px;
+      right: 240px;
+      border-radius: 50%;
+      background: rgba(85, 122, 70, 0.08);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      max-width: 760px;
+
+      .page-title {
+        margin: 0 0 12px;
+        color: $verde-escuro;
+        font-size: clamp(2.3rem, 3.2vw, 3.2rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-subtitle {
+        max-width: 700px;
+        margin: 0;
+        color: #53584f;
+        font-size: 1rem;
+        line-height: 1.65;
+        font-weight: 400;
+      }
+    }
+
+    .hero-image-wrapper {
+      position: relative;
+      width: 290px;
+      height: 220px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+
+      .pet-hero-img {
+        position: relative;
+        z-index: 3;
+        width: 190px;
+        height: 190px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 7px solid $branco;
+        box-shadow: 0 12px 25px rgba(54, 93, 50, 0.16);
+      }
+
+      .decor-shape {
+        position: absolute;
+        z-index: 1;
+        width: 190px;
+        height: 190px;
+        right: 24px;
+        border-radius: 50%;
+        background: $verde;
+        transform: translate(10px, 8px);
+      }
+
+      .decor-cross {
+        position: absolute;
+        z-index: 4;
+        color: $verde;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1;
+
+        &.cross-1 {
+          top: 12px;
+          right: 4px;
+        }
+
+        &.cross-2 {
+          bottom: 5px;
+          left: 12px;
+        }
+      }
+    }
+  }
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.prontuarios-container {
+
+  .form-section {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 32px;
+    color: $texto;
+  }
+
+  .section-header {
+    margin-bottom: 18px;
+
+    h2 {
+      margin: 0 0 5px;
+      color: $verde-escuro;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: $texto-secundario;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+  }
+
+  .form-card {
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 22px;
+      row-gap: 13px;
+      margin-bottom: 16px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      &.full-width {
+        grid-column: 1 / -1;
+      }
+
+      label {
+        color: #172217;
+        font-size: 0.76rem;
+        font-weight: 700;
+      }
+
+      .input-wrapper {
+        width: 100%;
+        min-height: 42px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        padding: 0 13px;
+        background: #ffffff;
+        border: 1px solid #e2e1dc;
+        border-radius: 9px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          border-color: #d4d8ce;
+        }
+
+        &:focus-within {
+          border-color: $verde;
+          box-shadow: 0 0 0 3px rgba(85, 122, 70, 0.10);
+        }
+
+        &.textarea-wrapper {
+          align-items: flex-start;
+          padding-top: 12px;
+        }
+
+        .input-icon {
+          width: 24px;
+          flex-shrink: 0;
+          margin-right: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $verde;
+        }
+
+        input,
+        select,
+        textarea {
+          width: 100%;
+          height: 42px;
+          padding: 0;
+          border: none;
+          outline: none;
+          background: transparent;
+          color: $texto;
+          font-family: inherit;
+          font-size: 0.84rem;
+          box-sizing: border-box;
+
+          &::placeholder {
+            color: #858980;
+          }
+        }
+
+        select {
+          cursor: pointer;
+        }
+
+        textarea {
+          height: auto;
+          min-height: 88px;
+          padding: 12px 0;
+          resize: vertical;
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+}
+
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+.prontuarios-container {
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    height: 42px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 8px;
+    background: $verde;
+    color: $branco;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      background: $verde-hover;
+      transform: translateY(-1px);
+    }
+  }
+
+  .btn-secondary {
+    height: 42px;
+    padding: 0 20px;
+    border: 1px solid #deddd7;
+    border-radius: 8px;
+    background: $branco;
+    color: $texto;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    &:hover {
+      background: $bege-claro;
+      border-color: #ceccc4;
+    }
+  }
+}
+
+
+/* =========================================================
+   TABELA
+   ========================================================= */
+
+.prontuarios-container {
+
+  .table-section {
+    width: 100%;
+  }
+
+  .table-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .table-header {
+    margin-bottom: 13px;
+
+    h3 {
+      margin: 0 0 5px;
+      color: $verde-escuro;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: $texto-secundario;
+      font-size: 0.84rem;
+    }
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .prontuarios-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    overflow: hidden;
+
+    th,
+    td {
+      box-sizing: border-box;
+      border-bottom: 1px solid #eeeee9;
+      vertical-align: middle;
+    }
+
+    th {
+      height: 36px;
+      padding: 0 10px;
+      background: #f1f3e9;
+      color: #33442f;
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    th:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    th:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+
+    td {
+      padding: 8px 10px;
+      color: #3d423c;
+      font-size: 0.78rem;
+    }
+
+    tbody tr {
+      transition: background 0.15s ease;
+
+      &:hover td {
+        background: #fafbf8;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .date-cell {
+    width: 125px;
+  }
+
+  .date-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: $texto;
+
+    span {
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    small {
+      color: $texto-muted;
+      font-size: 0.68rem;
+      font-weight: 500;
+    }
+  }
+
+  .pet-info {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 150px;
+    white-space: nowrap;
+  }
+
+  .pet-avatar {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #edf2e8;
+    color: $verde;
+
+    svg {
+      width: 17px;
+      height: 17px;
+    }
+  }
+
+  .pet-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      color: #253024;
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    span {
+      color: $texto-muted;
+      font-size: 0.7rem;
+    }
+  }
+
+  .motivo-cell {
+    display: block;
+    max-width: 210px;
+    overflow: hidden;
+    color: #646a62;
+    font-size: 0.76rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .actions-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .actions-cell button {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s ease, opacity 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+  }
+
+  .btn-edit,
+  .btn-delete {
+    width: 32px;
+    height: 32px;
+  }
+
+  .btn-edit {
+    border: 1px solid $verde;
+    background: $verde;
+    color: $branco;
+
+    &:hover {
+      background: $verde-hover;
+      border-color: $verde-hover;
+    }
+  }
+
+  .btn-delete {
+    border: 1px solid rgba(217, 77, 69, 0.25);
+    background: rgba(217, 77, 69, 0.08);
+    color: $vermelho;
+
+    &:hover {
+      background: rgba(217, 77, 69, 0.15);
+      border-color: rgba(217, 77, 69, 0.35);
+    }
+  }
+
+  .btn-ver-perfil {
+    height: 32px;
+    padding: 0 12px;
+    gap: 6px;
+    border: none;
+    background: $verde-escuro;
+    color: $branco;
+    font-weight: 500;
+    font-size: 0.72rem;
+
+    &:hover {
+      background: $verde-hover;
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    color: #999e97 !important;
+    padding: 35px !important;
+    font-size: 0.82rem !important;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .prontuarios-container {
+    padding: 24px 18px 35px;
+
+    .hero-banner {
+      padding: 28px 35px;
+
+      .hero-image-wrapper {
+        width: 240px;
+
+        .pet-hero-img,
+        .decor-shape {
+          width: 165px;
+          height: 165px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 850px) {
+  .prontuarios-container {
+
+    .hero-banner {
+      min-height: 200px;
+      padding: 25px;
+
+      .hero-image-wrapper {
+        width: 190px;
+
+        .pet-hero-img,
+        .decor-shape {
+          width: 140px;
+          height: 140px;
+        }
+      }
+    }
+
+    .page-title {
+      font-size: 2.2rem;
+    }
+
+    .form-card .form-grid {
+      grid-template-columns: 1fr;
+
+      .input-group.full-width {
+        grid-column: auto;
+      }
+    }
+
+    .prontuarios-table {
+      min-width: 780px;
+    }
+
+    .table-card {
+      overflow-x: auto;
+    }
+  }
+}
+
+@media (max-width: 650px) {
+  .prontuarios-container {
+    padding: 15px 12px 25px;
+
+    .hero-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 25px;
+
+      .hero-image-wrapper {
+        align-self: center;
+        margin-top: 10px;
+      }
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+    }
+
+    .form-section {
+      padding: 17px;
+    }
+
+    .table-card {
+      padding: 17px 17px 0;
+    }
+  }
+}
+
+
+/* =========================================================
+   MODO ESCURO UNIFICADO — PRONTUÁRIOS
+   ========================================================= */
+
+html.dark-mode {
+
+  .prontuarios-container {
+    background: $dark-bg;
+    color: $dark-text-main;
+
+    .hero-banner {
+      .page-title {
+        color: #9fbd98;
+      }
+
+      .hero-subtitle {
+        color: $dark-text-secondary;
+      }
+
+      .pet-hero-img {
+        border-color: $dark-border;
+      }
+
+      .decor-shape {
+        background: #456d42;
+      }
+
+      .decor-cross {
+        color: #6f9665;
+      }
+    }
+
+    .section-header {
+      h2 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: $dark-text-secondary;
+      }
+    }
+
+    .form-card .input-group {
+      label {
+        color: $dark-text-secondary;
+      }
+
+      .input-wrapper {
+        background: $dark-bg;
+        border-color: $dark-border;
+
+        &:hover {
+          border-color: #3d473d;
+        }
+
+        .input-icon {
+          color: #9fbd98;
+        }
+
+        input,
+        select,
+        textarea {
+          color: $dark-text-main;
+
+          &::placeholder {
+            color: $dark-text-muted;
+          }
+        }
+
+        select option {
+          background: $dark-surface;
+          color: $dark-text-main;
+        }
+      }
+    }
+
+    .btn-secondary {
+      background: #242b24;
+      color: #a8c4a1;
+      border-color: #394339;
+
+      &:hover {
+        background: #2c342c;
+        border-color: #4a564a;
+      }
+    }
+
+    .table-header {
+      h3 {
+        color: #9fbd98;
+      }
+
+      p {
+        color: $dark-text-secondary;
+      }
+    }
+
+    .prontuarios-table {
+      th, td {
+        border-bottom-color: $dark-border;
+      }
+
+      th {
+        background: $dark-bg;
+        color: $dark-text-secondary;
+      }
+
+      td {
+        background: $dark-surface;
+        color: $dark-text-main;
+      }
+
+      tbody tr:hover td {
+        background: $dark-surface-hover;
+      }
+    }
+
+    .date-content {
+      color: $dark-text-main;
+
+      small {
+        color: $dark-text-muted;
+      }
+    }
+
+    .pet-avatar {
+      background: #283128;
+      color: #9fbd98;
+    }
+
+    .pet-details {
+      strong {
+        color: $dark-text-main;
+      }
+
+      span {
+        color: $dark-text-muted;
+      }
+    }
+
+    .motivo-cell {
+      color: $dark-text-muted;
+    }
+
+    .btn-delete {
+      background: #3b2928;
+      border-color: #5c3a38;
+      color: #d18b86;
+
+      &:hover {
+        background: #472e2d;
+        border-color: #6b433f;
+      }
+    }
+
+    .btn-ver-perfil {
+      background: #2c342c;
+      color: #a8c4a1;
+
+      &:hover {
+        background: #354035;
+      }
+    }
+
+    .empty-state {
+      color: $dark-text-muted !important;
+    }
+  }
+}
