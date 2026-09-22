@@ -6,6 +6,9 @@
 
 // ui
 
+// npm install react-router-dom axios lucide-react && npm install -D tailwindcss postcss autoprefixer sass
+
+
 // npm install
 // npm install react-router-dom axios
 // npm install -D tailwindcss postcss autoprefixer
