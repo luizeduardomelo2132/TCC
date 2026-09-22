@@ -12,6 +12,7 @@ import DashboardTutor from './pages/DashboardTutor/DashboardTutor';
 import DashboardVet from './pages/DashboardVet/DashboardVet';
 import Perfil from './pages/Perfil/Perfil';
 import SolicitarConsulta from './pages/SolicitarConsulta/SolicitarConsulta';
+import DefinirNovaSenha from './pages/DefinirNovaSenha/DefinirNovaSenha';
 
 // Trava que impede acessar o sistema sem token
 const RotaProtegida = () => {
@@ -31,6 +32,7 @@ export default function App() {
 
         {/* Rotas do sistema bloqueadas para quem não está logado */}
         <Route element={<RotaProtegida />}>
+          <Route path="/definir-nova-senha" element={<DefinirNovaSenha />} />
           <Route element={<Layout />}>
             <Route path="dashboard-tutor" element={<DashboardTutor />} />
             <Route path="dashboard-admin" element={<DashboardAdmin />} />

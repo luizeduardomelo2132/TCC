@@ -10,9 +10,11 @@ export default function Login() {
   const [modoLogin, setModoLogin] = useState(true);
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
   const [senha, setSenha] = useState('');
   const [role, setRole] = useState('tutor');
+  const [especialidade, setEspecialidade] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [lembrar, setLembrar] = useState(false);
   const [temaEscuro, setTemaEscuro] = useState(false);
@@ -35,42 +37,66 @@ export default function Login() {
     localStorage.setItem(THEME_STORAGE_KEY, novoValor ? 'dark' : 'light');
   };
 
+  // Quando o usuário troca o "Eu sou um(a)" e sai de veterinário,
+  // limpa a especialidade para não enviar um valor de outra role por engano.
+  const handleRoleChange = (novaRole: string) => {
+    setRole(novaRole);
+    if (novaRole !== 'veterinario') {
+      setEspecialidade('');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       if (modoLogin) {
-        const response = await api.post('/auth/login', {
-          email,
-          senha
-        });
+  const response = await api.post('/auth/login', {
+    email,
+    senha
+  });
 
-        const usuarioId = response.data.usuario._id; 
-        const usuarioRole = response.data.usuario.role;
-        const usuarioNome = response.data.usuario.nome;
+  const usuarioId = response.data.usuario.id; // corrigido: era "_id", o backend retorna "id"
+  const usuarioRole = response.data.usuario.role;
+  const usuarioNome = response.data.usuario.nome;
+  const senhaTemporaria = response.data.usuario.senhaTemporaria;
 
-        localStorage.setItem('@TCC:token', response.data.token);
-        localStorage.setItem('@TCC:id', usuarioId);
-        localStorage.setItem('@TCC:role', usuarioRole);
-        localStorage.setItem('@TCC:nome', usuarioNome);
+  localStorage.setItem('@TCC:token', response.data.token);
+  localStorage.setItem('@TCC:id', usuarioId);
+  localStorage.setItem('@TCC:role', usuarioRole);
+  localStorage.setItem('@TCC:nome', usuarioNome);
 
-        if (usuarioRole === 'tutor') {
-          navigate('/dashboard-tutor');
-        } else if (usuarioRole === 'veterinario') {
-          navigate('/dashboard-vet');
-        } else if (usuarioRole === 'admin') {
-          navigate('/dashboard-admin');
-        } else {
-          navigate('/dashboard-tutor');
-        }
+  // Se a senha ainda é a temporária definida pelo admin,
+  // obriga a passar pela tela de definição de nova senha antes de tudo
+  if (senhaTemporaria) {
+    navigate('/definir-nova-senha');
+    return;
+  }
+
+  if (usuarioRole === 'tutor') {
+    navigate('/dashboard-tutor');
+  } else if (usuarioRole === 'veterinario') {
+    navigate('/dashboard-vet');
+  } else if (usuarioRole === 'admin') {
+    navigate('/dashboard-admin');
+  } else {
+    navigate('/dashboard-tutor');
+  }
       } else {
-        await api.post('/auth/registrar', {
+        const payload: Record<string, any> = {
           nome,
           email,
           senha,
           role,
+          telefone,
           endereco
-        });
+        };
+
+        if (role === 'veterinario') {
+          payload.especialidade = especialidade;
+        }
+
+        await api.post('/auth/registrar', payload);
 
         alert('Conta criada com sucesso! Faça login para entrar.');
         setModoLogin(true);
@@ -271,11 +297,60 @@ export default function Login() {
                           <path d="M8 12h8"></path>
                         </svg>
                       </span>
-                      <select value={role} onChange={(e) => setRole(e.target.value)}>
+                      <select value={role} onChange={(e) => handleRoleChange(e.target.value)}>
                         <option value="tutor">Tutor (Cliente)</option>
                         <option value="veterinario">Veterinário</option>
                         <option value="admin">Recepcionista / Admin</option>
                       </select>
+                    </div>
+                  </div>
+
+                  {role === 'veterinario' && (
+                    <div className="input-group">
+                      <label>Especialidade Médica</label>
+                      <div className="input-wrapper">
+                        <span className="input-icon">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                            <path d="M22 10v6"></path>
+                            <path d="M2 10l10-5 10 5-10 5-10-5Z"></path>
+                            <path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"></path>
+                          </svg>
+                        </span>
+                        <select
+                          value={especialidade}
+                          onChange={(e) => setEspecialidade(e.target.value)}
+                          required
+                        >
+                          <option value="">Selecione a Especialidade...</option>
+                          <option value="Clínica Geral">Clínica Geral</option>
+                          <option value="Diagnóstico por Imagem">Diagnóstico por Imagem (Raio-X / Ultrassom)</option>
+                          <option value="Cirurgia Geral">Cirurgia Geral</option>
+                          <option value="Dermatologia">Dermatologia</option>
+                          <option value="Cardiologia">Cardiologia</option>
+                          <option value="Oftalmologia">Oftalmologia</option>
+                          <option value="Ortopedia">Ortopedia</option>
+                          <option value="Anestesiologia">Anestesiologia</option>
+                          <option value="Outra">Outra</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="input-group">
+                    <label>Telefone</label>
+                    <div className="input-wrapper">
+                      <span className="input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                          <path d="M4.5 4h3l1.5 4-2 1.5a12 12 0 0 0 5.5 5.5L14 13l4 1.5v3a1.5 1.5 0 0 1-1.5 1.5A15.5 15.5 0 0 1 3 4.5 1.5 1.5 0 0 1 4.5 4Z"></path>
+                        </svg>
+                      </span>
+                      <input
+                        type="text"
+                        value={telefone}
+                        onChange={(e) => setTelefone(e.target.value)}
+                        placeholder="(00) 00000-0000"
+                        required
+                      />
                     </div>
                   </div>
 
@@ -400,7 +475,7 @@ export default function Login() {
                 type="button"
                 onClick={() => setModoLogin(!modoLogin)}
               >
-                {modoLogin ? 'Fale com a recepção' : 'Faça login'}
+                {modoLogin ? 'cadastre-se' : 'Faça login'}
               </button>
             </div>
           </div>

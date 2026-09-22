@@ -1,7 +1,5 @@
 import express from 'express';
-
 import * as UsuarioController from '../controllers/UsuarioController.js';
-
 import { verificarToken, apenasCargos } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -13,7 +11,9 @@ const router = express.Router();
 
 router.get('/meu-perfil', verificarToken, UsuarioController.obterMeuPerfil);
 router.put('/atualizar-perfil', verificarToken, UsuarioController.atualizarMeuPerfil);
+router.put('/definir-nova-senha', verificarToken, UsuarioController.definirNovaSenhaPrimeiroAcesso);
 router.put('/trocar-senha', verificarToken, UsuarioController.trocarMinhaSenha);
+
 
 // VETERINÁRIOS
 // Tutor também pode consultar os veterinários
@@ -24,6 +24,8 @@ router.get('/veterinarios', verificarToken, apenasCargos(['admin', 'veterinario'
 // Adm
 
 router.get('/', verificarToken, apenasCargos(['admin']), UsuarioController.listarUsuarios);
-router.delete( '/:id', verificarToken, apenasCargos(['admin']), UsuarioController.deletarVeterinario);
+router.post('/', verificarToken, apenasCargos(['admin']), UsuarioController.criarUsuario);
+router.put('/:id', verificarToken, apenasCargos(['admin']), UsuarioController.atualizarUsuario);
+router.delete('/:id', verificarToken, apenasCargos(['admin']), UsuarioController.deletarVeterinario);
 
 export default router;

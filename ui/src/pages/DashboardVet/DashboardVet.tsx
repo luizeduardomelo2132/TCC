@@ -94,7 +94,7 @@ export default function DashboardVet() {
   const pacientesAguardando = agendaProcessada.filter(c => c.statusExibido === 'Aguardando').length;
   const pacientesAtendidos = agendaProcessada.filter(c => c.statusExibido === 'Concluída').length;
 
-  const imgHero = "https://images.unsplash.com/photo-1628009368231-77e8b8cb6176?auto=format&fit=crop&q=80&w=800";
+  const imgHero = "https://images.unsplash.com/photo-1587764379873-97837921fd44?auto=format&fit=crop&q=80&w=800";
 
   return (
     <div className="dashboard-vet-container">

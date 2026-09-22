@@ -18,6 +18,7 @@ export const listarUsuarios = async (req, res) => {
 };
 
 // Criar Usuário (Veterinário ou Admin) - Aceita especialidade!
+// Criar Usuário (Veterinário ou Admin) - Aceita especialidade!
 export const criarUsuario = async (req, res) => {
   try {
     const { nome, email, senha, role, telefone, endereco, especialidade } = req.body;
@@ -25,14 +26,14 @@ export const criarUsuario = async (req, res) => {
     const novoUsuario = await Usuario.create({
       nome,
       email,
-      senha: senha || '123456', // Se não enviar senha, define padrão
+      senha: senha || '123456',
       role: role || 'veterinario',
       telefone,
       endereco,
-      especialidade: role === 'veterinario' ? especialidade : undefined
+      especialidade: role === 'veterinario' ? especialidade : undefined,
+      senhaTemporaria: true, // admin definiu a senha, então obriga troca no primeiro acesso
     });
 
-    // Remove a senha do objeto de retorno por segurança
     const usuarioFormatado = novoUsuario.toObject();
     delete usuarioFormatado.senha;
 
@@ -43,22 +44,38 @@ export const criarUsuario = async (req, res) => {
 };
 
 // Atualizar Usuário Geral (Admin/Vet)
+// Atualizar Usuário Geral (Admin/Vet)
 export const atualizarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nome, email, telefone, endereco, especialidade, role } = req.body;
+    const { nome, email, telefone, endereco, especialidade, role, senha } = req.body;
 
-    const usuario = await Usuario.findByIdAndUpdate(
-      id,
-      { nome, email, telefone, endereco, especialidade, role },
-      { new: true }
-    ).select('-senha');
+    const usuario = await Usuario.findById(id);
 
     if (!usuario) {
       return res.status(404).json({ erro: 'Usuário não encontrado' });
     }
 
-    return res.status(200).json(usuario);
+    usuario.nome = nome ?? usuario.nome;
+    usuario.email = email ?? usuario.email;
+    usuario.telefone = telefone ?? usuario.telefone;
+    usuario.endereco = endereco ?? usuario.endereco;
+    usuario.especialidade = especialidade ?? usuario.especialidade;
+    usuario.role = role ?? usuario.role;
+
+    // Se o admin digitou uma nova senha na edição, atualiza e marca como temporária
+    if (senha) {
+      usuario.senha = senha;
+      usuario.senhaTemporaria = true;
+    }
+
+    // .save() ativa o pre('save') que criptografa a senha quando ela for modificada
+    await usuario.save();
+
+    const usuarioFormatado = usuario.toObject();
+    delete usuarioFormatado.senha;
+
+    return res.status(200).json(usuarioFormatado);
   } catch (error) {
     return res.status(500).json({ erro: 'Falha ao atualizar usuário', detalhes: error.message });
   }
@@ -128,7 +145,7 @@ export const deletarVeterinario = async (req, res) => {
 // 2. REGRAS ESPECÍFICAS DE TUTORES
 // ==========================================
 
-// Criar Tutor
+// Criar Tutor (feito pelo Admin) — nasce com senha temporária
 export const criarTutor = async (req, res) => {
   try {
     const { nome, telefone, email, endereco } = req.body;
@@ -139,15 +156,18 @@ export const criarTutor = async (req, res) => {
       telefone,
       endereco,
       role: 'tutor',
-      senha: '123456'
+      senha: '123456',
+      senhaTemporaria: true, // obriga a trocar no primeiro login
     });
 
-    return res.status(201).json(novoTutor);
+    const tutorFormatado = novoTutor.toObject();
+    delete tutorFormatado.senha;
+
+    return res.status(201).json(tutorFormatado);
   } catch (error) {
     return res.status(400).json({ erro: 'Falha ao cadastrar tutor', detalhes: error.message });
   }
 };
-
 // Listar Apenas Tutores
 export const listarTutores = async (req, res) => {
   try {
@@ -298,5 +318,34 @@ export const trocarMinhaSenha = async (req, res) => {
     return res.status(200).json({ message: 'Senha atualizada com sucesso!' });
   } catch (error) {
     return res.status(500).json({ erro: 'Erro ao trocar a senha', detalhes: error.message });
+  }
+};
+
+
+
+// Define a nova senha no primeiro acesso (não exige senha atual,
+// pois o usuário já provou identidade ao logar com a senha temporária)
+export const definirNovaSenhaPrimeiroAcesso = async (req, res) => {
+  try {
+    const { novaSenha } = req.body;
+
+    if (!novaSenha || novaSenha.length < 6) {
+      return res.status(400).json({ erro: 'A nova senha deve ter pelo menos 6 caracteres.' });
+    }
+
+    const usuario = await Usuario.findById(req.usuarioId);
+
+    if (!usuario) {
+      return res.status(404).json({ erro: 'Usuário não encontrado' });
+    }
+
+    usuario.senha = novaSenha;
+    usuario.senhaTemporaria = false;
+
+    await usuario.save();
+
+    return res.status(200).json({ message: 'Senha definida com sucesso!' });
+  } catch (error) {
+    return res.status(500).json({ erro: 'Erro ao definir nova senha', detalhes: error.message });
   }
 };

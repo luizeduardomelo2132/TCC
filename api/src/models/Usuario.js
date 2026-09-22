@@ -18,9 +18,13 @@ const usuarioSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'veterinario', 'tutor'], // Só aceita esses 3 valores
-    default: 'tutor', // Se não enviar nada, vira tutor por padrão
+    enum: ['admin', 'veterinario', 'tutor'],
+    default: 'tutor',
     required: true,
+  },
+  senhaTemporaria: {
+    type: Boolean,
+    default: false,
   },
 
   telefone: {
@@ -35,13 +39,11 @@ const usuarioSchema = new mongoose.Schema({
     trim: true, },
 }, { timestamps: true });
 
-// Função que roda antes de salvar no banco para criptografar a senha
 usuarioSchema.pre('save', async function () {
   if (!this.isModified('senha')) return;
 
   const hash = await bcrypt.hash(this.senha, 10);
   this.senha = hash;
-
 });
 
 export default mongoose.model('Usuario', usuarioSchema);
