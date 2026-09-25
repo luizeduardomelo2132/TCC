@@ -30,12 +30,15 @@ interface Consulta {
 
 interface Prontuario {
   _id?: string;
-  consultaId: Consulta | string;
+  consultaId: Consulta | string | null;
   diagnostico: string;
   prescricao?: string;
   examesSolicitados?: string;
   observacoes?: string;
 }
+
+// Mesma regra do back-end: o campo não pode conter só números
+const REGEX_TEM_LETRA = /[a-zA-ZÀ-ÿ]/;
 
 export default function Prontuarios() {
   const navigate = useNavigate();
@@ -43,6 +46,7 @@ export default function Prontuarios() {
   const [prontuarios, setProntuarios] = useState<Prontuario[]>([]);
   const [consultas, setConsultas] = useState<Consulta[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [erro, setErro] = useState('');
 
   const [formData, setFormData] = useState<Prontuario>({
     consultaId: '',
@@ -69,16 +73,44 @@ export default function Prontuarios() {
     carregarDados();
   }, []);
 
+  // Retorna a mensagem de erro (ou '' se estiver tudo certo)
+  const validarFormulario = (): string => {
+    const diagnostico = formData.diagnostico.trim();
+    const prescricao = (formData.prescricao || '').trim();
+    const exames = (formData.examesSolicitados || '').trim();
+    const observacoes = (formData.observacoes || '').trim();
+
+    if (diagnostico.length < 10) return 'O diagnóstico deve ter no mínimo 10 caracteres.';
+    if (!REGEX_TEM_LETRA.test(diagnostico)) return 'O diagnóstico não pode conter apenas números.';
+
+    if (prescricao && !REGEX_TEM_LETRA.test(prescricao)) return 'A prescrição não pode conter apenas números.';
+    if (exames && !REGEX_TEM_LETRA.test(exames)) return 'Os exames solicitados não podem conter apenas números.';
+    if (observacoes && !REGEX_TEM_LETRA.test(observacoes)) return 'As observações não podem conter apenas números.';
+
+    return '';
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    const mensagem = validarFormulario();
+    if (mensagem) {
+      setErro(mensagem);
+      return;
+    }
+
     const payload = {
-      consultaId: typeof formData.consultaId === 'object' ? formData.consultaId._id : formData.consultaId,
+      consultaId:
+        formData.consultaId && typeof formData.consultaId === 'object'
+          ? formData.consultaId._id
+          : formData.consultaId,
       diagnostico: formData.diagnostico,
       prescricao: formData.prescricao,
       examesSolicitados: formData.examesSolicitados,
       observacoes: formData.observacoes,
     };
+
+    setErro('');
 
     try {
       if (editingId) {
@@ -98,10 +130,14 @@ export default function Prontuarios() {
   };
 
   const handleEdit = (prontuario: Prontuario) => {
+    setErro('');
     setEditingId(prontuario._id || null);
 
     setFormData({
-      consultaId: typeof prontuario.consultaId === 'object' ? prontuario.consultaId._id : prontuario.consultaId,
+      consultaId:
+        prontuario.consultaId && typeof prontuario.consultaId === 'object'
+          ? prontuario.consultaId._id
+          : prontuario.consultaId,
       diagnostico: prontuario.diagnostico,
       prescricao: prontuario.prescricao || '',
       examesSolicitados: prontuario.examesSolicitados || '',
@@ -124,6 +160,7 @@ export default function Prontuarios() {
 
   const limparFormulario = () => {
     setEditingId(null);
+    setErro('');
     setFormData({
       consultaId: '',
       diagnostico: '',
@@ -132,6 +169,16 @@ export default function Prontuarios() {
       observacoes: '',
     });
   };
+
+  // Consultas que já têm prontuário (exceto a que está sendo editada agora)
+  // não aparecem como opção — impede tentar criar um duplicado pela tela
+  const consultasComProntuario = new Set(
+    prontuarios
+      .filter((p) => p._id !== editingId)
+      .map((p) =>
+        p.consultaId && typeof p.consultaId === 'object' ? p.consultaId._id : p.consultaId
+      )
+  );
 
   return (
     <div className="prontuarios-container">
@@ -171,17 +218,25 @@ export default function Prontuarios() {
                 <ClipboardList className="input-icon" size={17} />
                 <select
                   required
-                  value={typeof formData.consultaId === 'object' ? formData.consultaId._id : formData.consultaId}
+                  disabled={!!editingId}
+                  value={typeof formData.consultaId === 'object' ? formData.consultaId?._id || '' : formData.consultaId || ''}
                   onChange={(e) => setFormData({ ...formData, consultaId: e.target.value })}
                 >
                   <option value="">Selecione uma consulta...</option>
-                  {consultas.map((consulta) => (
-                    <option key={consulta._id} value={consulta._id}>
-                      {new Date(consulta.dataConsulta).toLocaleString('pt-BR')} - {consulta.petId?.nome || 'Pet'} ({consulta.motivo})
-                    </option>
-                  ))}
+                  {consultas
+                    .filter((consulta) => !consultasComProntuario.has(consulta._id))
+                    .map((consulta) => (
+                      <option key={consulta._id} value={consulta._id}>
+                        {new Date(consulta.dataConsulta).toLocaleString('pt-BR')} - {consulta.petId?.nome || 'Pet'} ({consulta.motivo})
+                      </option>
+                    ))}
                 </select>
               </div>
+              {editingId && (
+                <small style={{ color: '#73776f', fontSize: '12px' }}>
+                  A consulta vinculada não pode ser alterada após o registro.
+                </small>
+              )}
             </div>
 
             <div className="input-group">
@@ -190,6 +245,7 @@ export default function Prontuarios() {
                 <Stethoscope className="input-icon" size={17} />
                 <textarea
                   required
+                  minLength={10}
                   placeholder="Descreva o diagnóstico do paciente..."
                   value={formData.diagnostico}
                   onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })}
@@ -234,6 +290,12 @@ export default function Prontuarios() {
             </div>
           </div>
 
+          {erro && (
+            <p role="alert" className="form-error" style={{ color: '#c62828', fontSize: '14px', margin: '12px 0 0' }}>
+              {erro}
+            </p>
+          )}
+
           <div className="form-actions">
             {editingId && (
               <button type="button" className="btn-secondary" onClick={limparFormulario}>
@@ -271,7 +333,10 @@ export default function Prontuarios() {
 
               <tbody>
                 {prontuarios.map((prontuario) => {
-                  const consulta = typeof prontuario.consultaId === 'object' ? prontuario.consultaId : null;
+                  const consulta =
+                    prontuario.consultaId && typeof prontuario.consultaId === 'object'
+                      ? prontuario.consultaId
+                      : null;
                   const pet = consulta?.petId;
                   const data = consulta?.dataConsulta ? new Date(consulta.dataConsulta) : null;
                   const isGato = pet?.especie?.toLowerCase() === 'gato';

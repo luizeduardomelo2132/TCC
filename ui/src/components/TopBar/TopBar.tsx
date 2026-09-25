@@ -136,12 +136,6 @@ export default function TopBar() {
                 Editar Perfil
               </button>
 
-              <button
-                onClick={() => handleMenuNavigate('/configuracoes')}
-              >
-                Configurações
-              </button>
-
               <div className="dropdown-divider" />
 
               <button

@@ -3,22 +3,27 @@ import mongoose from 'mongoose';
 const consultaSchema = new mongoose.Schema({
   dataConsulta: {
     type: Date,
-    required: true
-  },
-
-  dataHorario: {
-    type: Date,
-    required: false
+    required: true,
+    validate: {
+      validator: function (value) {
+        return value > new Date();
+      },
+      message: 'A data e hora da consulta não podem estar no passado.'
+    }
   },
 
   motivo: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    minlength: [5, 'O motivo da consulta deve ter no mínimo 5 caracteres.'],
   },
 
   pesoAtual: {
     type: Number,
-    required: false
+    required: false,
+    min: [1, 'O peso deve ser de no mínimo 1 kg.'],
+    max: [200, 'O peso deve ser de no máximo 200 kg.'],
   },
 
   observacoes: {
@@ -41,7 +46,7 @@ const consultaSchema = new mongoose.Schema({
   veterinarioId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Usuario',
-    required: false // Torna opcional para a solicitação inicial do tutor
+    required: false
   },
 
   status: {

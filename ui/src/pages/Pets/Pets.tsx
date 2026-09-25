@@ -4,6 +4,24 @@ import { CalendarDays, Cat, Dog, Edit3, PawPrint, Trash2, UserRound, ClipboardLi
 import api from '../../services/api';
 import './Pets.scss';
 
+const ESPECIES = ['Cão', 'Gato', 'Ave', 'Coelho', 'Roedor', 'Réptil', 'Outro'];
+
+// Idade máxima (em anos) por espécie — precisa ser igual à do model no back-end
+const IDADE_MAXIMA: Record<string, number> = {
+  'Cão': 35, 'Gato': 40, 'Coelho': 20, 'Roedor': 15, 'Ave': 100, 'Réptil': 200, 'Outro': 200
+};
+const limiteIdade = (especie: string) => IDADE_MAXIMA[especie] ?? 200;
+
+// Exemplos: "8 meses", "1 ano e 3 meses", "12 anos"
+const formatarIdade = (anos?: number | string, meses?: number | string) => {
+  const a = Number(anos) || 0;
+  const m = Number(meses) || 0;
+  const partes: string[] = [];
+  if (a > 0) partes.push(`${a} ${a === 1 ? 'ano' : 'anos'}`);
+  if (m > 0) partes.push(`${m} ${m === 1 ? 'mês' : 'meses'}`);
+  return partes.join(' e ') || '--';
+};
+
 interface Tutor {
   _id: string;
   nome: string;
@@ -14,9 +32,16 @@ interface Pet {
   nome: string;
   especie: string;
   raca: string;
-  idade: number | string;
+  idadeAnos: number | string;
+  idadeMeses: number | string;
   tutorId: Tutor | string;
 }
+
+const FORM_VAZIO: Pet = { nome: '', especie: '', raca: '', idadeAnos: '', idadeMeses: '', tutorId: '' };
+
+// Mesmas regras do back-end (model Pet)
+const REGEX_NOME = /^(?=.*[A-Za-zÀ-ÿ])[A-Za-zÀ-ÿ0-9 .'\-]+$/;
+const REGEX_RACA = /^(?=.*[A-Za-zÀ-ÿ])[A-Za-zÀ-ÿ '\-]+$/;
 
 export default function Pets() {
   const navigate = useNavigate();
@@ -26,7 +51,9 @@ export default function Pets() {
   const [pets, setPets] = useState<Pet[]>([]);
   const [tutores, setTutores] = useState<Tutor[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<Pet>({ nome: '', especie: '', raca: '', idade: '', tutorId: '' });
+  const [formData, setFormData] = useState<Pet>(FORM_VAZIO);
+  const [erro, setErro] = useState('');
+  const [salvando, setSalvando] = useState(false);
 
   const carregarDados = async () => {
     try {
@@ -47,25 +74,74 @@ export default function Pets() {
     carregarDados();
   }, []);
 
+  // Retorna a mensagem de erro (ou '' se estiver tudo certo)
+  const validarFormulario = (): string => {
+    const nome = formData.nome.trim();
+    const raca = formData.raca.trim();
+    const anos = Number(formData.idadeAnos);
+    const meses = Number(formData.idadeMeses);
+
+    if (nome.length < 2) return 'O nome do pet deve ter pelo menos 2 caracteres.';
+    if (!REGEX_NOME.test(nome)) return 'O nome do pet contém caracteres inválidos ou não pode ser só números.';
+    if (!formData.especie) return 'Selecione a espécie do pet.';
+    if (raca.length < 2) return 'A raça deve ter pelo menos 2 caracteres.';
+    if (!REGEX_RACA.test(raca)) return 'A raça deve conter apenas letras.';
+
+    if (!Number.isInteger(anos) || anos < 0) return 'Os anos devem ser um número inteiro maior ou igual a 0.';
+    if (!Number.isInteger(meses) || meses < 0 || meses > 11) return 'Os meses devem ficar entre 0 e 11.';
+    if (anos === 0 && meses === 0) return 'A idade não pode ser 0 anos e 0 meses. Informe ao menos 1 mês.';
+
+    const limite = limiteIdade(formData.especie);
+    if (anos > limite || (anos === limite && meses > 0)) {
+      return `Idade acima do limite plausível para a espécie selecionada (máximo ${limite} anos).`;
+    }
+
+    return '';
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (salvando) return;
+
+    const mensagem = validarFormulario();
+    if (mensagem) {
+      setErro(mensagem);
+      return;
+    }
+
+    const payload = {
+      nome: formData.nome.trim(),
+      especie: formData.especie,
+      raca: formData.raca.trim(),
+      idadeAnos: Number(formData.idadeAnos),
+      idadeMeses: Number(formData.idadeMeses),
+      tutorId: typeof formData.tutorId === 'object' ? formData.tutorId._id : formData.tutorId
+    };
+
+    setErro('');
+    setSalvando(true);
     try {
-      if (editingId) await api.put(`/pets/${editingId}`, formData);
-      else await api.post('/pets', formData);
+      if (editingId) await api.put(`/pets/${editingId}`, payload);
+      else await api.post('/pets', payload);
       limparFormulario();
       carregarDados();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao salvar pet:', error);
+      setErro(error.response?.data?.message || 'Erro ao salvar o pet. Tente novamente.');
+    } finally {
+      setSalvando(false);
     }
   };
 
   const handleEdit = (pet: Pet) => {
+    setErro('');
     setEditingId(pet._id || null);
     setFormData({
       nome: pet.nome,
       especie: pet.especie,
       raca: pet.raca,
-      idade: pet.idade,
+      idadeAnos: pet.idadeAnos,
+      idadeMeses: pet.idadeMeses,
       tutorId: typeof pet.tutorId === 'object' ? pet.tutorId._id : pet.tutorId
     });
   };
@@ -75,15 +151,17 @@ export default function Pets() {
       try {
         await api.delete(`/pets/${id}`);
         carregarDados();
-      } catch (error) {
+      } catch (error: any) {
         console.error('Erro ao deletar pet:', error);
+        alert(error.response?.data?.message || 'Erro ao excluir o pet.');
       }
     }
   };
 
   const limparFormulario = () => {
     setEditingId(null);
-    setFormData({ nome: '', especie: '', raca: '', idade: '', tutorId: '' });
+    setErro('');
+    setFormData(FORM_VAZIO);
   };
 
   const getPetIcon = (especie: string) => {
@@ -126,7 +204,7 @@ export default function Pets() {
                 <label>Nome do Pet*</label>
                 <div className="input-wrapper">
                   <PawPrint className="input-icon" size={17} />
-                  <input type="text" required placeholder="Ex: Thor, Meg, Mel" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
+                  <input type="text" required maxLength={50} placeholder="Ex: Thor, Meg, Mel" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
                 </div>
               </div>
               <div className="input-group">
@@ -143,28 +221,46 @@ export default function Pets() {
                 <label>Espécie*</label>
                 <div className="input-wrapper">
                   <PawPrint className="input-icon" size={17} />
-                  <input type="text" required placeholder="Ex: Cão, Gato, Felino..." value={formData.especie} onChange={(e) => setFormData({ ...formData, especie: e.target.value })} />
+                  <select required value={formData.especie} onChange={(e) => setFormData({ ...formData, especie: e.target.value })}>
+                    <option value="">Selecione a espécie...</option>
+                    {ESPECIES.map((especie) => <option key={especie} value={especie}>{especie}</option>)}
+                  </select>
                 </div>
               </div>
               <div className="input-group">
                 <label>Raça*</label>
                 <div className="input-wrapper">
                   <Dog className="input-icon" size={17} />
-                  <input type="text" required placeholder="Ex: Poodle, SRD, Persa" value={formData.raca} onChange={(e) => setFormData({ ...formData, raca: e.target.value })} />
+                  <input type="text" required maxLength={50} placeholder="Ex: Poodle, SRD, Persa" value={formData.raca} onChange={(e) => setFormData({ ...formData, raca: e.target.value })} />
                 </div>
               </div>
               <div className="input-group">
-                <label>Idade (anos)*</label>
+                <label>Idade — anos*</label>
                 <div className="input-wrapper">
                   <CalendarDays className="input-icon" size={17} />
-                  <input type="number" min="0" required placeholder="Ex: 3" value={formData.idade} onChange={(e) => setFormData({ ...formData, idade: e.target.value })} />
+                  <input type="number" required min="0" max={limiteIdade(formData.especie)} step="1" placeholder="Ex: 3 (use 0 para filhotes)" value={formData.idadeAnos} onChange={(e) => setFormData({ ...formData, idadeAnos: e.target.value })} />
+                </div>
+              </div>
+              <div className="input-group">
+                <label>Idade — meses</label>
+                <div className="input-wrapper">
+                  <CalendarDays className="input-icon" size={17} />
+                  <input type="number" min="0" max="11" step="1" placeholder="Ex: 6 (0 a 11)" value={formData.idadeMeses} onChange={(e) => setFormData({ ...formData, idadeMeses: e.target.value })} />
                 </div>
               </div>
             </div>
 
+            {erro && (
+              <p role="alert" className="form-error" style={{ color: '#c62828', fontSize: '14px', margin: '12px 0 0' }}>
+                {erro}
+              </p>
+            )}
+
             <div className="form-actions">
               {editingId && <button type="button" className="btn-secondary" onClick={limparFormulario}>Limpar</button>}
-              <button type="submit" className="btn-primary">{editingId ? 'Atualizar Paciente' : 'Salvar Paciente'}</button>
+              <button type="submit" className="btn-primary" disabled={salvando}>
+                {salvando ? 'Salvando...' : editingId ? 'Atualizar Paciente' : 'Salvar Paciente'}
+              </button>
             </div>
           </form>
         </section>
@@ -175,7 +271,7 @@ export default function Pets() {
         <div className="table-card">
           <div className="table-header">
             <div>
-              <h3>{isVet ? 'Pacientes Atendidos' : 'Pacientes Cadastrados'}</h3>
+              <h3>{isVet ? 'Pacientes' : 'Pacientes Cadastrados'}</h3>
               <p>{isVet ? 'Acesse o prontuário ou perfil de seus pacientes.' : 'Visualize, edite ou acesse o perfil dos pacientes cadastrados.'}</p>
             </div>
             <span className="total-badge">{pets.length} pacientes</span>
@@ -211,7 +307,7 @@ export default function Pets() {
                     <td>
                       <div className="age-info">
                         <CalendarDays size={15} />
-                        <span>{pet.idade} ano(s)</span>
+                        <span>{formatarIdade(pet.idadeAnos, pet.idadeMeses)}</span>
                       </div>
                     </td>
                     <td>

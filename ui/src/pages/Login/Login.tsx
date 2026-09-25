@@ -6,6 +6,8 @@ import { Sun, Moon } from 'lucide-react';
 
 const THEME_STORAGE_KEY = '@TCC:theme';
 
+const contarLetras = (texto: string) => (texto.match(/[a-zA-ZÀ-ÿ]/g) || []).length;
+
 export default function Login() {
   const [modoLogin, setModoLogin] = useState(true);
   const [nome, setNome] = useState('');
@@ -20,9 +22,6 @@ export default function Login() {
   const [temaEscuro, setTemaEscuro] = useState(false);
   const navigate = useNavigate();
 
-  // Aplica o tema salvo (ou já ativo na tag <html>) assim que a página abre.
-  // Como o Login não tem topbar, ele precisa checar/alternar o dark mode
-  // sozinho, usando a mesma classe "dark-mode" que as outras telas usam.
   useEffect(() => {
     const salvo = localStorage.getItem(THEME_STORAGE_KEY);
     const ativo = salvo ? salvo === 'dark' : document.documentElement.classList.contains('dark-mode');
@@ -37,8 +36,6 @@ export default function Login() {
     localStorage.setItem(THEME_STORAGE_KEY, novoValor ? 'dark' : 'light');
   };
 
-  // Quando o usuário troca o "Eu sou um(a)" e sai de veterinário,
-  // limpa a especialidade para não enviar um valor de outra role por engano.
   const handleRoleChange = (novaRole: string) => {
     setRole(novaRole);
     if (novaRole !== 'veterinario') {
@@ -51,38 +48,46 @@ export default function Login() {
 
     try {
       if (modoLogin) {
-  const response = await api.post('/auth/login', {
-    email,
-    senha
-  });
+        const response = await api.post('/auth/login', {
+          email,
+          senha
+        });
 
-  const usuarioId = response.data.usuario.id; // corrigido: era "_id", o backend retorna "id"
-  const usuarioRole = response.data.usuario.role;
-  const usuarioNome = response.data.usuario.nome;
-  const senhaTemporaria = response.data.usuario.senhaTemporaria;
+        const usuarioId = response.data.usuario.id;
+        const usuarioRole = response.data.usuario.role?.toLowerCase();
+        const usuarioNome = response.data.usuario.nome;
+        const senhaTemporaria = response.data.usuario.senhaTemporaria;
 
-  localStorage.setItem('@TCC:token', response.data.token);
-  localStorage.setItem('@TCC:id', usuarioId);
-  localStorage.setItem('@TCC:role', usuarioRole);
-  localStorage.setItem('@TCC:nome', usuarioNome);
+        localStorage.setItem('@TCC:token', response.data.token);
+        localStorage.setItem('@TCC:id', usuarioId);
+        localStorage.setItem('@TCC:role', usuarioRole);
+        localStorage.setItem('@TCC:nome', usuarioNome);
 
-  // Se a senha ainda é a temporária definida pelo admin,
-  // obriga a passar pela tela de definição de nova senha antes de tudo
-  if (senhaTemporaria) {
-    navigate('/definir-nova-senha');
-    return;
-  }
+        if (senhaTemporaria) {
+          navigate('/definir-nova-senha');
+          return;
+        }
 
-  if (usuarioRole === 'tutor') {
-    navigate('/dashboard-tutor');
-  } else if (usuarioRole === 'veterinario') {
-    navigate('/dashboard-vet');
-  } else if (usuarioRole === 'admin') {
-    navigate('/dashboard-admin');
-  } else {
-    navigate('/dashboard-tutor');
-  }
+        if (usuarioRole === 'tutor') {
+          navigate('/dashboard-tutor');
+        } else if (usuarioRole === 'veterinario') {
+          navigate('/dashboard-vet');
+        } else if (usuarioRole === 'admin') {
+          navigate('/dashboard-admin');
+        } else {
+          navigate('/dashboard-tutor');
+        }
       } else {
+        if (contarLetras(nome) < 4) {
+          alert('O nome deve ter no mínimo 4 letras.');
+          return;
+        }
+
+        if (contarLetras(endereco) < 8) {
+          alert('O endereço deve ter no mínimo 8 letras.');
+          return;
+        }
+
         const payload: Record<string, any> = {
           nome,
           email,
@@ -101,9 +106,10 @@ export default function Login() {
         alert('Conta criada com sucesso! Faça login para entrar.');
         setModoLogin(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert('Erro de autenticação. Verifique os dados e tente novamente.');
+      const msg = error.response?.data?.message || 'Erro de autenticação. Verifique os dados e tente novamente.';
+      alert(msg);
     }
   };
 
@@ -283,6 +289,8 @@ export default function Login() {
                         value={nome}
                         onChange={(e) => setNome(e.target.value)}
                         placeholder="Ex: Maria Silva"
+                        pattern="[A-Za-zÀ-ÿ\s]+"
+                        title="O nome não pode conter números."
                         required
                       />
                     </div>
@@ -349,6 +357,8 @@ export default function Login() {
                         value={telefone}
                         onChange={(e) => setTelefone(e.target.value)}
                         placeholder="(00) 00000-0000"
+                        minLength={8}
+                        maxLength={20}
                         required
                       />
                     </div>
@@ -408,6 +418,7 @@ export default function Login() {
                     value={senha}
                     onChange={(e) => setSenha(e.target.value)}
                     placeholder="••••••••"
+                    minLength={!modoLogin ? 6 : undefined}
                     required
                   />
                   <button
@@ -444,14 +455,6 @@ export default function Login() {
                     <span></span>
                     Lembrar-me
                   </label>
-
-                  <button
-                    type="button"
-                    className="forgot-password"
-                    onClick={() => alert('Entre em contato com a recepção para recuperar sua senha.')}
-                  >
-                    Esqueci minha senha
-                  </button>
                 </div>
               )}
 

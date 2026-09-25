@@ -29,7 +29,7 @@
     "globals": "^17.7.0",
     "lucide-react": "^1.47.0",
     "postcss": "^8.5.28",
-    "sass": "^1.104.1",
+    "sass": "^1.105.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.65.0",

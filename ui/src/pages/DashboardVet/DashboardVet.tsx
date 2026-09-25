@@ -91,8 +91,6 @@ export default function DashboardVet() {
     statusExibido: obterStatusDinamico(c)
   }));
 
-  const pacientesAguardando = agendaProcessada.filter(c => c.statusExibido === 'Aguardando').length;
-  const pacientesAtendidos = agendaProcessada.filter(c => c.statusExibido === 'Concluída').length;
 
   const imgHero = "https://images.unsplash.com/photo-1587764379873-97837921fd44?auto=format&fit=crop&q=80&w=800";
 
@@ -126,22 +124,6 @@ export default function DashboardVet() {
           </div>
         </div>
         <div className="summary-grid">
-          <div className="summary-card waiting">
-            <div className="summary-icon">🐾</div>
-            <div className="summary-info">
-              <span>Pacientes Aguardando</span>
-              <strong>{pacientesAguardando}</strong>
-              <small>Prontos para atendimento</small>
-            </div>
-          </div>
-          <div className="summary-card">
-            <div className="summary-icon">✓</div>
-            <div className="summary-info">
-              <span>Já Atendidos</span>
-              <strong>{pacientesAtendidos}</strong>
-              <small>Consultas finalizadas hoje</small>
-            </div>
-          </div>
           <div className="summary-card">
             <div className="summary-icon">📅</div>
             <div className="summary-info">
@@ -220,13 +202,7 @@ export default function DashboardVet() {
                         className="btn-secondary"
                         onClick={() => pet?._id && navigate(`/perfil-pet/${pet._id}`)}
                       >
-                        Ver Prontuário
-                      </button>
-                      <button
-                        className="btn-primary"
-                        onClick={() => navigate(`/prontuarios/novo/${consulta._id}`)}
-                      >
-                        Iniciar Consulta
+                        Ver perfil do paciente
                       </button>
                     </div>
                   </div>

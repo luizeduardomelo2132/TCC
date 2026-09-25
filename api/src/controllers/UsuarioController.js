@@ -18,7 +18,6 @@ export const listarUsuarios = async (req, res) => {
 };
 
 // Criar Usuário (Veterinário ou Admin) - Aceita especialidade!
-// Criar Usuário (Veterinário ou Admin) - Aceita especialidade!
 export const criarUsuario = async (req, res) => {
   try {
     const { nome, email, senha, role, telefone, endereco, especialidade } = req.body;
@@ -43,7 +42,6 @@ export const criarUsuario = async (req, res) => {
   }
 };
 
-// Atualizar Usuário Geral (Admin/Vet)
 // Atualizar Usuário Geral (Admin/Vet)
 export const atualizarUsuario = async (req, res) => {
   try {
@@ -157,7 +155,7 @@ export const criarTutor = async (req, res) => {
       endereco,
       role: 'tutor',
       senha: '123456',
-      senhaTemporaria: true, // obriga a trocar no primeiro login
+      senhaTemporaria: true,
     });
 
     const tutorFormatado = novoTutor.toObject();
@@ -165,9 +163,17 @@ export const criarTutor = async (req, res) => {
 
     return res.status(201).json(tutorFormatado);
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      const primeiraMensagem = Object.values(error.errors)[0].message;
+      return res.status(400).json({ erro: primeiraMensagem });
+    }
+    if (error.code === 11000) {
+      return res.status(400).json({ erro: 'Este e-mail já está cadastrado.' });
+    }
     return res.status(400).json({ erro: 'Falha ao cadastrar tutor', detalhes: error.message });
   }
 };
+
 // Listar Apenas Tutores
 export const listarTutores = async (req, res) => {
   try {
@@ -200,14 +206,32 @@ export const atualizarTutor = async (req, res) => {
     const { id } = req.params;
     const { nome, telefone, email, endereco } = req.body;
 
-    const tutor = await Usuario.findByIdAndUpdate(
-      id,
-      { nome, telefone, email, endereco },
-      { new: true }
-    ).select('-senha');
+    const tutor = await Usuario.findById(id);
 
-    return res.status(200).json(tutor);
+    if (!tutor) {
+      return res.status(404).json({ erro: 'Tutor não encontrado' });
+    }
+
+    tutor.nome = nome ?? tutor.nome;
+    tutor.telefone = telefone ?? tutor.telefone;
+    tutor.email = email ?? tutor.email;
+    tutor.endereco = endereco ?? tutor.endereco;
+
+    // .save() roda as validações do schema — findByIdAndUpdate não roda
+    await tutor.save();
+
+    const tutorFormatado = tutor.toObject();
+    delete tutorFormatado.senha;
+
+    return res.status(200).json(tutorFormatado);
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      const primeiraMensagem = Object.values(error.errors)[0].message;
+      return res.status(400).json({ erro: primeiraMensagem });
+    }
+    if (error.code === 11000) {
+      return res.status(400).json({ erro: 'Este e-mail já está cadastrado.' });
+    }
     return res.status(500).json({ erro: 'Falha ao atualizar tutor', detalhes: error.message });
   }
 };
@@ -276,11 +300,10 @@ export const atualizarMeuPerfil = async (req, res) => {
   try {
     const { nome, email, telefone, endereco } = req.body;
 
-    // Note que não permitimos mudar a 'role' ou a 'especialidade' por aqui!
     const usuario = await Usuario.findByIdAndUpdate(
       req.usuarioId,
       { nome, email, telefone, endereco },
-      { new: true }
+      { returnDocument: 'after', runValidators: true, context: 'query' }
     ).select('-senha');
 
     if (!usuario) {
@@ -289,6 +312,10 @@ export const atualizarMeuPerfil = async (req, res) => {
 
     return res.status(200).json(usuario);
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      const primeiraMensagem = Object.values(error.errors)[0].message;
+      return res.status(400).json({ erro: primeiraMensagem });
+    }
     return res.status(500).json({ erro: 'Erro ao atualizar perfil', detalhes: error.message });
   }
 };

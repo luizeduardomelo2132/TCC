@@ -14,6 +14,14 @@ import {
   Dog,
 } from 'lucide-react';
 
+// Exemplos: "8 meses", "1 ano e 3 meses", "12 anos"
+const formatarIdade = (anos?: number, meses?: number) => {
+  const partes: string[] = [];
+  if (anos) partes.push(`${anos} ${anos === 1 ? 'ano' : 'anos'}`);
+  if (meses) partes.push(`${meses} ${meses === 1 ? 'mês' : 'meses'}`);
+  return partes.join(' e ') || '--';
+};
+
 export default function PerfilPet() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -105,7 +113,7 @@ export default function PerfilPet() {
               </span>
               <div>
                 <small>Idade / Peso</small>
-                <strong>{pet.idade || '--'} anos • {pet.peso || '--'} kg</strong>
+                <strong>{formatarIdade(pet.idadeAnos, pet.idadeMeses)} • {pet.peso || '--'} kg</strong>
               </div>
             </div>
             <div className="info-block">

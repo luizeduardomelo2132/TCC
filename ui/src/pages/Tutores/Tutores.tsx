@@ -10,6 +10,8 @@ interface Tutor {
   endereco?: string;
 }
 
+const contarLetras = (texto: string) => (texto.match(/[a-zA-ZÀ-ÿ]/g) || []).length;
+
 export default function Tutores() {
   const [tutores, setTutores] = useState<Tutor[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -34,17 +36,31 @@ export default function Tutores() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (contarLetras(formData.nome) < 4) {
+      alert('O nome deve ter no mínimo 4 letras.');
+      return;
+    }
+
+    if (contarLetras(formData.endereco || '') < 8) {
+      alert('O endereço deve ter no mínimo 8 letras.');
+      return;
+    }
+
     try {
       if (editingId) {
         await api.put(`/tutores/${editingId}`, formData);
+        alert('Tutor atualizado com sucesso!');
       } else {
         await api.post('/tutores', formData);
+        alert('Tutor cadastrado com sucesso!');
       }
 
       limparFormulario();
       carregarTutores();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao salvar tutor:', error);
+      const msg = error.response?.data?.erro || 'Erro ao salvar tutor.';
+      alert(msg);
     }
   };
 
@@ -171,17 +187,15 @@ export default function Tutores() {
                   👤
                 </span>
 
+                {/* NOME */}
                 <input
                   type="text"
                   required
+                  pattern="[A-Za-zÀ-ÿ\s]+"
+                  title="O nome não pode conter números."
                   placeholder="Ex: Maria Silva"
                   value={formData.nome}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      nome: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                 />
 
               </div>
@@ -235,17 +249,15 @@ export default function Tutores() {
                   ☎
                 </span>
 
+                {/* TELEFONE */}
                 <input
                   type="text"
                   required
+                  minLength={8}
+                  maxLength={20}
                   placeholder="Ex: (11) 98765-4321"
                   value={formData.telefone}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      telefone: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
                 />
 
               </div>
@@ -267,16 +279,12 @@ export default function Tutores() {
                   ⌂
                 </span>
 
+                {/* ENDEREÇO */}
                 <input
                   type="text"
                   placeholder="Ex: Rua das Flores, 123"
                   value={formData.endereco}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      endereco: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
                 />
 
               </div>

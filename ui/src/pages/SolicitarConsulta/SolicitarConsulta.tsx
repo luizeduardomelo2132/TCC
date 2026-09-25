@@ -83,6 +83,11 @@ export default function SolicitarConsulta() {
     }
   };
 
+
+  const minDataHora = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
+
   return (
     <div className="solicitar-consulta-container">
       <section className="hero-banner">
@@ -160,6 +165,7 @@ export default function SolicitarConsulta() {
                 <input
                   type="datetime-local"
                   required
+                  min={minDataHora}
                   value={formData.dataConsulta}
                   onChange={(e) => setFormData({ ...formData, dataConsulta: e.target.value })}
                 />
@@ -173,6 +179,8 @@ export default function SolicitarConsulta() {
                 <input
                   type="number"
                   step="0.1"
+                  min="0"
+                  max="200"
                   placeholder="Ex: 5.4"
                   value={formData.pesoAtual}
                   onChange={(e) => setFormData({ ...formData, pesoAtual: e.target.value })}
@@ -186,6 +194,7 @@ export default function SolicitarConsulta() {
                 <FileText className="input-icon" size={17} />
                 <textarea
                   required
+                  minLength={5}
                   placeholder="Ex: Vacinação de rotina, exames gerais, sintomas oculares..."
                   value={formData.motivo}
                   onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}

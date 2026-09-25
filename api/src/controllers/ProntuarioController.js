@@ -1,5 +1,18 @@
 import Prontuario from '../models/Prontuario.js';
 
+const tratarErro = (error, res) => {
+  if (error.name === 'ValidationError') {
+    const mensagens = Object.values(error.errors).map((e) => e.message);
+    return res.status(400).json({ message: mensagens.join(' ') });
+  }
+  if (error.code === 11000) {
+    return res.status(409).json({
+      message: 'Esta consulta já possui um prontuário registrado. Edite o prontuário existente em vez de criar um novo.',
+    });
+  }
+  return res.status(500).json({ message: error.message });
+};
+
 export const criarProntuario = async (req, res) => {
   try {
     const {
@@ -9,6 +22,15 @@ export const criarProntuario = async (req, res) => {
       examesSolicitados,
       observacoes
     } = req.body;
+
+    // Checagem amigável antes de tentar salvar (o índice único no schema
+    // é a garantia real, isso aqui só evita um erro feio de duplicidade)
+    const jaExiste = await Prontuario.findOne({ consultaId });
+    if (jaExiste) {
+      return res.status(409).json({
+        message: 'Esta consulta já possui um prontuário registrado. Edite o prontuário existente em vez de criar um novo.',
+      });
+    }
 
     const novoProntuario = new Prontuario({
       consultaId,
@@ -22,7 +44,7 @@ export const criarProntuario = async (req, res) => {
 
     res.status(201).json(prontuarioSalvo);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    tratarErro(error, res);
   }
 };
 
@@ -104,21 +126,26 @@ export const buscarProntuarioPorConsulta = async (req, res) => {
 
 export const atualizarProntuario = async (req, res) => {
   try {
-    const prontuarioAtualizado = await Prontuario.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const prontuario = await Prontuario.findById(req.params.id);
 
-    if (!prontuarioAtualizado) {
-      return res.status(404).json({
-        message: 'Prontuário não encontrado'
-      });
+    if (!prontuario) {
+      return res.status(404).json({ message: 'Prontuário não encontrado' });
     }
+
+    // A consulta vinculada não pode ser trocada na edição — o campo consultaId
+    // é ignorado de propósito, mesmo que venha no corpo da requisição
+    const { diagnostico, prescricao, examesSolicitados, observacoes } = req.body;
+    if (diagnostico !== undefined) prontuario.diagnostico = diagnostico;
+    if (prescricao !== undefined) prontuario.prescricao = prescricao;
+    if (examesSolicitados !== undefined) prontuario.examesSolicitados = examesSolicitados;
+    if (observacoes !== undefined) prontuario.observacoes = observacoes;
+
+    // save() roda as validações do schema (findByIdAndUpdate não roda por padrão)
+    const prontuarioAtualizado = await prontuario.save();
 
     res.status(200).json(prontuarioAtualizado);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    tratarErro(error, res);
   }
 };
 

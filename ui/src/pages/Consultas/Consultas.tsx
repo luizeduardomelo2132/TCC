@@ -139,8 +139,10 @@ export default function Consultas() {
       try {
         await api.delete(`/consultas/${id}`);
         carregarDados();
-      } catch (error) {
+      } catch (error: any) {
         console.error('Erro ao deletar consulta:', error);
+        const msg = error.response?.data?.message || 'Erro ao excluir consulta.';
+        alert(msg);
       }
     }
   };
@@ -199,6 +201,7 @@ export default function Consultas() {
                   <PawPrint className="input-icon" size={17} />
                   <select
                     required
+                    disabled={!!editingId}
                     value={typeof formData.petId === 'object' ? formData.petId._id : formData.petId}
                     onChange={(e) => setFormData({ ...formData, petId: e.target.value })}
                   >
@@ -210,6 +213,11 @@ export default function Consultas() {
                     ))}
                   </select>
                 </div>
+                {editingId && (
+                  <small style={{ color: '#73776f', fontSize: '12px' }}>
+                    O paciente vinculado não pode ser alterado após o agendamento.
+                  </small>
+                )}
               </div>
 
               <div className="input-group">
@@ -218,7 +226,7 @@ export default function Consultas() {
                   <Stethoscope className="input-icon" size={17} />
                   <select
                     required
-                    value={typeof formData.veterinarioId === 'object' && formData.veterinarioId !== null ? formData.veterinarioId._id : formData.veterinarioId}
+                    value={typeof formData.veterinarioId === 'object' && formData.veterinarioId !== null ? formData.veterinarioId._id : formData.veterinarioId || ''}
                     onChange={(e) => setFormData({ ...formData, veterinarioId: e.target.value })}
                   >
                     <option value="">Selecione um Veterinário...</option>
@@ -289,6 +297,7 @@ export default function Consultas() {
                   <input
                     type="number"
                     step="0.1"
+                    min="0"
                     placeholder="Ex: 5.4"
                     value={formData.pesoAtual}
                     onChange={(e) => setFormData({ ...formData, pesoAtual: e.target.value })}
@@ -302,6 +311,7 @@ export default function Consultas() {
                   <FileText className="input-icon" size={17} />
                   <textarea
                     required
+                    minLength={5}
                     placeholder="Ex: Vacinação de rotina, exames gerais, sintomas oculares..."
                     value={formData.motivo}
                     onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
@@ -429,7 +439,8 @@ export default function Consultas() {
                                 borderRadius: '6px',
                                 cursor: 'pointer',
                                 fontWeight: 500,
-                                fontSize: '13px'
+                                fontSize: '13px',
+                                whiteSpace: 'nowrap'
                               }}
                               title="Ver Prontuário"
                               onClick={() => {
